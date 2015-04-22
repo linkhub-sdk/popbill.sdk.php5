@@ -81,8 +81,16 @@ class FaxService extends PopbillBase {
     	}
 		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);	
 		$FaxState = new FaxState();
-		$FaxState->fromJsonInfo($result[0]);
-		return $FaxState;
+		
+		$FaxInfoList = array();
+		
+		for($i=0; $i<Count($result); $i++){
+			$FaxInfo = new FaxState();
+			$FaxInfo->fromJsonInfo($result[$i]);
+			$FaxInfoList[$i] = $FaxInfo;
+
+		}
+		return $FaxInfoList;
 	}
 	
     /* 예약전송 취소
