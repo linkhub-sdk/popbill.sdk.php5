@@ -31,6 +31,7 @@ class PopbillBase
     private $Linkhub;
     private $IsTest = false;
     private $scopes = array();
+    private $__requestMode = LINKHUB_COMM_MODE;
     
     public function __construct($LinkID,$SecretKey) {
     	$this->Linkhub = Linkhub::getInstance($LinkID,$SecretKey);
@@ -109,39 +110,122 @@ class PopbillBase
     }
     
     protected function executeCURL($uri,$CorpNum = null,$userID = null,$isPost = false, $action = null, $postdata = null,$isMultiPart=false) {
-		$http = curl_init(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL).$uri);
-		$header = array();
-		
-		if(is_null($CorpNum) == false) {
-			$header[] = 'Authorization: Bearer '.$this->getsession_Token($CorpNum);
-		}
-		if(is_null($userID) == false) {
-			$header[] = 'x-pb-userid: '.$userID;
-		}
-		if(is_null($action) == false) {
-			$header[] = 'X-HTTP-Method-Override: '.$action;
-		}
-		if($isMultiPart == false) {
-			$header[] = 'Content-Type: Application/json';
-		}
-		
-		if($isPost) {
-			curl_setopt($http, CURLOPT_POST,1);
-			curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);   
-		}
-		curl_setopt($http, CURLOPT_HTTPHEADER,$header);
-		curl_setopt($http, CURLOPT_RETURNTRANSFER, TRUE);
-		
-		$responseJson = curl_exec($http);
-		$http_status = curl_getinfo($http, CURLINFO_HTTP_CODE);
-		
-		curl_close($http);
+    	
+    	if($this->__requestMode != "STREAM") {
+			$http = curl_init(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL).$uri);
+			$header = array();
 			
-		if($http_status != 200) {
-			throw new PopbillException($responseJson);
+			if(is_null($CorpNum) == false) {
+				$header[] = 'Authorization: Bearer '.$this->getsession_Token($CorpNum);
+			}
+			if(is_null($userID) == false) {
+				$header[] = 'x-pb-userid: '.$userID;
+			}
+			if(is_null($action) == false) {
+				$header[] = 'X-HTTP-Method-Override: '.$action;
+			}
+			if($isMultiPart == false) {
+				$header[] = 'Content-Type: Application/json';
+			}
+			
+			if($isPost) {
+				curl_setopt($http, CURLOPT_POST,1);
+				curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);   
+			}
+			curl_setopt($http, CURLOPT_HTTPHEADER,$header);
+			curl_setopt($http, CURLOPT_RETURNTRANSFER, TRUE);
+			
+			$responseJson = curl_exec($http);
+			$http_status = curl_getinfo($http, CURLINFO_HTTP_CODE);
+			
+			curl_close($http);
+				
+			if($http_status != 200) {
+				throw new PopbillException($responseJson);
+			}
+			
+			return json_decode($responseJson);
+			
+    	} else {
+			$header = array();
+			
+			if(is_null($CorpNum) == false) {
+				$header[] = 'Authorization: Bearer '.$this->getsession_Token($CorpNum);
+			}
+			if(is_null($userID) == false) {
+				$header[] = 'x-pb-userid: '.$userID;
+			}
+			if(is_null($action) == false) {
+				$header[] = 'X-HTTP-Method-Override: '.$action;
+			}
+			if($isMultiPart == false) {
+				$header[] = 'Content-Type: Application/json';
+				$postbody = $postdata;
+			} else { //Process MultipartBody.
+				$eol = "\r\n";
+				$postbody = '';
+
+				$mime_boundary=md5(time());
+				$header[] = 'Content-Type: multipart/form-data; boundary='.$mime_boundary.$eol;
+				
+				if($postdata['form']) {
+					$postbody .= '--'.$mime_boundary.$eol;
+					$postbody .= 'content-disposition: form-data; name="form"'.$eol;
+					$postbody .= 'content-type: Application/json;'.$eol.$eol;
+					$postbody .= $postdata['form'].$eol;			
+				}
+				
+				
+				foreach($postdata as $key => $value) {
+					if(substr($key,0,4) == 'file') {
+						if(substr($value,0,1) == '@') {
+							$value = substr($value,1);
+						}
+						if(file_exists($value) == FALSE) {
+							throw new PopbillException("전송할 파일이 존재하지 않습니다.",-99999999);
+						}
+						
+						$fileContents = file_get_contents($value); 
+	        			$postbody .= '--'.$mime_boundary.$eol;
+	        			$postbody .= "Content-Disposition: form-data; name=\"file\"; filename=\"".basename($value)."\"".$eol; 
+	        			$postbody .= "Content-Type: Application/octet-stream".$eol.$eol; 
+	        			$postbody .= $fileContents.$eol; 
+					}
+					
+				}
+				
+				$postbody .= '--'.$mime_boundary.'--'.$eol;
+				
+			}
+			
+			
+			$params = array('http' => array(
+					 'ignore_errors' => TRUE,
+					 'method' => 'GET'
+	                ));
+	        	    
+			if($isPost) {
+				$params['http']['method'] = 'POST';
+				$params['http']['content'] = $postbody;
+	        } 
+	  	
+	  		if ($header !== null) {
+			  	$head = "";
+			  	foreach($header as $h) {
+		  			$head = $head . $h . "\r\n";
+		    	}
+		    	$params['http']['header'] = substr($head,0,-2);
+		  	}
+	  		
+	  		$ctx = stream_context_create($params);
+	  		$response = file_get_contents(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL).$uri, false, $ctx);
+	  		
+	  		if ($http_response_header[0] != "HTTP/1.1 200 OK") {
+	    		throw new PopbillException($response);
+	  		}
+	  		
+			return json_decode($response);
 		}
-		
-		return json_decode($responseJson);
 	}
 }
 
