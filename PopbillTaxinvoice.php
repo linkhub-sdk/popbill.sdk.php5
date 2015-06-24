@@ -472,6 +472,7 @@ class Taxinvoice
 	public $faxsendYN;
 	public $faxreceiveNum;
 	public $originalTaxinvoiceKey;
+	public $ntsconfirmNum;
 	public $detailList;
 	public $addContactList;
 
