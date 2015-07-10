@@ -43,8 +43,11 @@ class ClosedownService extends PopbillBase {
     
 	//휴폐업조회 - 대량
 	public function CheckCorpNums($MemberCorpNum,$CheckCorpNumList){
+		if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+    		throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+    	}
 		if(is_null($CheckCorpNumList) || empty($CheckCorpNumList)) {
-    		throw new PopbillException('관리번호가 입력되지 않았습니다.');
+    		throw new PopbillException('조회할 사업자번호 배열이 입력되지 않았습니다.');
     	}
 		
 		$postData = json_encode($CheckCorpNumList);
