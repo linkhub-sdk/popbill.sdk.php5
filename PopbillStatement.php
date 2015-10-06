@@ -47,6 +47,28 @@ class StatementService extends PopbillBase {
 		}
 	}
 
+	# 전자명세서 선팩스 전송
+	public function FAXSend($CorpNum,$Statement,$SendNum,$ReceiveNum,$UserID){
+		if(!is_null($SendNum) || !empty($SendNum)){
+			$Statement->sendNum = $SendNum;
+		}
+		if(!is_null($ReceiveNum) || !empty($ReceiveNum)){
+			$Statement->receiveNum = $ReceiveNum;
+		}
+
+		$postdata = json_encode($Statement);
+    	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'FAX',$postdata)->receiptNum;
+	}
+
+	# 전자명세서 즉시발행
+	public function RegistIssue($CorpNum,$Statement,$memo,$UserID){
+		if(!is_null($memo) || !empty($memo)){
+			$Statement->memo = $memo;
+		}
+
+		$postdata = json_encode($Statement);
+    	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'ISSUE',$postdata);
+	}
 
 	# 전자명세서 임시저장
     public function Register($CorpNum, $Statement, $UserID) {
@@ -102,7 +124,14 @@ class StatementService extends PopbillBase {
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
-		$postdata = array('Filedata' => '@'.$FilePath);
+		if(mb_detect_encoding(basename($FilePath),'ASCII, EUC-KR')){
+			$FileName = iconv('CP949','UTF8',$FilePath);
+		} else {
+			$FileName = basename($FilePath);
+		}
+
+    	$postdata = array('Filedata' => '@'.$FilePath.';filename='.$FileName);
+
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID, true, null, $postdata, true);
 	}
 
@@ -273,6 +302,10 @@ class StatementService extends PopbillBase {
 }
 
 class Statement {
+	public $sendNum;
+	public $receiveNum;
+	public $memo;
+
 	public $itemCode;             
 	public $mgtKey;               
 	public $invoiceNum;           

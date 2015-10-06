@@ -44,6 +44,29 @@ class TaxinvoiceService extends PopbillBase {
     		throw $pe;
     	}
     }
+
+	//즉시발행 
+	public function RegistIssue($CorpNum, $Taxinvoice, $UserID = null, $writeSpecification = false, $forceIssue = false, $memo, $emailSubject, $dealInvoiceMgtKey){
+		if($writeSpecification) {
+    		$Taxinvoice->writeSpecification = $writeSpecification;
+    	}
+		if($forceIssue) {
+    		$Taxinvoice->forcieIssue = $forcieIssue;
+    	}
+
+		if(!is_null($memo) || !empty($memo)){
+			$Taxinvoice->memo = $memo;
+		}
+		if(!is_null($emailSubject) || !empty($emailSubject)){
+			$Taxinvoice->emailSubject = $emailSubject;
+		}
+		if(!is_null($dealInvoiceMgtKey) || !empty($dealInvoiceMgtKey)){
+			$Taxinvoice->dealInvoiceMgtKey = $dealInvoiceMgtKey;
+		}
+
+		$postdata = json_encode($Taxinvoice);
+		return $this->executeCURL('/Taxinvoice',$CorpNum,$UserID,true,'ISSUE',$postdata);
+	}
     
     //임시저장
     public function Register($CorpNum, $Taxinvoice, $UserID = null, $writeSpecification = false) {
@@ -298,13 +321,17 @@ class TaxinvoiceService extends PopbillBase {
     }
     
     //파일첨부
-    public function AttachFile($CorpNum,$MgtKeyType,$MgtKey,$FilePath , $UserID = null) {
-    
-    	if(is_null($MgtKey) || empty($MgtKey)) {
+    public function AttachFile($CorpNum,$MgtKeyType,$MgtKey,$FilePath, $UserID = null) {
+       	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
-    
-    	$postdata = array('Filedata' => '@'.$FilePath);
+		
+		if(mb_detect_encoding(basename($FilePath)) == 'ASCII'){
+			$FileName = iconv('CP949','UTF8',$FilePath);
+		} else {
+			$FileName = basename($FilePath);
+		}
+       	$postdata = array('Filedata' => '@'.$FilePath.';filename='.$FileName);
     	
     	return $this->executeCURL('/Taxinvoice/'.$MgtKeyType.'/'.$MgtKey.'/Files', $CorpNum, $UserID, true,null,$postdata,true);
     
@@ -390,12 +417,61 @@ class TaxinvoiceService extends PopbillBase {
     public function GetEmailPublicKeys($CorpNum) {
     	return $this->executeCURL('/Taxinvoice/EmailPublicKeys', $CorpNum);
     }
+
+	//세금계산서 조회
+	public function Search($CorpNum,$MgtKeyType,$DType,$SDate,$EDate,$State = array(),$Type=array(),$TaxType=array(),$LateOnly,$Page,$PerPage,$UserID = null){
+		if(is_null($DType) || $DType ===""){
+			throw new PopbillException(-99999999, '일자유형이 입력되지 않았습니다.');
+		}
+		if(is_null($SDate) || $SDate ===""){
+			throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
+		}
+		if(is_null($EDate) || $EDate ===""){
+			throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
+		}
+	
+		$uri = '/Taxinvoice/' . $MgtKeyType . '?';
+		$uri .= 'DType=' . $DType;
+		$uri .= '&SDate=' . $SDate;
+		$uri .= '&EDate=' . $EDate;
+	
+		if(!is_null($State) || !empty($State)){
+			$uri .= '&State=' . implode(',',$State);
+		}
+
+		if(!is_null($Type) || !empty($Type)){
+			$uri .= '&Type=' . implode(',',$Type);
+		}
+
+		if(!is_null($TaxType) || !empty($TaxType)){
+			$uri .= '&TaxType=' . implode(',',$TaxType);
+		}
+
+		if(!is_null($LateOnly) || !empty($LateOnly)){
+			$uri .= '&LateOnly=' . $LateOnly;
+		}
+		
+		$uri .= '&Page=' . $Page;
+		$uri .= '&PerPage=' . $PerPage;
+		
+		$response = $this->executeCURL($uri,$CorpNum,$UserID);
+			
+		$SearchList = new SearchResult();
+		$SearchList->fromJsonInfo($response);
+
+		return $SearchList;
+
+	}	
     
 }
 
 class Taxinvoice
 {
 	public $writeSpecification;
+	public $emailSubject;
+	public $memo;
+	public $dealInvoiceMgtKey;
+
 	public $writeDate;
 	public $chargeDirection;
 	public $issueType;
@@ -616,6 +692,36 @@ class TaxinvoiceAddContact {
 	}
 }
 
+class SearchResult 
+{
+	public $code;
+	public $total;
+	public $perPage;
+	public $pageNum;
+	public $pageCount;
+	public $message;
+	public $list;
+
+	public function fromJsonInfo($jsonInfo){
+		isset($jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
+		isset($jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
+		isset($jsonInfo->perPage ) ? $this->perPage = $jsonInfo->perPage : null;
+		isset($jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
+		isset($jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
+		isset($jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
+
+		$InfoList = array();
+
+		for($i=0; $i < Count($jsonInfo->list);$i++){
+			$InfoObj = new TaxinvoiceInfo();
+			$InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+			$InfoList[$i] = $InfoObj;
+		}
+		$this->list = $InfoList;
+	}
+}
+
+
 class TaxinvoiceInfo {
 	public $itemKey;                 
 	public $stateCode;               
@@ -623,7 +729,8 @@ class TaxinvoiceInfo {
 	public $purposeType;             
 	public $modifyCode;              
 	public $issueType;               
-	public $writeDate;               
+	public $writeDate;
+	public $lateIssueYN;
 	public $invoicerCorpName;        
 	public $invoicerCorpNum;         
 	public $invoicerMgtKey;          
@@ -654,6 +761,7 @@ class TaxinvoiceInfo {
 		isset($jsonInfo->purposeType ) ? $this->purposeType = $jsonInfo->purposeType : null;
 		isset($jsonInfo->modifyCode ) ? $this->modifyCode = $jsonInfo->modifyCode : null;
 		isset($jsonInfo->issueType ) ? $this->issueType = $jsonInfo->issueType : null;
+		isset($jsonInfo->lateIssueYN ) ? $this->lateIssueYN = $jsonInfo->lateIssueYN : null;
 		isset($jsonInfo->writeDate ) ? $this->writeDate = $jsonInfo->writeDate : null;
 		isset($jsonInfo->invoicerCorpName ) ? $this->invoicerCorpName = $jsonInfo->invoicerCorpName : null;
 		isset($jsonInfo->invoicerCorpNum ) ? $this->invoicerCorpNum = $jsonInfo->invoicerCorpNum : null;

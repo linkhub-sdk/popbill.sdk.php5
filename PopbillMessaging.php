@@ -45,8 +45,8 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null , $UserID = null) {
-    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,null,$Content,$Messages,$ReserveDT,$UserID);
+    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
+    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
     
     /* 장문메시지 전송
@@ -63,8 +63,8 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendLMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $UserID = null) {
-    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$UserID);
+    public function SendLMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
+    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
     
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
@@ -81,8 +81,8 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $UserID = null) {
-    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$UserID);
+    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null) {
+    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
 
 	/* MMS 메시지 전송
@@ -163,7 +163,7 @@ class MessagingService extends PopbillBase {
     	return $this->executeCURL('/Message/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
     }
     
-    private function SendMessage($MessageType, $CorpNum, $Sender,$Subject,$Content, $Messages = array(), $ReserveDT = null , $UserID = null) {
+    private function SendMessage($MessageType, $CorpNum, $Sender,$Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null) {
     	if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.'); 
     	}
@@ -174,6 +174,7 @@ class MessagingService extends PopbillBase {
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
+		if($adsYN) $Request['adsYN'] = $adsYN;
     	
     	$Request['msgs'] = $Messages;
     	
@@ -181,12 +182,47 @@ class MessagingService extends PopbillBase {
     	return $this->executeCURL('/'.$MessageType,$CorpNum,$UserID,true,null,$postdata)->receiptNum;
     	
     }
-    
+ 
     //문자 관련 URL함수
     public function GetURL($CorpNum ,$UserID, $TOGO) {
     	$response = $this->executeCURL('/Message/?TG='.$TOGO,$CorpNum,$UserID);
     	return $response->url;
     }
+
+	//문자 전송내역 조회
+	public function Search($CorpNum,$SDate,$EDate,$State=array(),$Item=array(),$ReserveYN = false,$SenderYN = false,$Page,$PerPage,$UserID = null){
+		if(is_null($SDate) || $SDate ===""){
+			throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
+		}
+	
+		$uri = '/Message/Search?SDate=' . $SDate;
+		$uri .= '&EDate=' . $EDate;
+
+		if(!is_null($State) || !empty($State)){
+			$uri .= '&State=' . implode(',',$State);
+		}
+		if(!is_null($Item) || !empty($Item)){
+			$uri .= '&Item=' . implode(',',$Item);
+		}
+
+		if($ReserveYN){
+			$uri .= '&ReserveYN=1';
+		}
+		if($SenderYN){
+			$uri .= '&SenderYN=1';
+		}
+		
+		$uri .= '&Page=' . $Page;
+		$uri .= '&PerPage=' . $PerPage;
+			
+		$response = $this->executeCURL($uri,$CorpNum,$UserID);
+			
+		$SearchList = new SearchResult();
+		$SearchList->fromJsonInfo($response);
+
+		return $SearchList;
+
+	}	
     
 }
 class ENumMessageType {
@@ -194,6 +230,34 @@ class ENumMessageType {
 	const LMS = 'LMS';
 	const XMS = 'XMS';
 	const MMS = 'MMS';
+}
+
+class SearchResult{
+	public $code;
+	public $total;
+	public $perPage;
+	public $pageNum;
+	public $pageCount;
+	public $message;
+	public $list;
+
+	public function fromJsonInfo($jsonInfo){
+		isset($jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
+		isset($jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
+		isset($jsonInfo->perPage ) ? $this->perPage = $jsonInfo->perPage : null;
+		isset($jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
+		isset($jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
+		isset($jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
+
+		$InfoList = array();
+
+		for($i=0; $i < Count($jsonInfo->list);$i++){
+			$InfoObj = new MessageInfo();
+			$InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+			$InfoList[$i] = $InfoObj;
+		}
+		$this->list = $InfoList;
+	}
 }
 
 

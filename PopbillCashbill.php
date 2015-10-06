@@ -45,7 +45,15 @@ class CashbillService extends PopbillBase {
     		throw $pe;
     	}
     }
-    
+
+    //즉시발행
+    public function RegistIssue($CorpNum, $Cashbill, $Memo, $UserID = null) {
+		if(!is_null($Memo) || !empty($Memo)){
+			$Cashbill->memo = $Memo;
+		}
+    	$postdata = json_encode($Cashbill);
+    	return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'ISSUE',$postdata);
+    }
     //임시저장
     public function Register($CorpNum, $Cashbill, $UserID = null) {
     	$postdata = json_encode($Cashbill);
@@ -250,7 +258,8 @@ class CashbillService extends PopbillBase {
 class Cashbill {
 	
 	public $mgtKey;
-	
+	public $memo;
+
     public $tradeDate;
     public $tradeUsage;
     public $tradeType;
