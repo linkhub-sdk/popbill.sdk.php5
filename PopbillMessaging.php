@@ -100,7 +100,7 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $UserID = null) {
+    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null) {
 		if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.'); 
     	}
@@ -115,6 +115,7 @@ class MessagingService extends PopbillBase {
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
+		if($adsYN) $Request['adsYN'] = $adsYN;
     	
 	   	$Request['msgs'] = $Messages;
 
@@ -193,6 +194,10 @@ class MessagingService extends PopbillBase {
 	public function Search($CorpNum,$SDate,$EDate,$State=array(),$Item=array(),$ReserveYN = false,$SenderYN = false,$Page,$PerPage,$UserID = null){
 		if(is_null($SDate) || $SDate ===""){
 			throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
+		}
+
+		if(is_null($EDate) || $EDate ===""){
+			throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
 		}
 	
 		$uri = '/Message/Search?SDate=' . $SDate;
