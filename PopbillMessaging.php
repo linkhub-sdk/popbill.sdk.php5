@@ -266,6 +266,7 @@ class MessageInfo{
 	public $subject;
 	public $type;
 	public $content;
+	public $tranNet;
 	public $sendNum;
 	public $receiveNum;
 	public $receiveName;
@@ -277,6 +278,7 @@ class MessageInfo{
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
 		isset($jsonInfo->subject) ? $this->subject = $jsonInfo->subject : null;
+		isset($jsonInfo->tranNet) ? $this->tranNet = $jsonInfo->tranNet : null;
 		isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
 		isset($jsonInfo->content) ? $this->content = $jsonInfo->content : null;
 		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
