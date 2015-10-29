@@ -767,6 +767,7 @@ class TaxinvoiceInfo {
 		isset($jsonInfo->invoicerCorpNum ) ? $this->invoicerCorpNum = $jsonInfo->invoicerCorpNum : null;
 		isset($jsonInfo->invoicerMgtKey ) ? $this->invoicerMgtKey = $jsonInfo->invoicerMgtKey : null;
 		isset($jsonInfo->invoiceeCorpName ) ? $this->invoiceeCorpName = $jsonInfo->invoiceeCorpName : null;
+		isset($jsonInfo->invoiceeCorpNum) ? $this->invoiceeCorpNum = $jsonInfo->invoiceeCorpNum : null;
 		isset($jsonInfo->invoiceeMgtKey ) ? $this->invoiceeMgtKey = $jsonInfo->invoiceeMgtKey : null;
 		isset($jsonInfo->trusteeCorpName ) ? $this->trusteeCorpName = $jsonInfo->trusteeCorpName : null;
 		isset($jsonInfo->trusteeCorpNum ) ? $this->trusteeCorpNum = $jsonInfo->trusteeCorpNum : null;
