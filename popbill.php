@@ -270,7 +270,7 @@ class PopbillBase
 			$params = array(
 				'http' => array(
 					 'ignore_errors' => TRUE,
-	      			'protocol_version' => '1.1',
+	      			'protocol_version' => '1.0',
 					 'method' => 'GET'
 	                ));
 	        	    
