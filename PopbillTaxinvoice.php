@@ -456,7 +456,7 @@ class TaxinvoiceService extends PopbillBase {
 		
 		$response = $this->executeCURL($uri,$CorpNum,$UserID);
 			
-		$SearchList = new SearchResult();
+		$SearchList = new TISearchResult();
 		$SearchList->fromJsonInfo($response);
 
 		return $SearchList;
@@ -692,7 +692,7 @@ class TaxinvoiceAddContact {
 	}
 }
 
-class SearchResult 
+class TISearchResult 
 {
 	public $code;
 	public $total;

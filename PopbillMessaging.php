@@ -222,7 +222,7 @@ class MessagingService extends PopbillBase {
 			
 		$response = $this->executeCURL($uri,$CorpNum,$UserID);
 			
-		$SearchList = new SearchResult();
+		$SearchList = new MsgSearchResult();
 		$SearchList->fromJsonInfo($response);
 
 		return $SearchList;
@@ -237,7 +237,7 @@ class ENumMessageType {
 	const MMS = 'MMS';
 }
 
-class SearchResult{
+class MsgSearchResult{
 	public $code;
 	public $total;
 	public $perPage;
