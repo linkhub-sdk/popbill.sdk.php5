@@ -191,35 +191,36 @@ class MessagingService extends PopbillBase {
     }
 
 	//문자 전송내역 조회
-	public function Search($CorpNum,$SDate,$EDate,$State=array(),$Item=array(),$ReserveYN = false,$SenderYN = false,$Page,$PerPage,$UserID = null){
-		if(is_null($SDate) || $SDate ===""){
+	public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page, $PerPage, $Order, $UserID = null){
+		if ( is_null( $SDate ) || $SDate === "" ) {
 			throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
 		}
 
-		if(is_null($EDate) || $EDate ===""){
+		if ( is_null( $EDate ) || $EDate ==="" ) {
 			throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
 		}
 	
 		$uri = '/Message/Search?SDate=' . $SDate;
 		$uri .= '&EDate=' . $EDate;
 
-		if(!is_null($State) || !empty($State)){
+		if ( !is_null( $State ) || !empty( $State ) ) {
 			$uri .= '&State=' . implode(',',$State);
-		}
-		if(!is_null($Item) || !empty($Item)){
+		} 
+		if ( !is_null( $Item ) || !empty( $Item ) ) {
 			$uri .= '&Item=' . implode(',',$Item);
 		}
 
-		if($ReserveYN){
+		if ( $ReserveYN ) {
 			$uri .= '&ReserveYN=1';
 		}
-		if($SenderYN){
+		if ( $SenderYN ) {
 			$uri .= '&SenderYN=1';
 		}
 		
 		$uri .= '&Page=' . $Page;
 		$uri .= '&PerPage=' . $PerPage;
-			
+	  $uri .= '&Order=' . $Order;
+
 		$response = $this->executeCURL($uri,$CorpNum,$UserID);
 			
 		$SearchList = new MsgSearchResult();
@@ -279,6 +280,7 @@ class MessageInfo{
 	public $sendDT;
 	public $resultDT;
 	public $sendResult;
+  public $receiptDT;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
@@ -293,6 +295,7 @@ class MessageInfo{
 		isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
 		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
+		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
 	}
 }
 ?>

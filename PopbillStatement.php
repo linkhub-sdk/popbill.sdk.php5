@@ -27,7 +27,7 @@ class StatementService extends PopbillBase {
 		$this->AddScope('124');
 		$this->AddScope('125');
 		$this->AddScope('126');
-    }
+  }
 
 	#전자명세서 발행단가 확인
 	public function GetUnitCost($CorpNum,$itemCode){
@@ -301,7 +301,7 @@ class StatementService extends PopbillBase {
 	}
 
   //전자명세서 목록조회 
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page, $PerPage){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page, $PerPage, $Order){
     if(is_null($DType) || empty($DType)) {
     		throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
   	}
@@ -326,7 +326,8 @@ class StatementService extends PopbillBase {
 
     $uri .= '&Page=' . $Page;
     $uri .= '&PerPage=' . $PerPage;
-    
+    $uri .= '&Order=' . $Order;
+
     $response = $this->executeCURL($uri,$CorpNum,"");
 		
 		$SearchList = new DocSearchResult();
@@ -491,7 +492,7 @@ class StatementDetail {
     public $purchaseDT; 
     public $itemName;
     public $spec;
-	public $unit;
+  	public $unit;
     public $qty;
     public $unitCost;
     public $supplyCost;
@@ -534,8 +535,10 @@ class StatementInfo {
 	public $writeDate;
 	public $senderCorpName;
 	public $senderCorpNum;
+  public $senderPrintYN;
 	public $receiverCorpName;
 	public $receiverCorpNum;
+  public $receiverPrintYN;
 	public $supplyCostTotal;
 	public $taxTotal;
 	public $issueDT;
@@ -554,8 +557,10 @@ class StatementInfo {
 		isset($jsonInfo->writeDate ) ? ($this->writeDate = $jsonInfo->writeDate ) : null;
 		isset($jsonInfo->senderCorpName ) ? ($this->senderCorpName = $jsonInfo->senderCorpName ) : null;
 		isset($jsonInfo->senderCorpNum ) ? ($this->senderCorpNum = $jsonInfo->senderCorpNum ) : null;
+		isset($jsonInfo->senderPrintYN ) ? ($this->senderPrintYN = $jsonInfo->senderPrintYN ) : null;
 		isset($jsonInfo->receiverCorpName ) ? ($this->receiverCorpName = $jsonInfo->receiverCorpName ) : null;
 		isset($jsonInfo->receiverCorpNum ) ? ($this->receiverCorpNum = $jsonInfo->receiverCorpNum ) : null;
+		isset($jsonInfo->receiverPrintYN ) ? ($this->receiverPrintYN = $jsonInfo->receiverPrintYN ) : null;
 		isset($jsonInfo->supplyCostTotal ) ? ($this->supplyCostTotal = $jsonInfo->supplyCostTotal ) : null;
 		isset($jsonInfo->taxTotal ) ? ($this->taxTotal = $jsonInfo->taxTotal ) : null;
 		isset($jsonInfo->issueDT ) ? ($this->issueDT = $jsonInfo->issueDT ) : null;

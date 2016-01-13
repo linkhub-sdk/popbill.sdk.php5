@@ -419,7 +419,7 @@ class TaxinvoiceService extends PopbillBase {
   }
 
 	//세금계산서 조회
-	public function Search( $CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $UserID = null){
+	public function Search( $CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $Order, $UserID = null){
 		if(is_null($DType) || $DType ===""){
 			throw new PopbillException(-99999999, '일자유형이 입력되지 않았습니다.');
 		}
@@ -452,7 +452,8 @@ class TaxinvoiceService extends PopbillBase {
 		if(!is_null($LateOnly) || !empty($LateOnly)){
 			$uri .= '&LateOnly=' . $LateOnly;
 		}
-		
+
+		$uri .= '&Order=' . $Order;
 		$uri .= '&Page=' . $Page;
 		$uri .= '&PerPage=' . $PerPage;
 		
@@ -759,13 +760,16 @@ class TaxinvoiceInfo {
 	public $lateIssueYN;
 	public $invoicerCorpName;        
 	public $invoicerCorpNum;         
-	public $invoicerMgtKey;          
+	public $invoicerMgtKey;
+  public $invoicerPrintYN;
 	public $invoiceeCorpName;        
 	public $invoiceeCorpNum;         
-	public $invoiceeMgtKey;          
+	public $invoiceeMgtKey; 
+  public $invoiceePrintYN;
 	public $trusteeCorpName;         
 	public $trusteeCorpNum;          
-	public $trusteeMgtKey;           
+	public $trusteeMgtKey;  
+  public $trusteePrintYN;
 	public $supplyCostTotal;         
 	public $taxTotal;                
 	public $issueDT;                 
@@ -792,12 +796,15 @@ class TaxinvoiceInfo {
 		isset($jsonInfo->invoicerCorpName ) ? $this->invoicerCorpName = $jsonInfo->invoicerCorpName : null;
 		isset($jsonInfo->invoicerCorpNum ) ? $this->invoicerCorpNum = $jsonInfo->invoicerCorpNum : null;
 		isset($jsonInfo->invoicerMgtKey ) ? $this->invoicerMgtKey = $jsonInfo->invoicerMgtKey : null;
+		isset($jsonInfo->invoicerPrintYN ) ? $this->invoicerPrintYN = $jsonInfo->invoicerPrintYN : null;
 		isset($jsonInfo->invoiceeCorpName ) ? $this->invoiceeCorpName = $jsonInfo->invoiceeCorpName : null;
 		isset($jsonInfo->invoiceeCorpNum) ? $this->invoiceeCorpNum = $jsonInfo->invoiceeCorpNum : null;
 		isset($jsonInfo->invoiceeMgtKey ) ? $this->invoiceeMgtKey = $jsonInfo->invoiceeMgtKey : null;
+		isset($jsonInfo->invoiceePrintYN ) ? $this->invoiceePrintYN = $jsonInfo->invoiceePrintYN : null;
 		isset($jsonInfo->trusteeCorpName ) ? $this->trusteeCorpName = $jsonInfo->trusteeCorpName : null;
 		isset($jsonInfo->trusteeCorpNum ) ? $this->trusteeCorpNum = $jsonInfo->trusteeCorpNum : null;
 		isset($jsonInfo->trusteeMgtKey ) ? $this->trusteeMgtKey = $jsonInfo->trusteeMgtKey : null;
+		isset($jsonInfo->trusteePrintYN ) ? $this->trusteePrintYN = $jsonInfo->trusteePrintYN : null;
 		isset($jsonInfo->supplyCostTotal ) ? $this->supplyCostTotal = $jsonInfo->supplyCostTotal : null;
 		isset($jsonInfo->taxTotal ) ? $this->taxTotal = $jsonInfo->taxTotal : null;
 		isset($jsonInfo->issueDT ) ? $this->issueDT = $jsonInfo->issueDT : null;

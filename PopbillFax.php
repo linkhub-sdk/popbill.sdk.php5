@@ -117,7 +117,7 @@ class FaxService extends PopbillBase {
   }
 
   // 팩스전송내역 조회
-  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage){
+  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order){
 
     if(is_null($SDate) || $SDate ===""){
 			throw new PopbillException('시작일자가 입력되지 않았습니다.');
@@ -149,6 +149,7 @@ class FaxService extends PopbillBase {
 
     $uri .= '&Page=' . $Page;
     $uri .= '&PerPage=' . $PerPage;
+    $uri .= '&Order=' . $Order;
 
     $response = $this->executeCURL($uri, $CorpNum, "");
 
@@ -175,6 +176,8 @@ class FaxState {
 	public $sendDT;
 	public $resultDT;
 	public $sendResult;
+  public $fileNames;
+  public $receiptDT;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
@@ -191,7 +194,19 @@ class FaxState {
 		isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
 		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
+		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+
+    if( isset ( $jsonInfo->fileNames ) ) {
+      $fileNameList = array();
+
+      for ( $i = 0; $i < Count($jsonInfo->fileNames); $i++ ) {
+        $fileNameList[$i] = $jsonInfo->fileNames[$i];
+      }
+
+      $this->fileNames = $fileNameList;
+    }
 	}
+
 }
 
 class FaxSearchResult {

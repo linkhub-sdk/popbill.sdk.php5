@@ -254,7 +254,7 @@ class CashbillService extends PopbillBase {
   }
   
   // 현금영수증 목록 조회
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order){
     if(is_null($DType) || empty($DType)) {
       throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
     }
@@ -290,6 +290,7 @@ class CashbillService extends PopbillBase {
 
     $uri .= '&Page='.$Page;
     $uri .= '&PerPage='.$PerPage;
+    $uri .= '&Order='.$Order;
 
     $response = $this->executeCURL($uri, $CorpNum, "");
 
