@@ -21,32 +21,32 @@ require_once 'popbill.php';
 class FaxService extends PopbillBase {
 	
 	public function __construct($LinkID,$SecretKey) {
-    	parent::__construct($LinkID,$SecretKey);
-    	$this->AddScope('160');
-    }
-    
-    //ë°œí–‰ë‹¨ê°€ í™•ì¸
-    public function GetUnitCost($CorpNum) {
-    	return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
-    }
+    parent::__construct($LinkID,$SecretKey);
+    $this->AddScope('160');
+  }
+  
+  //¹ßÇà´Ü°¡ È®ÀÎ
+  public function GetUnitCost($CorpNum) {
+    return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
+  }
 
-	/* íŒ©ìŠ¤ ì „ì†¡ ìš”ì²­
-    *	$CorpNum => ë°œì†¡ì‚¬ì—…ìžë²ˆí˜¸
-    *	$Sender	=> ë°œì‹ ë²ˆí˜¸
-    *	$Receviers => ìˆ˜ì‹ ì²˜ ëª©ë¡
-    *		'rcv'	=> ìˆ˜ì‹ ë²ˆí˜¸
-    *		'rcvnm'	=> ìˆ˜ì‹ ìž ëª…ì¹­
-    *	$FilePaths	=> ì „ì†¡í•  íŒŒì¼ê²½ë¡œ ë¬¸ìžì—´ ëª©ë¡, ìµœëŒ€ 5ê°œ.
-    *	$ReserveDT	=> ì˜ˆì•½ì „ì†¡ì„ í• ê²½ìš° ì „ì†¡ì˜ˆì•½ì‹œê°„ yyyyMMddHHmmss í˜•ì‹
-    *	$UserID	=> íŒë¹Œ íšŒì›ì•„ì´ë””
+	/* ÆÑ½º Àü¼Û ¿äÃ»
+    *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
+    *	$Sender	=> ¹ß½Å¹øÈ£
+    *	$Receviers => ¼ö½ÅÃ³ ¸ñ·Ï
+    *		'rcv'	=> ¼ö½Å¹øÈ£
+    *		'rcvnm'	=> ¼ö½ÅÀÚ ¸íÄª
+    *	$FilePaths	=> Àü¼ÛÇÒ ÆÄÀÏ°æ·Î ¹®ÀÚ¿­ ¸ñ·Ï, ÃÖ´ë 5°³.
+    *	$ReserveDT	=> ¿¹¾àÀü¼ÛÀ» ÇÒ°æ¿ì Àü¼Û¿¹¾à½Ã°£ yyyyMMddHHmmss Çü½Ä
+    *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
     */
 	public function SendFAX($CorpNum,$Sender,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null) {
 		if(empty($Receivers)) {
-			throw new PopbillException('ìˆ˜ì‹ ì²˜ ëª©ë¡ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
+			throw new PopbillException('¼ö½ÅÃ³ ¸ñ·ÏÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
 		}
 		
 		if(empty($FilePaths)) {
-			throw new PopbillException('ë°œì‹ íŒŒì¼ ëª©ë¡ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
+			throw new PopbillException('¹ß½ÅÆÄÀÏ ¸ñ·ÏÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
 		}
 		
 		$RequestForm = array();
@@ -70,14 +70,14 @@ class FaxService extends PopbillBase {
  		
 	}
 	
-	/* íŒ©ìŠ¤ ì „ì†¡ ë‚´ì—­ í™•ì¸
-    *	$CorpNum => ë°œì†¡ì‚¬ì—…ìžë²ˆí˜¸
-    *	$ReceiptNum	=> ì ‘ìˆ˜ë²ˆí˜¸
-    *	$UserID	=> íŒë¹Œ íšŒì›ì•„ì´ë””
+	/* ÆÑ½º Àü¼Û ³»¿ª È®ÀÎ
+    *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
+    *	$ReceiptNum	=> Á¢¼ö¹øÈ£
+    *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
     */
 	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID) {
 		if(empty($ReceiptNum)) {
-    		throw new PopbillException('í™•ì¸í•  ì ‘ìˆ˜ë²ˆí˜¸ë¥¼ ìž…ë ¥í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.'); 
+    		throw new PopbillException('È®ÀÎÇÒ Á¢¼ö¹øÈ£¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù.'); 
     	}
 		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);	
 		$FaxState = new FaxState();
@@ -93,27 +93,70 @@ class FaxService extends PopbillBase {
 		return $FaxInfoList;
 	}
 	
-    /* ì˜ˆì•½ì „ì†¡ ì·¨ì†Œ
-    *	$CorpNum => ë°œì†¡ì‚¬ì—…ìžë²ˆí˜¸
-    *	$ReceiptNum	=> ì ‘ìˆ˜ë²ˆí˜¸
-    *	$UserID	=> íŒë¹Œ íšŒì›ì•„ì´ë””
-    */
-    public function CancelReserve($CorpNum,$ReceiptNum,$UserID) {
-    	if(empty($ReceiptNum)) {
-    		throw new PopbillException('ì·¨ì†Œí•  ì ‘ìˆ˜ë²ˆí˜¸ë¥¼ ìž…ë ¥í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.'); 
-    	}
-    	return $this->executeCURL('/FAX/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
+  /* ¿¹¾àÀü¼Û Ãë¼Ò
+  *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
+  *	$ReceiptNum	=> Á¢¼ö¹øÈ£
+  *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
+  */
+  public function CancelReserve($CorpNum,$ReceiptNum,$UserID) {
+    if(empty($ReceiptNum)) {
+      throw new PopbillException('Ãë¼ÒÇÒ Á¢¼ö¹øÈ£¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù.'); 
     }
+    return $this->executeCURL('/FAX/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
+  }
+
+  
+ /* ÆÑ½º °ü·Ã ±â´É URL È®ÀÎ
+  *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
+  *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
+  *	$TOGO => URL À§Ä¡ ¾ÆÀÌµð
+  */
+  public function GetURL($CorpNum ,$UserID, $TOGO) {
+    $response = $this->executeCURL('/FAX/?TG='.$TOGO,$CorpNum,$UserID);
+    return $response->url;
+  }
+
+  // ÆÑ½ºÀü¼Û³»¿ª Á¶È¸
+  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage){
+
+    if(is_null($SDate) || $SDate ===""){
+			throw new PopbillException('½ÃÀÛÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+		}
+
+    if(is_null($EDate) || $EDate ===""){
+			throw new PopbillException('Á¾·áÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+		}
+
+    $uri = '/FAX/Search';
+    $uri .= '?SDate=' . $SDate;
+    $uri .= '&EDate=' . $EDate;
+		
+    if(!is_null($State) || !empty($State)){
+			$uri .= '&State=' . implode(',',$State);
+		}
+
+    if($ReserveYN) {
+      $uri .= '&ReserveYN=1';
+    }else {
+      $uri .= '&ReserveYN=0';
+    }
+
+    if($SenderOnly){
+      $uri .= '&SenderOnly=1';
+    } else {
+      $uri .= '&SenderOnly=0';
+    }
+
+    $uri .= '&Page=' . $Page;
+    $uri .= '&PerPage=' . $PerPage;
+
+    $response = $this->executeCURL($uri, $CorpNum, "");
+
+    $SearchList = new FaxSearchResult();
+    $SearchList->fromJsonInfo($response);
     
-   /* íŒ©ìŠ¤ ê´€ë ¨ ê¸°ëŠ¥ URL í™•ì¸
-    *	$CorpNum => ë°œì†¡ì‚¬ì—…ìžë²ˆí˜¸
-    *	$UserID	=> íŒë¹Œ íšŒì›ì•„ì´ë””
-    *	$TOGO => URL ìœ„ì¹˜ ì•„ì´ë””
-    */
-    public function GetURL($CorpNum ,$UserID, $TOGO) {
-    	$response = $this->executeCURL('/FAX/?TG='.$TOGO,$CorpNum,$UserID);
-    	return $response->url;
-    }
+    return $SearchList;
+  }
 }
 
 
@@ -150,4 +193,35 @@ class FaxState {
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
 	}
 }
+
+class FaxSearchResult {
+  public $code;
+  public $total;
+  public $perPage;
+  public $pageNum;
+  public $pageCount;
+  public $message;
+  
+  function fromJsonInfo( $jsonInfo ){
+    isset( $jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
+    isset( $jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
+    isset( $jsonInfo->perPage ) ? $this->perPage = $jsonInfo->perPage : null;
+    isset( $jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
+    isset( $jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
+    isset( $jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
+    
+    $InfoList = array();
+
+    for ( $i = 0; $i < Count( $jsonInfo->list ); $i++ ) {
+      $InfoObj = new FaxState();
+      $InfoObj->fromJsonInfo( $jsonInfo->list[$i] );
+      $InfoList[$i] = $InfoObj;
+    }
+    
+    $this->list = $InfoList;
+  }
+
+}
+
+
 ?>

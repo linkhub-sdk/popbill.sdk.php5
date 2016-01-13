@@ -299,6 +299,40 @@ class StatementService extends PopbillBase {
     	}
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=MAIL',$CorpNum,$UserID)->url;
 	}
+
+  //전자명세서 목록조회 
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page, $PerPage){
+    if(is_null($DType) || empty($DType)) {
+    		throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
+  	}
+    if(is_null($SDate) || empty($SDate)) {
+    		throw new PopbillException('시작일자가 입력되지 않았습니다.');
+  	}
+    if(is_null($EDate) || empty($EDate)) {
+    		throw new PopbillException('종료일자가 입력되지 않았습니다.');
+  	}
+    
+    $uri = '/Statement/Search?DType=' . $DType;
+    $uri .= '&SDate=' . $SDate;
+    $uri .= '&EDate=' . $EDate;
+     
+    if( !is_null( $State ) || !empty( $State ) ){
+			$uri .= '&State=' . implode(',',$State);
+		}
+
+    if( !is_null( $ItemCode ) || !empty( $ItemCode ) ){
+			$uri .= '&ItemCode=' . implode(',',$ItemCode);
+		}
+
+    $uri .= '&Page=' . $Page;
+    $uri .= '&PerPage=' . $PerPage;
+    
+    $response = $this->executeCURL($uri,$CorpNum,"");
+		
+		$SearchList = new DocSearchResult();
+		$SearchList->fromJsonInfo($response);
+		return $SearchList;
+  }
 }
 
 class Statement {
@@ -469,6 +503,7 @@ class StatementDetail {
 class StatementInfo {
 
 	public $itemKey;
+  public $mgtKey;
 	public $stateCode;
 	public $taxType;
 	public $purposeType;
@@ -488,6 +523,7 @@ class StatementInfo {
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->itemKey ) ? ($this->itemKey = $jsonInfo->itemKey ) : null;
+		isset($jsonInfo->mgtKey ) ? ($this->mgtKey = $jsonInfo->mgtKey ) : null;
 		isset($jsonInfo->stateCode ) ? ($this->stateCode = $jsonInfo->stateCode ) : null;
 		isset($jsonInfo->taxType ) ? ($this->taxType = $jsonInfo->taxType ) : null;
 		isset($jsonInfo->purposeType ) ? ($this->purposeType = $jsonInfo->purposeType ) : null;
@@ -533,4 +569,34 @@ class MemoRequest {
 class IssueRequest {
 	public $memo;
 }
+
+class DocSearchResult {
+  public $code;
+  public $total;
+  public $perPage;
+  public $pageNum;
+  public $pageCount;
+  public $message;
+  public $list;
+
+  public function fromJsonInfo($jsonInfo){
+    isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+    isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+    isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+    isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+    isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+    isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
+  
+    $InfoList = array();
+
+    for ( $i = 0 ; $i < Count($jsonInfo->list) ; $i++ ) {
+      $InfoObj = new StatementInfo();
+      $InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+      $InfoList[$i] = $InfoObj;
+    }
+
+    $this->list = $InfoList;
+  }
+}
+
 ?>

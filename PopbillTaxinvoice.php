@@ -419,7 +419,7 @@ class TaxinvoiceService extends PopbillBase {
     }
 
 	//세금계산서 조회
-	public function Search($CorpNum,$MgtKeyType,$DType,$SDate,$EDate,$State = array(),$Type=array(),$TaxType=array(),$LateOnly,$Page,$PerPage,$UserID = null){
+	public function Search( $CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $UserID = null){
 		if(is_null($DType) || $DType ===""){
 			throw new PopbillException(-99999999, '일자유형이 입력되지 않았습니다.');
 		}
