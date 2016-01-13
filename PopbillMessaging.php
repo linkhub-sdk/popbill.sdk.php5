@@ -227,8 +227,11 @@ class MessagingService extends PopbillBase {
 		$SearchList->fromJsonInfo($response);
 
 		return $SearchList;
-
 	}	
+  // 080 수신거부목록 조회
+  public function GetAutoDenyList($CorpNum){
+    return $this->executeCURL('/Message/Denied', $CorpNum);
+  }
     
 }
 class ENumMessageType {
