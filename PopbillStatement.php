@@ -20,9 +20,9 @@ require_once 'popbill.php';
 
 class StatementService extends PopbillBase {
 	public function __construct($LinkID,$SecretKey) {
-    	parent::__construct($LinkID,$SecretKey);
-    	$this->AddScope('121');
-    	$this->AddScope('122');
+    parent::__construct($LinkID,$SecretKey);
+    $this->AddScope('121');
+    $this->AddScope('122');
 		$this->AddScope('123');
 		$this->AddScope('124');
 		$this->AddScope('125');
@@ -333,6 +333,30 @@ class StatementService extends PopbillBase {
 		$SearchList->fromJsonInfo($response);
 		return $SearchList;
   }
+
+  // 전자명세서 첨부
+  public function AttachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
+    $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/AttachStmt';
+
+    $Request = new StmtRequest();
+  	$Request->ItemCode = $SubItemCode;
+		$Request->MgtKey= $SubMgtKey;
+   	$postdata = json_encode($Request);
+     
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
+  }
+
+  // 전자명세서 첨부해제
+  public function DetachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
+    $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/DetachStmt';
+
+    $Request = new StmtRequest();
+  	$Request->ItemCode = $SubItemCode;
+		$Request->MgtKey= $SubMgtKey;
+   	$postdata = json_encode($Request);
+     
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
+  }
 }
 
 class Statement {
@@ -597,6 +621,11 @@ class DocSearchResult {
 
     $this->list = $InfoList;
   }
+}
+
+class StmtRequest {
+  public $ItemCode;
+  public $MgtKey;
 }
 
 ?>
