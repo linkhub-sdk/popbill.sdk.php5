@@ -421,7 +421,7 @@ class TaxinvoiceService extends PopbillBase {
   }
 
 	//세금계산서 조회
-	public function Search( $CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $Order, $UserID = null){
+	public function Search( $CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $Order, $TaxRegIDType = null, $TaxRegIDYN = null, $TaxRegID = null, $UserID = null) {
 		if(is_null($DType) || $DType ===""){
 			throw new PopbillException(-99999999, '일자유형이 입력되지 않았습니다.');
 		}
@@ -455,11 +455,24 @@ class TaxinvoiceService extends PopbillBase {
 			$uri .= '&LateOnly=' . $LateOnly;
 		}
 
+    if(!empty($TaxRegIDType)){
+			$uri .= '&TaxRegIDType=' . $TaxRegIDType;
+		}
+
+    if(!empty($TaxRegIDType)){
+		  $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+    }
+    
+    $uri .= '&TaxRegID=' . $TaxRegID;
+
+
 		$uri .= '&Order=' . $Order;
 		$uri .= '&Page=' . $Page;
 		$uri .= '&PerPage=' . $PerPage;
 
-		$response = $this->executeCURL($uri,$CorpNum,$UserID);
+    var_dump($uri);
+
+    $response = $this->executeCURL($uri,$CorpNum,$UserID);
 
 		$SearchList = new TISearchResult();
 		$SearchList->fromJsonInfo($response);
