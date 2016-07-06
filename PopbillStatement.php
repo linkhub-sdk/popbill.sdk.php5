@@ -11,6 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
+* Contributor : Jeong YoHan (code@linkhub.co.kr)
+* Updated : 2016-07-06
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -74,8 +76,8 @@ class StatementService extends PopbillBase {
     public function Register($CorpNum, $Statement, $UserID) {
     	$postdata = json_encode($Statement);
     	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,null,$postdata);
-    }    
-	
+    }
+
 	# 전자명세서 수정
 	public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID) {
     	if(is_null($MgtKey) || empty($MgtKey)) {
@@ -84,7 +86,7 @@ class StatementService extends PopbillBase {
 		$postdata = json_encode($Statement);
 		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey,$CorpNum,$UserID,true,"PATCH",$postdata);
 	}
-    
+
 	# 전자명세서 삭제
 	public function Delete($CorpNum,$itemCode,$MgtKey,$UserID = null) {
     	if(is_null($MgtKey) || empty($MgtKey)) {
@@ -92,7 +94,7 @@ class StatementService extends PopbillBase {
     	}
     	return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID,true,'DELETE','');
     }
-	
+
 
 	# 전자명세서 발행
 	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID){
@@ -162,7 +164,7 @@ class StatementService extends PopbillBase {
 		$StatementInfo->fromJsonInfo($result);
 		return $StatementInfo;
 	}
-	
+
 	# 다량 전자명세서 상태,요약 정보확인
 	public function GetInfos($CorpNum,$itemCode,$MgtKeyList,$UserID){
 		if(is_null($MgtKeyList) || empty($MgtKeyList)) {
@@ -271,7 +273,7 @@ class StatementService extends PopbillBase {
 	public function GetPrintURL($CorpNum,$itemCode,$MgtKey,$UserID){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
-    	}	
+    	}
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=PRINT',$CorpNum,$UserID)->url;
 	}
 
@@ -300,7 +302,7 @@ class StatementService extends PopbillBase {
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=MAIL',$CorpNum,$UserID)->url;
 	}
 
-  //전자명세서 목록조회 
+  //전자명세서 목록조회
   public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page, $PerPage, $Order){
     if(is_null($DType) || empty($DType)) {
     		throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
@@ -311,11 +313,11 @@ class StatementService extends PopbillBase {
     if(is_null($EDate) || empty($EDate)) {
     		throw new PopbillException('종료일자가 입력되지 않았습니다.');
   	}
-    
+
     $uri = '/Statement/Search?DType=' . $DType;
     $uri .= '&SDate=' . $SDate;
     $uri .= '&EDate=' . $EDate;
-     
+
     if( !is_null( $State ) || !empty( $State ) ){
 			$uri .= '&State=' . implode(',',$State);
 		}
@@ -329,7 +331,7 @@ class StatementService extends PopbillBase {
     $uri .= '&Order=' . $Order;
 
     $response = $this->executeCURL($uri,$CorpNum,"");
-		
+
 		$SearchList = new DocSearchResult();
 		$SearchList->fromJsonInfo($response);
 		return $SearchList;
@@ -343,7 +345,7 @@ class StatementService extends PopbillBase {
   	$Request->ItemCode = $SubItemCode;
 		$Request->MgtKey= $SubMgtKey;
    	$postdata = json_encode($Request);
-     
+
     return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
   }
 
@@ -355,8 +357,19 @@ class StatementService extends PopbillBase {
   	$Request->ItemCode = $SubItemCode;
 		$Request->MgtKey= $SubMgtKey;
    	$postdata = json_encode($Request);
-     
+
     return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
+  }
+
+  // 과금정보 확인
+  public function GetChargeInfo ( $CorpNum, $ItemCode, $UserID = null){
+    $uri = '/Statement/ChargeInfo/'.$ItemCode;
+
+    $response = $this->executeCURL($uri, $CorpNum, $UserID);
+    $ChargeInfo = new ChargeInfo();
+    $ChargeInfo->fromJsonInfo($response);
+
+    return $ChargeInfo;
   }
 }
 
@@ -365,58 +378,58 @@ class Statement {
 	public $receiveNum;
 	public $memo;
 
-	public $itemCode;             
-	public $mgtKey;               
-	public $invoiceNum;           
-	public $formCode;             
-	public $writeDate;            
-	public $taxType;              
+	public $itemCode;
+	public $mgtKey;
+	public $invoiceNum;
+	public $formCode;
+	public $writeDate;
+	public $taxType;
 
-	public $senderCorpNum;      
-	public $senderTaxRegID;     
-	public $senderCorpName;     
-	public $senderCEOName;      
-	public $senderAddr;         
-	public $senderBizClass;     
-	public $senderBizType;      
-	public $senderContactName;  
-	public $senderDeptName;     
-	public $senderTEL;          
-	public $senderHP;           
-	public $senderEmail;        
-	public $senderFAX;          
+	public $senderCorpNum;
+	public $senderTaxRegID;
+	public $senderCorpName;
+	public $senderCEOName;
+	public $senderAddr;
+	public $senderBizClass;
+	public $senderBizType;
+	public $senderContactName;
+	public $senderDeptName;
+	public $senderTEL;
+	public $senderHP;
+	public $senderEmail;
+	public $senderFAX;
 
-	public $receiverCorpNum;    
-	public $receiverTaxRegID;   
-	public $receiverCorpName;   
-	public $receiverCEOName;    
-	public $receiverAddr;       
-	public $receiverBizClass;   
-	public $receiverBizType;    
+	public $receiverCorpNum;
+	public $receiverTaxRegID;
+	public $receiverCorpName;
+	public $receiverCEOName;
+	public $receiverAddr;
+	public $receiverBizClass;
+	public $receiverBizType;
 	public $receiverContactName;
-	public $receiverDeptName;   
-	public $receiverTEL;        
-	public $receiverHP;         
-	public $receiverEmail;      
-	public $receiverFAX;        
+	public $receiverDeptName;
+	public $receiverTEL;
+	public $receiverHP;
+	public $receiverEmail;
+	public $receiverFAX;
 
-	public $taxTotal;           
-	public $supplyCostTotal;    
-	public $totalAmount;        
-	public $purposeType;        
-	public $serialNum;          
-	public $remark1;            
-	public $remark2;            
-	public $remark3;            
-	public $businessLicenseYN;  
-	public $bankBookYN;         
-	public $faxsendYN;          
-	public $smssendYN;          
-	public $autoacceptYN;       
+	public $taxTotal;
+	public $supplyCostTotal;
+	public $totalAmount;
+	public $purposeType;
+	public $serialNum;
+	public $remark1;
+	public $remark2;
+	public $remark3;
+	public $businessLicenseYN;
+	public $bankBookYN;
+	public $faxsendYN;
+	public $smssendYN;
+	public $autoacceptYN;
 
 	public $detailList;
 	public $propertyBag;
-	
+
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->itemCode ) ? ($this->itemCode = $jsonInfo->itemCode ) : null;
 		isset($jsonInfo->mgtKey ) ? ($this->mgtKey = $jsonInfo->mgtKey ) : null;
@@ -469,7 +482,7 @@ class Statement {
 		isset($jsonInfo->bankBookYN ) ? ($this->bankBookYN = $jsonInfo->bankBookYN ) : null;
 		isset($jsonInfo->smssendYN ) ? ($this->smssendYN = $jsonInfo->smssendYN ) : null;
 		isset($jsonInfo->autoacceptYN ) ? ($this->autoacceptYN = $jsonInfo->autoacceptYN ) : null;
-		
+
 		if(!is_null($jsonInfo->detailList)){
 			$StatementDetailList = array();
 			for($i=0; $i<Count($jsonInfo->detailList); $i++){
@@ -489,7 +502,7 @@ class Statement {
 
 class StatementDetail {
     public $serialNum;
-    public $purchaseDT; 
+    public $purchaseDT;
     public $itemName;
     public $spec;
   	public $unit;
@@ -615,7 +628,7 @@ class DocSearchResult {
     isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
     isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
     isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
-  
+
     $InfoList = array();
 
     for ( $i = 0 ; $i < Count($jsonInfo->list) ; $i++ ) {

@@ -11,6 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2015-07-10
+* Contributor : Jeong YoHan (code@linkhub.co.kr)
+* Updated : 2016-07-06
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -19,12 +21,12 @@
 require_once 'popbill.php';
 
 class ClosedownService extends PopbillBase {
-	
+
 	public function __construct($LinkID,$SecretKey) {
     	parent::__construct($LinkID,$SecretKey);
     	$this->AddScope('170');
     }
-    
+
     //휴폐업조회 - 단건
     public function CheckCorpNum($MemberCorpNum,$CheckCorpNum) {
     	if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
@@ -33,14 +35,14 @@ class ClosedownService extends PopbillBase {
 		if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
     		throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
     	}
-    	$result = $this->executeCURL('/CloseDown?CN='.$CheckCorpNum, $MemberCorpNum); 
-		
+    	$result = $this->executeCURL('/CloseDown?CN='.$CheckCorpNum, $MemberCorpNum);
+
 		$CorpState = new CorpState();
 		$CorpState->fromJsonInfo($result);
 		return $CorpState;
-    	
+
     }
-    
+
 	//휴폐업조회 - 대량
 	public function CheckCorpNums($MemberCorpNum,$CheckCorpNumList){
 		if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
@@ -49,7 +51,7 @@ class ClosedownService extends PopbillBase {
 		if(is_null($CheckCorpNumList) || empty($CheckCorpNumList)) {
     		throw new PopbillException('조회할 사업자번호 배열이 입력되지 않았습니다.');
     	}
-		
+
 		$postData = json_encode($CheckCorpNumList);
 
 		$result = $this->executeCURL('/CloseDown', $MemberCorpNum, null, true, null, $postData);
@@ -64,12 +66,21 @@ class ClosedownService extends PopbillBase {
 
 		return $CorpStateList;
 	}
-    
-  
-    //조회단가 확인
-    public function GetUnitCost($CorpNum) {
-    	return $this->executeCURL('/CloseDown/UnitCost', $CorpNum)->unitCost;
-    }
+
+  //조회단가 확인
+  public function GetUnitCost($CorpNum) {
+	  return $this->executeCURL('/CloseDown/UnitCost', $CorpNum)->unitCost;
+  }
+
+  public function GetChargeInfo ( $CorpNum, $UserID = null) {
+    $uri = '/CloseDown/ChargeInfo';
+
+    $response = $this->executeCURL($uri, $CorpNum, $UserID);
+    $ChargeInfo = new ChargeInfo();
+    $ChargeInfo->fromJsonInfo($response);
+
+    return $ChargeInfo;
+  }
 }
 
 class CorpState {

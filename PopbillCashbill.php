@@ -11,6 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
+* Contributor : Jeong YoHan (code@linkhub.co.kr)
+* Updated : 2016-07-06
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -19,22 +21,20 @@
 require_once 'popbill.php';
 
 class CashbillService extends PopbillBase {
-	
+
 	public function __construct($LinkID,$SecretKey) {
     	parent::__construct($LinkID,$SecretKey);
     	$this->AddScope('140');
   }
-  
-  //ÆËºô Çö±Ý¿µ¼öÁõ ¿¬°á url
+
   public function GetURL($CorpNum,$UserID,$TOGO) {
     $response = $this->executeCURL('/Cashbill/?TG='.$TOGO,$CorpNum,$UserID);
     return $response->url;
   }
-  
-  //°ü¸®¹øÈ£ »ç¿ë¿©ºÎ È®ÀÎ
-  public function CheckMgtKeyInUse($CorpNum,$MgtKey) {
+
+    public function CheckMgtKeyInUse($CorpNum,$MgtKey) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     try
     {
@@ -46,7 +46,6 @@ class CashbillService extends PopbillBase {
     }
   }
 
-  //Áï½Ã¹ßÇà
   public function RegistIssue($CorpNum, $Cashbill, $Memo, $UserID = null) {
   if(!is_null($Memo) || !empty($Memo)){
     $Cashbill->memo = $Memo;
@@ -54,94 +53,89 @@ class CashbillService extends PopbillBase {
     $postdata = json_encode($Cashbill);
     return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'ISSUE',$postdata);
   }
-  //ÀÓ½ÃÀúÀå
+
   public function Register($CorpNum, $Cashbill, $UserID = null) {
     $postdata = json_encode($Cashbill);
     return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,null,$postdata);
-  }    
-  
-  //»èÁ¦
+  }
+
+
   public function Delete($CorpNum,$MgtKey,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'DELETE','');
   }
-  
-  //¼öÁ¤
+
+  //ï¿½ï¿½ï¿½ï¿½
   public function Update($CorpNum,$MgtKey,$Cashbill, $UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
 
     $postdata = json_encode($Cashbill);
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true, 'PATCH', $postdata);
   }
-  
-  //¹ßÇà
+
   public function Issue($CorpNum,$MgtKey,$Memo = '', $UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     $Request = new IssueRequest();
     $Request->memo = $Memo;
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'ISSUE',$postdata);
   }
-  
-  //¹ßÇàÃë¼Ò
+
   public function CancelIssue($CorpNum,$MgtKey,$Memo = '',$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     $Request = new MemoRequest();
     $Request->memo = $Memo;
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'CANCELISSUE',$postdata);
   }
-  
-  //¾Ë¸²¸ÞÀÏ ÀçÀü¼Û
+
   public function SendEmail($CorpNum,$MgtKey,$Receiver,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     $Request = array('receiver' => $Receiver);
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'EMAIL',$postdata);
   }
-  
-  //¾Ë¸²¹®ÀÚ ÀçÀü¼Û
+
   public function SendSMS($CorpNum,$MgtKey,$Sender,$Receiver,$Contents,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     $Request = array('receiver' => $Receiver,'sender'=>$Sender,'contents' => $Contents);
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'SMS',$postdata);
   }
-  
-  //¾Ë¸²ÆÑ½º ÀçÀü¼Û
+
+  //ï¿½Ë¸ï¿½ï¿½Ñ½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
   public function SendFAX($CorpNum,$MgtKey,$Sender,$Receiver,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.',-99999999);
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ ë°°ì—´ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     $Request = array('receiver' => $Receiver,'sender'=>$Sender);
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'FAX',$postdata);
   }
-  
-  //Çö±Ý¿µ¼öÁõ ¿ä¾àÁ¤º¸ ¹× »óÅÂÁ¤º¸ È®ÀÎ
+
   public function GetInfo($CorpNum,$MgtKey) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     $result = $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum);
 
@@ -149,11 +143,10 @@ class CashbillService extends PopbillBase {
   $CashbillInfo->fromJsonInfo($result);
   return $CashbillInfo;
   }
-  
-  //Çö±Ý¿µ¼öÁõ »ó¼¼Á¤º¸ È®ÀÎ 
+
   public function GetDetailInfo($CorpNum,$MgtKey) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
   $result = $this->executeCURL('/Cashbill/'.$MgtKey.'?Detail', $CorpNum);
 
@@ -162,19 +155,18 @@ class CashbillService extends PopbillBase {
   $CashbillDetail->fromJsonInfo($result);
   return $CashbillDetail;
   }
-  
-  //Çö±Ý¿µ¼öÁõ ¿ä¾àÁ¤º¸ ´Ù·®È®ÀÎ ÃÖ´ë 1000°Ç
+
   public function GetInfos($CorpNum,$MgtKeyList = array()) {
     if(is_null($MgtKeyList) || empty($MgtKeyList)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ ë°°ì—´ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     $postdata = json_encode($MgtKeyList);
-    
+
     $result = $this->executeCURL('/Cashbill/States', $CorpNum, null, true,null,$postdata);
 
   $CashbillInfoList = array();
-  
+
   for($i=0; $i<Count($result); $i++){
     $CashbillInfoObj = new CashbillInfo();
     $CashbillInfoObj->fromJsonInfo($result[$i]);
@@ -183,16 +175,15 @@ class CashbillService extends PopbillBase {
 
   return $CashbillInfoList;
   }
-  
-  //Çö±Ý¿µ¼öÁõ ¹®¼­ÀÌ·Â È®ÀÎ 
+
   public function GetLogs($CorpNum,$MgtKey) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     $result = $this->executeCURL('/Cashbill/'.$MgtKey.'/Logs', $CorpNum);
 
   $CashbillLogList = array();
-  
+
   for($i=0; $i<Count($result); $i++){
     $CashbillLog = new CashbillLog();
     $CashbillLog->fromJsonInfo($result[$i]);
@@ -200,78 +191,71 @@ class CashbillService extends PopbillBase {
   }
   return $CashbillLogList;
   }
-  
-  //ÆË¾÷URL
+
   public function GetPopUpURL($CorpNum,$MgtKey,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=POPUP', $CorpNum,$UserID)->url;
   }
-  
-  //ÀÎ¼âURL
+
   public function GetPrintURL($CorpNum,$MgtKey,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=PRINT', $CorpNum,$UserID)->url;
   }
 
-  //°ø±Þ¹Þ´ÂÀÚ ÀÎ¼âURL
   public function GetEPrintURL($CorpNum,$MgtKey,$UserID = null) {
       if(is_null($MgtKey) || empty($MgtKey)) {
-          throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+          throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
       }
-      
+
       return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=EPRINT', $CorpNum,$UserID)->url;
   }
-  
-  //°ø±Þ¹Þ´ÂÀÚ ¸ÞÀÏURL
+
   public function GetMailURL($CorpNum,$MgtKey,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=MAIL', $CorpNum,$UserID)->url;
   }
-  
-  //Çö±Ý¿µ¼öÁõ ´Ù·®ÀÎ¼â URL
+
   public function GetMassPrintURL($CorpNum,$MgtKeyList = array(),$UserID = null) {
     if(is_null($MgtKeyList) || empty($MgtKeyList)) {
-      throw new PopbillException('°ü¸®¹øÈ£°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ê´€ë¦¬ë²ˆí˜¸ ë°°ì—´ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     $postdata = json_encode($MgtKeyList);
-    
+
     return $this->executeCURL('/Cashbill/Prints', $CorpNum, $UserID, true,null,$postdata)->url;
   }
-  
-  //¹ßÇà´Ü°¡ È®ÀÎ
+
   public function GetUnitCost($CorpNum) {
     return $this->executeCURL('/Cashbill?cfg=UNITCOST', $CorpNum)->unitCost;
   }
-  
-  // Çö±Ý¿µ¼öÁõ ¸ñ·Ï Á¶È¸
+
   public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order){
     if(is_null($DType) || empty($DType)) {
-      throw new PopbillException('Á¶È¸ÀÏÀÚ À¯ÇüÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ë‚ ìžìœ í˜•(DType)ì´ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
-    
+
     if(is_null($SDate) || empty($SDate)) {
-      throw new PopbillException('½ÃÀÛÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ì‹œìž‘ì¼ìž(SDate)ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
 
     if(is_null($EDate) || empty($EDate)) {
-      throw new PopbillException('Á¾·áÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+      throw new PopbillException('ì¢…ë£Œì¼ìž(EDate)ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
 
     $uri = '/Cashbill/Search';
     $uri .= '?DType='.$DType;
     $uri .= '&SDate='.$SDate;
     $uri .= '&EDate='.$EDate;
-    
+
     if(!is_null($State) || !empty($State)){
 			$uri .= '&State=' . implode(',',$State);
 		}
@@ -299,40 +283,50 @@ class CashbillService extends PopbillBase {
 
     return $SearchList;
   }
+
+  public function GetChargeInfo ( $CorpNum, $UserID = null) {
+    $uri = '/Cashbill/ChargeInfo';
+
+    $response = $this->executeCURL($uri, $CorpNum, $UserID);
+    $ChargeInfo = new ChargeInfo();
+    $ChargeInfo->fromJsonInfo($response);
+
+    return $ChargeInfo;
+  }
 }
 
 class Cashbill {
-	
+
 	public $mgtKey;
 	public $memo;
 
   public $tradeDate;
   public $tradeUsage;
   public $tradeType;
-  
+
   public $taxationType;
   public $supplyCost;
   public $tax;
   public $serviceFee;
   public $totalAmount;
-  
+
   public $franchiseCorpNum;
   public $franchiseCorpName;
   public $franchiseCEOName;
   public $franchiseAddr;
   public $franchiseTEL;
-  
+
   public $identityNum;
   public $customerName;
   public $itemName;
   public $orderNumber;
-  
+
   public $email;
   public $hp;
   public $fax;
   public $smssendYN;
   public $faxsendYN;
-  
+
   public $orgConfirmNum;
 
 	function fromJsonInfo($jsonInfo){
@@ -366,28 +360,28 @@ class Cashbill {
 class CashbillInfo {
 
 	public $itemKey;
-	public $mgtKey; 
-	public $tradeDate; 
-	public $issueDT; 
-	public $customerName; 
-	public $itemName; 
-	public $identityNum; 
-	public $taxationType; 
-	public $totalAmount; 
-	public $tradeUsage; 
-	public $tradeType; 
-	public $stateCode; 
-	public $stateDT; 
-	public $printYN; 
-	public $confirmNum; 
-	public $orgTradeDate; 
-	public $orgConfirmNum; 
-	public $ntssendDT; 
-	public $ntsresult; 
-	public $ntsresultDT; 
-	public $ntsresultCode; 
-	public $ntsresultMessage; 
-	public $regDT; 
+	public $mgtKey;
+	public $tradeDate;
+	public $issueDT;
+	public $customerName;
+	public $itemName;
+	public $identityNum;
+	public $taxationType;
+	public $totalAmount;
+	public $tradeUsage;
+	public $tradeType;
+	public $stateCode;
+	public $stateDT;
+	public $printYN;
+	public $confirmNum;
+	public $orgTradeDate;
+	public $orgConfirmNum;
+	public $ntssendDT;
+	public $ntsresult;
+	public $ntsresultDT;
+	public $ntsresultCode;
+	public $ntsresultMessage;
+	public $regDT;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->itemKey) ? $this->itemKey = $jsonInfo->itemKey : null;

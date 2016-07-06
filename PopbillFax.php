@@ -11,6 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
+* Contributor : Jeong YoHan (code@linkhub.co.kr)
+* Updated : 2016-07-06
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -19,71 +21,55 @@
 require_once 'popbill.php';
 
 class FaxService extends PopbillBase {
-	
+
 	public function __construct($LinkID,$SecretKey) {
     parent::__construct($LinkID,$SecretKey);
     $this->AddScope('160');
   }
-  
-  //¹ßÇà´Ü°¡ È®ÀÎ
+
   public function GetUnitCost($CorpNum) {
     return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
   }
 
-	/* ÆÑ½º Àü¼Û ¿äÃ»
-    *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
-    *	$Sender	=> ¹ß½Å¹øÈ£
-    *	$Receviers => ¼ö½ÅÃ³ ¸ñ·Ï
-    *		'rcv'	=> ¼ö½Å¹øÈ£
-    *		'rcvnm'	=> ¼ö½ÅÀÚ ¸íÄª
-    *	$FilePaths	=> Àü¼ÛÇÒ ÆÄÀÏ°æ·Î ¹®ÀÚ¿­ ¸ñ·Ï, ÃÖ´ë 5°³.
-    *	$ReserveDT	=> ¿¹¾àÀü¼ÛÀ» ÇÒ°æ¿ì Àü¼Û¿¹¾à½Ã°£ yyyyMMddHHmmss Çü½Ä
-    *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
-    */
 	public function SendFAX($CorpNum,$Sender,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null) {
 		if(empty($Receivers)) {
-			throw new PopbillException('¼ö½ÅÃ³ ¸ñ·ÏÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+			throw new PopbillException('ìˆ˜ì‹ ìž ì •ë³´ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤..');
 		}
-		
+
 		if(empty($FilePaths)) {
-			throw new PopbillException('¹ß½ÅÆÄÀÏ ¸ñ·ÏÀÌ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+			throw new PopbillException('ì „ì†¡í•  íŒ©ìŠ¤íŒŒì¼ê²½ë¡œê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
 		}
-		
+
 		$RequestForm = array();
-		
+
 		$RequestForm['snd'] = $Sender;
 		if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
 		$RequestForm['fCnt'] = count($FilePaths);
-		
+
 		$RequestForm['rcvs'] = $Receivers;
-	
+
     	$postdata = array();
     	$postdata['form'] = json_encode($RequestForm);
-    	
+
     	$i = 0;
-    	
+
     	foreach($FilePaths as $FilePath) {
     		$postdata['file['.$i++.']'] = '@'.$FilePath;
     	}
-    	
+
     	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
- 		
+
 	}
-	
-	/* ÆÑ½º Àü¼Û ³»¿ª È®ÀÎ
-    *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
-    *	$ReceiptNum	=> Á¢¼ö¹øÈ£
-    *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
-    */
+
 	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID) {
 		if(empty($ReceiptNum)) {
-    		throw new PopbillException('È®ÀÎÇÒ Á¢¼ö¹øÈ£¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù.'); 
+    		throw new PopbillException('íŒ©ìŠ¤ ì ‘ìˆ˜ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     	}
-		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);	
+		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);
 		$FaxState = new FaxState();
-		
+
 		$FaxInfoList = array();
-		
+
 		for($i=0; $i<Count($result); $i++){
 			$FaxInfo = new FaxState();
 			$FaxInfo->fromJsonInfo($result[$i]);
@@ -92,45 +78,33 @@ class FaxService extends PopbillBase {
 		}
 		return $FaxInfoList;
 	}
-	
-  /* ¿¹¾àÀü¼Û Ãë¼Ò
-  *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
-  *	$ReceiptNum	=> Á¢¼ö¹øÈ£
-  *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
-  */
+
   public function CancelReserve($CorpNum,$ReceiptNum,$UserID) {
     if(empty($ReceiptNum)) {
-      throw new PopbillException('Ãë¼ÒÇÒ Á¢¼ö¹øÈ£¸¦ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù.'); 
+      throw new PopbillException('íŒ©ìŠ¤ ì ‘ìˆ˜ë²ˆí˜¸ê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
     }
     return $this->executeCURL('/FAX/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
   }
 
-  
- /* ÆÑ½º °ü·Ã ±â´É URL È®ÀÎ
-  *	$CorpNum => ¹ß¼Û»ç¾÷ÀÚ¹øÈ£
-  *	$UserID	=> ÆËºô È¸¿ø¾ÆÀÌµð
-  *	$TOGO => URL À§Ä¡ ¾ÆÀÌµð
-  */
   public function GetURL($CorpNum ,$UserID, $TOGO) {
     $response = $this->executeCURL('/FAX/?TG='.$TOGO,$CorpNum,$UserID);
     return $response->url;
   }
 
-  // ÆÑ½ºÀü¼Û³»¿ª Á¶È¸
   public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order){
 
     if(is_null($SDate) || $SDate ===""){
-			throw new PopbillException('½ÃÀÛÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+			throw new PopbillException('ì‹œìž‘ì¼ìžê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
 		}
 
     if(is_null($EDate) || $EDate ===""){
-			throw new PopbillException('Á¾·áÀÏÀÚ°¡ ÀÔ·ÂµÇÁö ¾Ê¾Ò½À´Ï´Ù.');
+			throw new PopbillException('ì¢…ë£Œì¼ìžê°€ ìž…ë ¥ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.');
 		}
 
     $uri = '/FAX/Search';
     $uri .= '?SDate=' . $SDate;
     $uri .= '&EDate=' . $EDate;
-		
+
     if(!is_null($State) || !empty($State)){
 			$uri .= '&State=' . implode(',',$State);
 		}
@@ -155,8 +129,19 @@ class FaxService extends PopbillBase {
 
     $SearchList = new FaxSearchResult();
     $SearchList->fromJsonInfo($response);
-    
+
     return $SearchList;
+  }
+
+
+  public function GetChargeInfo ( $CorpNum, $UserID = null) {
+    $uri = '/FAX/ChargeInfo';
+
+    $response = $this->executeCURL($uri, $CorpNum, $UserID);
+    $ChargeInfo = new ChargeInfo();
+    $ChargeInfo->fromJsonInfo($response);
+
+    return $ChargeInfo;
   }
 }
 
@@ -216,7 +201,7 @@ class FaxSearchResult {
   public $pageNum;
   public $pageCount;
   public $message;
-  
+
   function fromJsonInfo( $jsonInfo ){
     isset( $jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
     isset( $jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
@@ -224,7 +209,7 @@ class FaxSearchResult {
     isset( $jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
     isset( $jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
     isset( $jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
-    
+
     $InfoList = array();
 
     for ( $i = 0; $i < Count( $jsonInfo->list ); $i++ ) {
@@ -232,7 +217,7 @@ class FaxSearchResult {
       $InfoObj->fromJsonInfo( $jsonInfo->list[$i] );
       $InfoList[$i] = $InfoObj;
     }
-    
+
     $this->list = $InfoList;
   }
 
