@@ -11,7 +11,6 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2015-07-10
-* Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Updated : 2016-07-06
 *
 * Thanks for your interest.

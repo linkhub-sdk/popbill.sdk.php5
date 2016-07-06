@@ -462,15 +462,13 @@ class TaxinvoiceService extends PopbillBase {
     if(!empty($TaxRegIDType)){
 		  $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
     }
-    
+
     $uri .= '&TaxRegID=' . $TaxRegID;
 
 
 		$uri .= '&Order=' . $Order;
 		$uri .= '&Page=' . $Page;
 		$uri .= '&PerPage=' . $PerPage;
-
-    var_dump($uri);
 
     $response = $this->executeCURL($uri,$CorpNum,$UserID);
 
