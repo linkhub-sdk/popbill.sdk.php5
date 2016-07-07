@@ -192,7 +192,7 @@ class PopbillBase
 
 			curl_close($http);
 			if($http_status != 200) {
-				throw new PopbillException($responseJson);
+        throw new PopbillException($responseJson);
 			}
 			return json_decode($responseJson);
 
