@@ -38,6 +38,7 @@ class MessagingService extends PopbillBase {
     /* 단문메시지 전송
     *	$CorpNum => 발송사업자번호
     *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     *	$Content => 동보전송용 발신내용 미기재시 개별메시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
     *	$Messages => 발신메시지 최대 1000건, 배열
     *		'snd' => 개별발신번호
@@ -47,13 +48,14 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
-    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendSMS($CorpNum,$Sender,$SenderName,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
+    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,$SenderName,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
 
     /* 장문메시지 전송
     *	$CorpNum => 발송사업자번호
     *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
     *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
     *	$Messages => 발신메시지 최대 1000건, 배열
@@ -65,13 +67,14 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendLMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
-    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendLMS($CorpNum,$Sender,$SenderName, $Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null) {
+    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
 
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
     *	$CorpNum => 발송사업자번호
     *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
     *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
     *	$Messages => 발신메시지 최대 1000건, 배열
@@ -83,13 +86,14 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null) {
-    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendXMS($CorpNum,$Sender,$SenderName,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null) {
+    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
     }
 
 	/* MMS 메시지 전송
     *	$CorpNum => 발송사업자번호
     *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
     *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
     *	$Messages => 발신메시지 최대 1000건, 배열
@@ -102,7 +106,7 @@ class MessagingService extends PopbillBase {
 	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
 	*	$UserID		=> 발신자 팝빌 회원아이디
     */
-    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null) {
+    public function SendMMS($CorpNum,$Sender,$SenderName,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null) {
 		if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -114,10 +118,12 @@ class MessagingService extends PopbillBase {
     	$Request = array();
 
     	if(empty($Sender) == false)		$Request['snd'] = $Sender;
+      if(empty($SenderName) == false)		$Request['sndnm'] = $SenderName;
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
-		if($adsYN) $Request['adsYN'] = $adsYN;
+
+		  if($adsYN) $Request['adsYN'] = $adsYN;
 
 	   	$Request['msgs'] = $Messages;
 
@@ -166,7 +172,7 @@ class MessagingService extends PopbillBase {
     	return $this->executeCURL('/Message/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
     }
 
-    private function SendMessage($MessageType, $CorpNum, $Sender,$Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null) {
+    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null) {
     	if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -174,16 +180,17 @@ class MessagingService extends PopbillBase {
     	$Request = array();
 
     	if(empty($Sender) == false)		$Request['snd'] = $Sender;
+      if(empty($SenderName) == false)		$Request['sndnm'] = $SenderName;
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
-		if($adsYN) $Request['adsYN'] = $adsYN;
+
+		  if($adsYN) $Request['adsYN'] = $adsYN;
 
     	$Request['msgs'] = $Messages;
 
     	$postdata = json_encode($Request);
     	return $this->executeCURL('/'.$MessageType,$CorpNum,$UserID,true,null,$postdata)->receiptNum;
-
     }
 
     //문자 관련 URL함수
@@ -289,6 +296,7 @@ class MessageInfo{
 	public $content;
 	public $tranNet;
 	public $sendNum;
+  public $senderName;
 	public $receiveNum;
 	public $receiveName;
 	public $reserveDT;
@@ -304,6 +312,7 @@ class MessageInfo{
 		isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
 		isset($jsonInfo->content) ? $this->content = $jsonInfo->content : null;
 		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
+    isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
 		isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
 		isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
 		isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;

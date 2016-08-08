@@ -31,7 +31,7 @@ class FaxService extends PopbillBase {
     return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
   }
 
-	public function SendFAX($CorpNum,$Sender,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null) {
+	public function SendFAX($CorpNum,$Sender,$SenderName,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null) {
 		if(empty($Receivers)) {
 			throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
 		}
@@ -43,21 +43,22 @@ class FaxService extends PopbillBase {
 		$RequestForm = array();
 
 		$RequestForm['snd'] = $Sender;
-		if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+    $RequestForm['sndnm'] = $SenderName;
+    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
 		$RequestForm['fCnt'] = count($FilePaths);
 
 		$RequestForm['rcvs'] = $Receivers;
 
-    	$postdata = array();
-    	$postdata['form'] = json_encode($RequestForm);
+  	$postdata = array();
+  	$postdata['form'] = json_encode($RequestForm);
 
-    	$i = 0;
+  	$i = 0;
 
-    	foreach($FilePaths as $FilePath) {
-    		$postdata['file['.$i++.']'] = '@'.$FilePath;
-    	}
+  	foreach($FilePaths as $FilePath) {
+  		$postdata['file['.$i++.']'] = '@'.$FilePath;
+  	}
 
-    	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
+  	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
 
 	}
 
@@ -150,6 +151,7 @@ class FaxState {
 	public $sendState;
 	public $convState;
 	public $sendNum;
+  public $senderName;
 	public $receiveNum;
 	public $receiveName;
 	public $sendPageCnt;
@@ -168,6 +170,7 @@ class FaxState {
 		isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
 		isset($jsonInfo->convState) ? $this->convState = $jsonInfo->convState : null;
 		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
+    isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
 		isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
 		isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
 		isset($jsonInfo->sendPageCnt) ? $this->sendPageCnt = $jsonInfo->sendPageCnt : null;
