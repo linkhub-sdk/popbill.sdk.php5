@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-07-06
+* Updated : 2016-08-16
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -238,7 +238,7 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill?cfg=UNITCOST', $CorpNum)->unitCost;
   }
 
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order, $QString){
     if(is_null($DType) || empty($DType)) {
       throw new PopbillException('날자유형(DType)이 입력되지 않았습니다.');
     }
@@ -275,6 +275,10 @@ class CashbillService extends PopbillBase {
     $uri .= '&Page='.$Page;
     $uri .= '&PerPage='.$PerPage;
     $uri .= '&Order='.$Order;
+
+    if(!is_null($QString) || !empty($QString)){
+			$uri .= '&QString=' . $QString;
+		}
 
     $response = $this->executeCURL($uri, $CorpNum, "");
 
