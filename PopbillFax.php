@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-07-06
+* Updated : 2016-08-26
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -31,7 +31,7 @@ class FaxService extends PopbillBase {
     return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
   }
 
-	public function SendFAX($CorpNum,$Sender,$SenderName,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null) {
+	public function SendFAX($CorpNum,$Sender,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null, $SenderName=null) {
 		if(empty($Receivers)) {
 			throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
 		}
