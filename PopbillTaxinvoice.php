@@ -520,6 +520,9 @@ class TaxinvoiceService extends PopbillBase {
 
 class Taxinvoice
 {
+  public $closeDownState;
+  public $closeDownStateDate;
+
 	public $writeSpecification;
 	public $emailSubject;
 	public $memo;
@@ -606,6 +609,8 @@ class Taxinvoice
 	public $addContactList;
 
 	function fromjsonInfo($jsonInfo){
+    isset($jsonInfo->closeDownState ) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
+    isset($jsonInfo->closeDownStateDate ) ? ($this->closeDownStateDate = $jsonInfo->closeDownStateDate) : null;
 
 		isset($jsonInfo->writeSpecification ) ? ($this->writeSpecification = $jsonInfo->writeSpecification) : null;
 		isset($jsonInfo->writeDate ) ? ($this->writeDate = $jsonInfo->writeDate ) : null;
@@ -776,6 +781,9 @@ class TISearchResult
 
 
 class TaxinvoiceInfo {
+  public $closeDownState;
+  public $closeDownStateDate;
+
 	public $itemKey;
 	public $stateCode;
 	public $taxType;
@@ -811,6 +819,9 @@ class TaxinvoiceInfo {
 	public $stateMemo;
 
 	public function fromJsonInfo($jsonInfo) {
+    isset($jsonInfo->closeDownState ) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
+    isset($jsonInfo->closeDownStateDate ) ? ($this->closeDownStateDate = $jsonInfo->closeDownStateDate) : null;
+    
 		isset($jsonInfo->itemKey ) ? $this->itemKey = $jsonInfo->itemKey : null;
 		isset($jsonInfo->stateCode ) ? $this->stateCode = $jsonInfo->stateCode : null;
 		isset($jsonInfo->taxType ) ? $this->taxType = $jsonInfo->taxType : null;
