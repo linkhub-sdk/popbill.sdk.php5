@@ -291,6 +291,7 @@ class MsgSearchResult{
 
 class MessageInfo{
 	public $state;
+  public $result;
 	public $subject;
 	public $type;
 	public $content;
@@ -307,6 +308,7 @@ class MessageInfo{
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+    isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
 		isset($jsonInfo->subject) ? $this->subject = $jsonInfo->subject : null;
 		isset($jsonInfo->tranNet) ? $this->tranNet = $jsonInfo->tranNet : null;
 		isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
