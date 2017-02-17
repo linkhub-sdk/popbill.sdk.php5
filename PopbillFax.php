@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-08-26
+* Updated : 2017-02-17
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -59,13 +59,32 @@ class FaxService extends PopbillBase {
   	}
 
   	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
+	}
 
+  public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null,$UserID = null) {
+		if(empty($ReceiptNum)) {
+			throw new PopbillException('팩스접수번호(receiptNum)가 입력되지 않았습니다.');
+		}
+
+		$RequestForm = array();
+
+		if(!empty($SenderNum)) $RequestForm['snd'] = $SenderNum;
+    if(!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
+    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+
+    if( !is_null($Receivers)) {
+  		$RequestForm['rcvs'] = $Receivers;
+    }
+
+    $postdata = json_encode($RequestForm);
+    var_dump($postdata);
+  	return $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
 	}
 
 	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID) {
 		if(empty($ReceiptNum)) {
     		throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
-    	}
+    }
 		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);
 		$FaxState = new FaxState();
 
@@ -220,10 +239,8 @@ class FaxSearchResult {
       $InfoObj->fromJsonInfo( $jsonInfo->list[$i] );
       $InfoList[$i] = $InfoObj;
     }
-
     $this->list = $InfoList;
   }
-
 }
 
 
