@@ -83,7 +83,7 @@ class PopbillBase
 	}
 
 	// 담당자 추가
-	public function RegistContact($CorpNum, $ContactInfo, $UserID){
+	public function RegistContact($CorpNum, $ContactInfo, $UserID = null){
 		$postdata = json_encode($ContactInfo);
 		return $this->executeCURL('/IDs/New',$CorpNum,$UserID,true,null,$postdata);
 	}
@@ -95,7 +95,7 @@ class PopbillBase
 	}
 
 	// 담당자 목록 조회
-	public function ListContact($CorpNum, $UserID){
+	public function ListContact($CorpNum, $UserID =  null){
 		$ContactInfoList = array();
 
 		$response = $this->executeCURL('/IDs',$CorpNum,$UserID);
@@ -110,7 +110,7 @@ class PopbillBase
 	}
 
 	// 회사정보 확인
-	public function GetCorpInfo($CorpNum, $UserID){
+	public function GetCorpInfo($CorpNum, $UserID = null){
 		$response = $this->executeCURL('/CorpInfo',$CorpNum,$UserID);
 
 		$CorpInfo = new CorpInfo();
@@ -120,7 +120,7 @@ class PopbillBase
 	}
 
 	// 회사정보 수정
-	public function UpdateCorpInfo($CorpNum, $CorpInfo, $UserID){
+	public function UpdateCorpInfo($CorpNum, $CorpInfo, $UserID = null){
 		$postdata = json_encode($CorpInfo);
 		return $this->executeCURL('/CorpInfo',$CorpNum,$UserID,true,null,$postdata);
 	}
@@ -182,7 +182,7 @@ class PopbillBase
 				curl_setopt($http, CURLOPT_POST,1);
 				curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);
 			}
-      
+
 			curl_setopt($http, CURLOPT_HTTPHEADER,$header);
 			curl_setopt($http, CURLOPT_RETURNTRANSFER, TRUE);
 			curl_setopt($http, CURLOPT_ENCODING, 'gzip,deflate');
