@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2015-06-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-08-16
+* Updated : 2017-02-28
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -48,7 +48,7 @@ class TaxinvoiceService extends PopbillBase {
   }
 
 	//즉시발행
-	public function RegistIssue($CorpNum, $Taxinvoice, $UserID = null, $writeSpecification = false, $forceIssue = false, $memo, $emailSubject, $dealInvoiceMgtKey){
+	public function RegistIssue($CorpNum, $Taxinvoice, $UserID = null, $writeSpecification = false, $forceIssue = false, $memo = null, $emailSubject = null, $dealInvoiceMgtKey = null){
 		if($writeSpecification) {
     		$Taxinvoice->writeSpecification = $writeSpecification;
     	}
@@ -821,7 +821,7 @@ class TaxinvoiceInfo {
 	public function fromJsonInfo($jsonInfo) {
     isset($jsonInfo->closeDownState ) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
     isset($jsonInfo->closeDownStateDate ) ? ($this->closeDownStateDate = $jsonInfo->closeDownStateDate) : null;
-    
+
 		isset($jsonInfo->itemKey ) ? $this->itemKey = $jsonInfo->itemKey : null;
 		isset($jsonInfo->stateCode ) ? $this->stateCode = $jsonInfo->stateCode : null;
 		isset($jsonInfo->taxType ) ? $this->taxType = $jsonInfo->taxType : null;
