@@ -77,7 +77,7 @@ class FaxService extends PopbillBase {
     }
 
     $postdata = json_encode($RequestForm);
-    
+
   	return $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
 	}
 
