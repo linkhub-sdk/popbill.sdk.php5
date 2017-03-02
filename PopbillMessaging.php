@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-08-26
+* Updated : 2017-03-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -145,7 +145,7 @@ class MessagingService extends PopbillBase {
     *	$ReceiptNum	=> 접수번호
     *	$UserID	=> 팝빌 회원아이디
     */
-    public function GetMessages($CorpNum,$ReceiptNum,$UserID) {
+    public function GetMessages($CorpNum,$ReceiptNum,$UserID = null) {
     	if(empty($ReceiptNum)) {
     		throw new PopbillException('확인할 접수번호를 입력하지 않았습니다.');
     	}
@@ -165,7 +165,7 @@ class MessagingService extends PopbillBase {
     *	$ReceiptNum	=> 접수번호
     *	$UserID	=> 팝빌 회원아이디
     */
-    public function CancelReserve($CorpNum,$ReceiptNum,$UserID) {
+    public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
     	if(empty($ReceiptNum)) {
     		throw new PopbillException('확인할 접수번호를 입력하지 않았습니다.');
     	}
