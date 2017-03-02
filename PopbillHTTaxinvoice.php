@@ -170,9 +170,6 @@ class HTTaxinvoiceService extends PopbillBase {
 
   public function GetFlatRatePopUpURL ( $CorpNum, $UserID = null )
   {
-    if ( empty($UserID) || is_null($UserID)){
-      throw new PopbillException ('팝빌회원 아이디가 입력되지 않았습니다.');
-    }
     return $this->executeCURL ( '/HomeTax/Taxinvoice?TG=CHRG', $CorpNum, $UserID )->url;
   }
 
@@ -188,9 +185,6 @@ class HTTaxinvoiceService extends PopbillBase {
 
   public function GetCertificatePopUpURL ( $CorpNum, $UserID = null )
   {
-    if ( empty($UserID) || is_null($UserID)) {
-      throw new PopbillException ('팝빌회원 아이디가 입력되지 않았습니다.');
-    }
     return $this->executeCURL ( '/HomeTax/Taxinvoice?TG=CERT', $CorpNum, $UserID )->url;
   }
 
