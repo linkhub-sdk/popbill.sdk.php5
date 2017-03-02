@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2015-07-10
-* Updated : 2016-07-06
+* Updated : 2017-03-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -27,29 +27,32 @@ class ClosedownService extends PopbillBase {
     }
 
     //휴폐업조회 - 단건
-    public function CheckCorpNum($MemberCorpNum,$CheckCorpNum) {
+    public function CheckCorpNum($MemberCorpNum, $CheckCorpNum) {
     	if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
     		throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
     	}
-		if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
+
+		  if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
     		throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
     	}
+
     	$result = $this->executeCURL('/CloseDown?CN='.$CheckCorpNum, $MemberCorpNum);
 
-		$CorpState = new CorpState();
-		$CorpState->fromJsonInfo($result);
-		return $CorpState;
+  		$CorpState = new CorpState();
+  		$CorpState->fromJsonInfo($result);
+  		return $CorpState;
 
     }
 
 	//휴폐업조회 - 대량
-	public function CheckCorpNums($MemberCorpNum,$CheckCorpNumList){
+	public function CheckCorpNums($MemberCorpNum, $CheckCorpNumList){
 		if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
     		throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
-    	}
+    }
+
 		if(is_null($CheckCorpNumList) || empty($CheckCorpNumList)) {
     		throw new PopbillException('조회할 사업자번호 배열이 입력되지 않았습니다.');
-    	}
+    }
 
 		$postData = json_encode($CheckCorpNumList);
 
@@ -57,7 +60,7 @@ class ClosedownService extends PopbillBase {
 
 		$CorpStateList = array();
 
-		for($i=0; $i<Count($result); $i++){
+		for($i = 0; $i < Count($result); $i++) {
 			$CorpState = new CorpState();
 			$CorpState->fromJsonInfo($result[$i]);
 			$CorpStateList[$i] = $CorpState;
