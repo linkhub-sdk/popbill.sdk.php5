@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2016-07-07
-* Updated : 2016-07-07
+* Updated : 2017-03-02
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
 * ======================================================================================
@@ -119,11 +119,8 @@ class HTCashbillService extends PopbillBase {
     return $Summary;
   }
 
-  public function GetFlatRatePopUpURL ( $CorpNum, $UserID )
+  public function GetFlatRatePopUpURL ( $CorpNum, $UserID = null )
   {
-    if ( empty($UserID) || is_null($UserID) ) {
-      throw new PopbillException ('팝빌회원 아이디가 입력되지 않았습니다.');
-    }
     return $this->executeCURL ( '/HomeTax/Cashbill?TG=CHRG', $CorpNum, $UserID )->url;
   }
 
@@ -137,11 +134,8 @@ class HTCashbillService extends PopbillBase {
     return $FlatRateState;
   }
 
-  public function GetCertificatePopUpURL ( $CorpNum, $UserID )
+  public function GetCertificatePopUpURL ( $CorpNum, $UserID = null)
   {
-    if ( empty($UserID) || is_null($UserID)) {
-      throw new PopbillException ('팝빌회원 아이디가 입력되지 않았습니다.');
-    }
     return $this->executeCURL ( '/HomeTax/Cashbill?TG=CERT', $CorpNum, $UserID )->url;
   }
 
