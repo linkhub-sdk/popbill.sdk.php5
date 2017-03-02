@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-08-16
+* Updated : 2017-03-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -67,7 +67,6 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'DELETE','');
   }
 
-  //����
   public function Update($CorpNum,$MgtKey,$Cashbill, $UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
       throw new PopbillException('관리번호가 입력되지 않았습니다.');
@@ -121,7 +120,6 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'SMS',$postdata);
   }
 
-  //�˸��ѽ� ������
   public function SendFAX($CorpNum,$MgtKey,$Sender,$Receiver,$UserID = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
       throw new PopbillException('관리번호 배열이 입력되지 않았습니다.');
