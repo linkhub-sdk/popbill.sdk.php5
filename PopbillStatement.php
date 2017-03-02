@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-08-16
+* Updated : 2017-03-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -50,7 +50,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 전자명세서 선팩스 전송
-	public function FAXSend($CorpNum,$Statement,$SendNum,$ReceiveNum,$UserID){
+	public function FAXSend($CorpNum,$Statement,$SendNum,$ReceiveNum,$UserID = null){
 		if(!is_null($SendNum) || !empty($SendNum)){
 			$Statement->sendNum = $SendNum;
 		}
@@ -63,7 +63,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 전자명세서 즉시발행
-	public function RegistIssue($CorpNum,$Statement,$memo,$UserID){
+	public function RegistIssue($CorpNum,$Statement,$memo,$UserID = null){
 		if(!is_null($memo) || !empty($memo)){
 			$Statement->memo = $memo;
 		}
@@ -73,13 +73,13 @@ class StatementService extends PopbillBase {
 	}
 
 	# 전자명세서 임시저장
-    public function Register($CorpNum, $Statement, $UserID) {
+    public function Register($CorpNum, $Statement, $UserID = null) {
     	$postdata = json_encode($Statement);
     	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,null,$postdata);
     }
 
 	# 전자명세서 수정
-	public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID) {
+	public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID = null) {
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -97,7 +97,7 @@ class StatementService extends PopbillBase {
 
 
 	# 전자명세서 발행
-	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID){
+	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null){
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -110,7 +110,7 @@ class StatementService extends PopbillBase {
 
 
 	# 전자명세서 발행취소
-	public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID){
+	public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null){
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -138,7 +138,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 첨부파일 목록확인
-	public function GetFiles($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetFiles($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -146,7 +146,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 첨부파일 삭제
-	public function DeleteFile($CorpNum,$itemCode,$MgtKey,$FileID,$UserID){
+	public function DeleteFile($CorpNum,$itemCode,$MgtKey,$FileID,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -154,7 +154,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 다량 전자명세서 상태,요약 정보확인
-	public function GetInfo($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -166,7 +166,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 다량 전자명세서 상태,요약 정보확인
-	public function GetInfos($CorpNum,$itemCode,$MgtKeyList,$UserID){
+	public function GetInfos($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
 		if(is_null($MgtKeyList) || empty($MgtKeyList)) {
     		throw new PopbillException('관리번호배열이 입력되지 않았습니다.');
     	}
@@ -202,7 +202,7 @@ class StatementService extends PopbillBase {
 	}
 
 	# 상세정보 확인
-	public function GetDetailInfo($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetDetailInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -215,7 +215,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#알림메일 재전송
-	public function SendEmail($CorpNum,$itemCode,$MgtKey,$receiver,$UserID){
+	public function SendEmail($CorpNum,$itemCode,$MgtKey,$receiver,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -225,7 +225,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#알림문자 재전송
-	public function SendSMS($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$contents,$UserID){
+	public function SendSMS($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$contents,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -242,7 +242,7 @@ class StatementService extends PopbillBase {
 
 
 	#전자명세서 팩스전송
-	public function SendFAX($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$UserID){
+	public function SendFAX($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -262,7 +262,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#전자명세서 보기 URL
-	public function GetPopUpURL($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetPopUpURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -270,7 +270,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#인쇄 URL 호출
-	public function GetPrintURL($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -278,7 +278,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#인쇄 URL 호출(공급받는자용)
-	public function GetEPrintURL($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetEPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
@@ -286,7 +286,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#다량 인쇄 URL호출
-	public function GetMassPrintURL($CorpNum,$itemCode,$MgtKeyList,$UserID){
+	public function GetMassPrintURL($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
 		if(is_null($MgtKeyList) || empty($MgtKeyList)) {
     		throw new PopbillException('관리번호배열이 입력되지 않았습니다.');
     	}
@@ -295,7 +295,7 @@ class StatementService extends PopbillBase {
 	}
 
 	#메일 링크 URL 호출
-	public function GetMailURL($CorpNum,$itemCode,$MgtKey,$UserID){
+	public function GetMailURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
