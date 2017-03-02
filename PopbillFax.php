@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-02-17
+* Updated : 2017-03-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -81,7 +81,7 @@ class FaxService extends PopbillBase {
   	return $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
 	}
 
-	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID) {
+	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID = null) {
 		if(empty($ReceiptNum)) {
     		throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
     }
@@ -99,7 +99,7 @@ class FaxService extends PopbillBase {
 		return $FaxInfoList;
 	}
 
-  public function CancelReserve($CorpNum,$ReceiptNum,$UserID) {
+  public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
     if(empty($ReceiptNum)) {
       throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
     }
