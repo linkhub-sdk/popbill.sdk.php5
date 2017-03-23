@@ -818,6 +818,8 @@ class TaxinvoiceInfo {
 	public $ntssendErrCode;
 	public $stateMemo;
 
+  public $interOPYN;
+
 	public function fromJsonInfo($jsonInfo) {
     isset($jsonInfo->closeDownState ) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
     isset($jsonInfo->closeDownStateDate ) ? ($this->closeDownStateDate = $jsonInfo->closeDownStateDate) : null;
@@ -855,6 +857,7 @@ class TaxinvoiceInfo {
 		isset($jsonInfo->ntsresultDT ) ? $this->ntsresultDT = $jsonInfo->ntsresultDT : null;
 		isset($jsonInfo->ntssendErrCode ) ? $this->ntssendErrCode = $jsonInfo->ntssendErrCode : null;
 		isset($jsonInfo->stateMemo ) ? $this->stateMemo = $jsonInfo->stateMemo : null;
+    isset($jsonInfo->interOPYN ) ? $this->interOPYN = $jsonInfo->interOPYN : null;
 	}
 
 }
