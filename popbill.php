@@ -187,7 +187,7 @@ class PopbillBase
               $filename = ltrim($value, '@');
               $postdata[$key] = new CURLFile($filename);
             }
-          }
+          } // end of foreach
         }
       }
 
