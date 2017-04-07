@@ -181,7 +181,7 @@ class PopbillBase
         // PHP 5.6 이상 CURL 파일전송 처리
         if ( (version_compare(PHP_VERSION, '5.5') >= 0) ) {
           curl_setopt($ch, CURLOPT_SAFE_UPLOAD, true);
-          
+
           foreach($postdata as $key => $value) {
             if(strpos($value, '@') === 0) {
               $filename = ltrim($value, '@');
@@ -195,8 +195,6 @@ class PopbillBase
           } // end of foreach
         }
       }
-
-      var_dump($postdata);
 
 			if($isPost) {
 				curl_setopt($http, CURLOPT_POST,1);
