@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-03-02
+* Updated : 2017-05-29
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -237,6 +237,7 @@ class MessagingService extends PopbillBase {
 
 		return $SearchList;
 	}
+
   // 080 수신거부목록 조회
   public function GetAutoDenyList($CorpNum){
     return $this->executeCURL('/Message/Denied', $CorpNum);
@@ -250,6 +251,11 @@ class MessagingService extends PopbillBase {
     $ChargeInfo->fromJsonInfo($response);
 
     return $ChargeInfo;
+  }
+
+  // 발신번호 목록 조회
+  public function GetSenderNumberList($CorpNum, $UserID = null){
+    return $this->executeCURL('/Message/SenderNumber', $CorpNum, $UserID);
   }
 
 }

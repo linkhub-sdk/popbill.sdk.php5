@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-03-02
+* Updated : 2017-05-29
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -162,6 +162,11 @@ class FaxService extends PopbillBase {
     $ChargeInfo->fromJsonInfo($response);
 
     return $ChargeInfo;
+  }
+
+  // 발신번호 목록 조회
+  public function GetSenderNumberList($CorpNum, $UserID = null){
+    return $this->executeCURL('/FAX/SenderNumber', $CorpNum, $UserID);
   }
 }
 
