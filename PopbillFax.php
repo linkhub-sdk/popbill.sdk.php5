@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-05-29
+* Updated : 2017-06-01
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -31,8 +31,8 @@ class FaxService extends PopbillBase {
     return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
   }
 
-	public function SendFAX($CorpNum,$Sender,$Receivers = array(),$FilePaths = array(),$ReserveDT = null,$UserID = null, $SenderName=null) {
-		if(empty($Receivers)) {
+	public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False) {
+    if(empty($Receivers)) {
 			throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
 		}
 
@@ -41,13 +41,13 @@ class FaxService extends PopbillBase {
 		}
 
 		$RequestForm = array();
-
 		$RequestForm['snd'] = $Sender;
     $RequestForm['sndnm'] = $SenderName;
-    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
-		$RequestForm['fCnt'] = count($FilePaths);
+    $RequestForm['fCnt'] = count($FilePaths);
+    $RequestForm['rcvs'] = $Receivers;
 
-		$RequestForm['rcvs'] = $Receivers;
+    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+    if($adsYN) $RequestForm['adsYN'] = $adsYN;
 
   	$postdata = array();
   	$postdata['form'] = json_encode($RequestForm);
