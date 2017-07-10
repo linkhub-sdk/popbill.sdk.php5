@@ -330,6 +330,7 @@ class Cashbill {
   public $faxsendYN;
 
   public $orgConfirmNum;
+  public $orgTradeDate;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
@@ -356,6 +357,7 @@ class Cashbill {
 		isset($jsonInfo->smssendYN) ? $this->smssendYN = $jsonInfo->smssendYN : null;
 		isset($jsonInfo->faxsendYN) ? $this->faxsendYN = $jsonInfo->faxsendYN : null;
 		isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
+    isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
 	}
 }
 
