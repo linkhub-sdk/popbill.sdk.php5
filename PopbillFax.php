@@ -31,7 +31,7 @@ class FaxService extends PopbillBase {
     return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
   }
 
-	public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False) {
+	public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False, $title = null) {
     if(empty($Receivers)) {
 			throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
 		}
@@ -43,8 +43,10 @@ class FaxService extends PopbillBase {
 		$RequestForm = array();
 		$RequestForm['snd'] = $Sender;
     $RequestForm['sndnm'] = $SenderName;
+    $RequestForm['title'] = $title;
     $RequestForm['fCnt'] = count($FilePaths);
     $RequestForm['rcvs'] = $Receivers;
+
 
     if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
     if($adsYN) $RequestForm['adsYN'] = $adsYN;
@@ -61,7 +63,7 @@ class FaxService extends PopbillBase {
   	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
 	}
 
-  public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null,$UserID = null) {
+  public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null, $UserID = null, $title = null) {
 		if(empty($ReceiptNum)) {
 			throw new PopbillException('팩스접수번호(receiptNum)가 입력되지 않았습니다.');
 		}
@@ -72,9 +74,12 @@ class FaxService extends PopbillBase {
     if(!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
     if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
 
+
     if( !is_null($Receivers)) {
   		$RequestForm['rcvs'] = $Receivers;
     }
+
+    $RequestForm['title'] = $title;
 
     $postdata = json_encode($RequestForm);
 
@@ -172,6 +177,9 @@ class FaxService extends PopbillBase {
 
 
 class FaxState {
+  public $state;
+	public $result;
+  public $title;
 	public $sendState;
 	public $convState;
 	public $sendNum;
@@ -191,6 +199,10 @@ class FaxState {
   public $receiptDT;
 
 	function fromJsonInfo($jsonInfo){
+    isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+    isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
+    isset($jsonInfo->title) ? $this->title = $jsonInfo->title : null;
+
 		isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
 		isset($jsonInfo->convState) ? $this->convState = $jsonInfo->convState : null;
 		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;

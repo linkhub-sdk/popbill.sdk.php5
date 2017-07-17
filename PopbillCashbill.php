@@ -403,6 +403,7 @@ class CashbillInfo {
 		isset($jsonInfo->printYN) ? $this->printYN = $jsonInfo->printYN : null;
 		isset($jsonInfo->confirmNum) ? $this->confirmNum = $jsonInfo->confirmNum : null;
 		isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
+    isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
 		isset($jsonInfo->ntssendDT) ? $this->ntssendDT = $jsonInfo->ntssendDT : null;
 		isset($jsonInfo->ntsresult) ? $this->ntsresult = $jsonInfo->ntsresult : null;
 		isset($jsonInfo->ntsresultDT) ? $this->ntsresultDT = $jsonInfo->ntsresultDT : null;
