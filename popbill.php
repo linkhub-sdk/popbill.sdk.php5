@@ -25,7 +25,7 @@ class PopbillBase
 	const ServiceID_REAL = 'POPBILL';
 	const ServiceID_TEST = 'POPBILL_TEST';
 	const ServiceURL_REAL = 'https://popbill.linkhub.co.kr';
-  const ServiceURL_TEST = 'https://popbill_test.linkhub.co.kr';
+  const ServiceURL_TEST = 'https://popbill-test.linkhub.co.kr';
   const Version = '1.0';
 
   private $Token_Table = array();

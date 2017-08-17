@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-03-02
+* Updated : 2017-08-16
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -32,7 +32,7 @@ class CashbillService extends PopbillBase {
     return $response->url;
   }
 
-    public function CheckMgtKeyInUse($CorpNum,$MgtKey) {
+  public function CheckMgtKeyInUse($CorpNum,$MgtKey) {
     if(is_null($MgtKey) || empty($MgtKey)) {
       throw new PopbillException('관리번호가 입력되지 않았습니다.');
     }
@@ -57,6 +57,33 @@ class CashbillService extends PopbillBase {
   public function Register($CorpNum, $Cashbill, $UserID = null) {
     $postdata = json_encode($Cashbill);
     return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,null,$postdata);
+  }
+
+  // 취소현금영수증 즉시발행 추가(RevokeRegistIssue). 2017/08/17
+  public function RevokeRegistIssue($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $memo = null, $UserID = null){
+    $request = array(
+      'mgtKey' => $mgtKey,
+      'orgConfirmNum' => $orgConfirmNum,
+      'orgTradeDate' => $orgTradeDate,
+      'smssendYN' => $smssendYN,
+      'memo' => $memo,
+    );
+    $postdata = json_encode($request);
+
+    return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'REVOKEISSUE',$postdata);
+  }
+
+  // 취소현금영수증 임시저장 추가(RevokeRegister). 2017/08/17
+  public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null){
+    $request = array(
+      'mgtKey' => $mgtKey,
+      'orgConfirmNum' => $orgConfirmNum,
+      'orgTradeDate' => $orgTradeDate,
+      'smssendYN' => $smssendYN,
+    );
+    $postdata = json_encode($request);
+
+    return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'REVOKE',$postdata);
   }
 
 
