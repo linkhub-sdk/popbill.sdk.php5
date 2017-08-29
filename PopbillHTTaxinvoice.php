@@ -493,6 +493,11 @@ class HTTaxinvoiceAbbr {
   public $trusteeCEOName;
   public $trusteeEmail;
 
+  /*
+  * 매출/매입 구분 필드 추가 (2017/08/29)
+  */
+  public $invoiceType;
+
   public function fromJsonInfo ( $jsonInfo )
   {
   	isset ( $jsonInfo->ntsconfirmNum ) ? $this->ntsconfirmNum = $jsonInfo->ntsconfirmNum : null;
@@ -537,6 +542,8 @@ class HTTaxinvoiceAbbr {
     isset ( $jsonInfo->trusteeCorpName ) ? $this->trusteeCorpName = $jsonInfo->trusteeCorpName : null;
     isset ( $jsonInfo->trusteeCEOName ) ? $this->trusteeCEOName = $jsonInfo->trusteeCEOName : null;
     isset ( $jsonInfo->trusteeEmail ) ? $this->trusteeCEOName = $jsonInfo->trusteeCEOName : null;
+
+    isset ( $jsonInfo->invoiceType ) ? $this->invoiceType = $jsonInfo->invoiceType : null;
   }
 }
 

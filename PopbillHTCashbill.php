@@ -207,6 +207,10 @@ class HTCashbill {
   public $customerName;
   public $cardOwnerName;
   public $deductionType;
+  /*
+  * 매출/매입 구분 필드 추가 (2017/08/29)
+  */
+  public $invoiceType;
 
   public function fromJsonInfo ( $jsonInfo )
   {
@@ -228,6 +232,8 @@ class HTCashbill {
     isset ( $jsonInfo->customerName ) ? $this->customerName = $jsonInfo->customerName : null;
     isset ( $jsonInfo->cardOwnerName ) ? $this->cardOwnerName = $jsonInfo->cardOwnerName : null;
     isset ( $jsonInfo->deductionType ) ? $this->deductionType = $jsonInfo->deductionType : null;
+
+    isset ( $jsonInfo->invoiceType ) ? $this->invoiceType = $jsonInfo->invoiceType : null;
   }
 }
 
