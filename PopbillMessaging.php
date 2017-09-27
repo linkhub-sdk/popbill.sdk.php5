@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-05-29
+* Updated : 2017-09-27
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -48,8 +48,8 @@ class MessagingService extends PopbillBase {
     *	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null) {
-    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,$SenderName,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null,$SystemYN=false) {
+    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,$SenderName,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
     }
 
     /* 장문메시지 전송
@@ -67,8 +67,8 @@ class MessagingService extends PopbillBase {
   	*	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendLMS($CorpNum,$Sender, $Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null) {
-    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendLMS($CorpNum,$Sender, $Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null, $SystemYN=false) {
+    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
     }
 
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
@@ -86,8 +86,8 @@ class MessagingService extends PopbillBase {
     *	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null, $SenderName=null) {
-    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID);
+    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null, $SenderName=null, $SystemYN=false) {
+    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
     }
 
 	/* MMS 메시지 전송
@@ -106,7 +106,7 @@ class MessagingService extends PopbillBase {
   	*	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null, $SenderName=null) {
+    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null, $SenderName=null, $SystemYN=false) {
 		if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -124,6 +124,7 @@ class MessagingService extends PopbillBase {
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
 
 		  if($adsYN) $Request['adsYN'] = $adsYN;
+      if($SystemYN) $Request['systemYN'] = $SystemYN;
 
 	   	$Request['msgs'] = $Messages;
 
@@ -172,7 +173,7 @@ class MessagingService extends PopbillBase {
     	return $this->executeCURL('/Message/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
     }
 
-    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null) {
+    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null, $SystemYN = false) {
     	if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -186,6 +187,7 @@ class MessagingService extends PopbillBase {
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
 
 		  if($adsYN) $Request['adsYN'] = $adsYN;
+      if($SystemYN) $Request['systemYN'] = $SystemYN;
 
     	$Request['msgs'] = $Messages;
 
