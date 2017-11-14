@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-08-16
+* Updated : 2017-11-14
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -60,13 +60,21 @@ class CashbillService extends PopbillBase {
   }
 
   // 취소현금영수증 즉시발행 추가(RevokeRegistIssue). 2017/08/17
-  public function RevokeRegistIssue($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $memo = null, $UserID = null){
+  public function RevokeRegistIssue($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $memo = null,
+    $UserID = null, $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null){
+
     $request = array(
       'mgtKey' => $mgtKey,
       'orgConfirmNum' => $orgConfirmNum,
       'orgTradeDate' => $orgTradeDate,
       'smssendYN' => $smssendYN,
       'memo' => $memo,
+      'isPartCancel' => $isPartCancel,
+      'cancelType' => $cancelType,
+      'supplyCost' => $supplyCost,
+      'tax' => $tax,
+      'serviceFee' => $serviceFee,
+      'totalAmount' => $totalAmount,
     );
     $postdata = json_encode($request);
 
@@ -74,12 +82,19 @@ class CashbillService extends PopbillBase {
   }
 
   // 취소현금영수증 임시저장 추가(RevokeRegister). 2017/08/17
-  public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null){
+  public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null,
+    $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null){
     $request = array(
       'mgtKey' => $mgtKey,
       'orgConfirmNum' => $orgConfirmNum,
       'orgTradeDate' => $orgTradeDate,
       'smssendYN' => $smssendYN,
+      'isPartCancel' => $isPartCancel,
+      'cancelType' => $cancelType,
+      'supplyCost' => $supplyCost,
+      'tax' => $tax,
+      'serviceFee' => $serviceFee,
+      'totalAmount' => $totalAmount,
     );
     $postdata = json_encode($request);
 
@@ -358,6 +373,7 @@ class Cashbill {
 
   public $orgConfirmNum;
   public $orgTradeDate;
+  public $cancelType;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
@@ -385,6 +401,7 @@ class Cashbill {
 		isset($jsonInfo->faxsendYN) ? $this->faxsendYN = $jsonInfo->faxsendYN : null;
 		isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
     isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
+    isset($jsonInfo->cancelType) ? $this->cancelType = $jsonInfo->cancelType : null;
 	}
 }
 
