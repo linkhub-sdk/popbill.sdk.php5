@@ -152,13 +152,13 @@ class MessagingService extends PopbillBase {
     	}
     	$result = $this->executeCURL('/Message/'.$ReceiptNum, $CorpNum,$UserID);
 
-		$MessageInfoList = array();
+		  $MessageInfoList = array();
 
-		for($i=0; $i<Count($result); $i++){
-			$MsgInfo = new MessageInfo();
-			$MsgInfo->fromJsonInfo($result[$i]);
-			$MessageInfoList[$i] = $MsgInfo;
-		}
+  		for($i=0; $i<Count($result); $i++){
+  			$MsgInfo = new MessageInfo();
+  			$MsgInfo->fromJsonInfo($result[$i]);
+  			$MessageInfoList[$i] = $MsgInfo;
+  		}
 		return $MessageInfoList;
     }
     /* 예약전송 취소
