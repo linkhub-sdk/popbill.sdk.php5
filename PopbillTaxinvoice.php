@@ -53,7 +53,7 @@ class TaxinvoiceService extends PopbillBase {
     		$Taxinvoice->writeSpecification = $writeSpecification;
     	}
 		if($forceIssue) {
-    		$Taxinvoice->forcieIssue = $forcieIssue;
+    		$Taxinvoice->forceIssue = $forceIssue;
     	}
 
 		if(!is_null($memo) || !empty($memo)){
