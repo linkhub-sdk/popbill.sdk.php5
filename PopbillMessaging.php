@@ -260,7 +260,27 @@ class MessagingService extends PopbillBase {
     return $this->executeCURL('/Message/SenderNumber', $CorpNum, $UserID);
   }
 
+  // 문자전송결과
+  public function GetStates($CorpNum,$ReceiptNumList = array(), $UserID=null) {
+    if(is_null($ReceiptNumList) || empty($ReceiptNumList)) {
+      throw new PopbillException('관리번호가 입력되지 않았습니다.');
+    }
+
+    $postdata = json_encode($ReceiptNumList);
+    $result = $this->executeCURL('/Message/States', $CorpNum, $UserID, true,null, $postdata);
+    $MsgInfoList = array();
+
+		for($i=0; $i<Count($result); $i++){
+			$MsgInfo = new MessageBriefInfo();
+			$MsgInfo->fromJsonInfo($result[$i]);
+			$MsgInfoList[$i] = $MsgInfo;
+		}
+
+		return $MsgInfoList;
+  }
+
 }
+
 class ENumMessageType {
 	const SMS = 'SMS';
 	const LMS = 'LMS';
@@ -331,5 +351,26 @@ class MessageInfo{
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
 		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
 	}
+}
+
+class MessageBriefInfo {
+  public $sn;
+  public $rNum;
+  public $stat;
+  public $sDT;
+  public $rDT;
+  public $rlt;
+  public $net;
+
+  function fromJsonInfo($jsonInfo){
+    isset($jsonInfo->sn) ? $this->sn = $jsonInfo->sn : null;
+    isset($jsonInfo->rNum) ? $this->rNum = $jsonInfo->rNum : null;
+    isset($jsonInfo->stat) ? $this->stat = $jsonInfo->stat : null;
+    isset($jsonInfo->sDT) ? $this->sDT = $jsonInfo->sDT : null;
+    isset($jsonInfo->rDT) ? $this->rDT = $jsonInfo->rDT : null;
+    isset($jsonInfo->rlt) ? $this->rlt = $jsonInfo->rlt : null;
+    isset($jsonInfo->net) ? $this->net = $jsonInfo->net : null;
+  }
+
 }
 ?>
