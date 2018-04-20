@@ -263,7 +263,7 @@ class MessagingService extends PopbillBase {
   // 문자전송결과
   public function GetStates($CorpNum,$ReceiptNumList = array(), $UserID=null) {
     if(is_null($ReceiptNumList) || empty($ReceiptNumList)) {
-      throw new PopbillException('관리번호가 입력되지 않았습니다.');
+      throw new PopbillException('접수번호가 입력되지 않았습니다.');
     }
 
     $postdata = json_encode($ReceiptNumList);
