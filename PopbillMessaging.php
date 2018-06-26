@@ -48,8 +48,8 @@ class MessagingService extends PopbillBase {
     *	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null,$SystemYN=false) {
-    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,$SenderName,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
+    public function SendSMS($CorpNum,$Sender,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null,$SystemYN=false,$RequestNum=null) {
+    	return $this->SendMessage(ENumMessageType::SMS,$CorpNum,$Sender,$SenderName,null,$Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN,$RequestNum);
     }
 
     /* 장문메시지 전송
@@ -67,8 +67,8 @@ class MessagingService extends PopbillBase {
   	*	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendLMS($CorpNum,$Sender, $Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName=null, $SystemYN=false) {
-    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
+    public function SendLMS($CorpNum,$Sender, $Subject,$Content,$Messages = array(),$ReserveDT = null ,$adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null) {
+    	return $this->SendMessage(ENumMessageType::LMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN,$RequestNum);
     }
 
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
@@ -86,8 +86,8 @@ class MessagingService extends PopbillBase {
     *	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN=false,$UserID = null, $SenderName=null, $SystemYN=false) {
-    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN);
+    public function SendXMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$ReserveDT = null , $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null) {
+    	return $this->SendMessage(ENumMessageType::XMS,$CorpNum,$Sender,$SenderName,$Subject, $Content,$Messages,$ReserveDT,$adsYN,$UserID,$SystemYN,$RequestNum);
     }
 
 	/* MMS 메시지 전송
@@ -106,7 +106,7 @@ class MessagingService extends PopbillBase {
   	*	$UserID		=> 발신자 팝빌 회원아이디
     *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
-    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN=false, $UserID = null, $SenderName=null, $SystemYN=false) {
+    public function SendMMS($CorpNum,$Sender,$Subject,$Content,$Messages = array(),$FilePaths = array(), $ReserveDT = null , $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null) {
 		if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -122,6 +122,7 @@ class MessagingService extends PopbillBase {
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
+			if(empty($RequestNum) == false)	$Request['requestNum'] = $RequestNum;
 
 		  if($adsYN) $Request['adsYN'] = $adsYN;
       if($SystemYN) $Request['systemYN'] = $SystemYN;
@@ -161,6 +162,28 @@ class MessagingService extends PopbillBase {
   		}
 		return $MessageInfoList;
     }
+
+		/* 전송메시지 내역 및 전송상태 확인
+    *	$CorpNum => 발송사업자번호
+    *	$RequestNum	=> 전송요청번호
+    *	$UserID	=> 팝빌 회원아이디
+    */
+    public function GetMessagesRN($CorpNum,$RequestNum,$UserID = null) {
+    	if(empty($RequestNum)) {
+    		throw new PopbillException('확인할 전송요청번호를 입력하지 않았습니다.');
+    	}
+    	$result = $this->executeCURL('/Message/Get/'.$RequestNum, $CorpNum,$UserID);
+
+		  $MessageInfoList = array();
+
+  		for($i=0; $i<Count($result); $i++){
+  			$MsgInfo = new MessageInfo();
+  			$MsgInfo->fromJsonInfo($result[$i]);
+  			$MessageInfoList[$i] = $MsgInfo;
+  		}
+		return $MessageInfoList;
+    }
+
     /* 예약전송 취소
     *	$CorpNum => 발송사업자번호
     *	$ReceiptNum	=> 접수번호
@@ -168,12 +191,24 @@ class MessagingService extends PopbillBase {
     */
     public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
     	if(empty($ReceiptNum)) {
-    		throw new PopbillException('확인할 접수번호를 입력하지 않았습니다.');
+    		throw new PopbillException('예약전송 취소할 접수번호를 입력하지 않았습니다.');
     	}
     	return $this->executeCURL('/Message/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
     }
 
-    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null, $SystemYN = false) {
+		/* 예약전송 취소
+    *	$CorpNum => 발송사업자번호
+    *	$RequestNum	=> 전송요청번호
+    *	$UserID	=> 팝빌 회원아이디
+    */
+    public function CancelReserveRN($CorpNum,$RequestNum,$UserID = null) {
+    	if(empty($RequestNum)) {
+    		throw new PopbillException('예약전송 취소할 전송요청번호를 입력하지 않았습니다.');
+    	}
+    	return $this->executeCURL('/Message/Cancel/'.$RequestNum, $CorpNum, $UserID);
+    }
+
+    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject,$Content, $Messages = array(), $ReserveDT = null , $adsYN = false, $UserID = null, $SystemYN = false, $RequestNum = null) {
     	if(empty($Messages)) {
     		throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
     	}
@@ -185,6 +220,7 @@ class MessagingService extends PopbillBase {
     	if(empty($Content) == false)	$Request['content'] = $Content;
     	if(empty($Subject) == false)	$Request['subject'] = $Subject;
     	if(empty($ReserveDT) == false)	$Request['sndDT'] = $ReserveDT;
+			if(empty($RequestNum) == false)	$Request['requestNum'] = $RequestNum;
 
 		  if($adsYN) $Request['adsYN'] = $adsYN;
       if($SystemYN) $Request['systemYN'] = $SystemYN;
