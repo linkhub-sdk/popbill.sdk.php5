@@ -11,6 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Jeong YoHan (code@linkhub.co.kr)
 * Updated : 2018-03-02
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-06-27
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -41,6 +43,17 @@ class KakaoService extends PopbillBase {
       return $DetailInfo;
     }
 
+    public function GetMessagesRN($CorpNum,$RequestNum,$UserID = null) {
+      if(empty($RequestNum)) {
+          throw new PopbillException('카카오톡 전송요청번호를 입력하지 않았습니다.');
+      }
+      $response  = $this->executeCURL('/KakaoTalk/Get/'.$RequestNum, $CorpNum,$UserID);
+      $DetailInfo = new KakaoSentInfo();
+  		$DetailInfo->fromJsonInfo($response);
+
+      return $DetailInfo;
+    }
+
     public function ListPlusFriendID($CorpNum) {
       $PlusFriendList = array();
   		$response = $this->executeCURL('/KakaoTalk/ListPlusFriendID', $CorpNum);
@@ -64,9 +77,16 @@ class KakaoService extends PopbillBase {
 
     public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
       if(empty($ReceiptNum)) {
-          throw new PopbillException('확인할 접수번호를 입력하지 않았습니다.');
+          throw new PopbillException('예약전송을 취소할 접수번호를 입력하지 않았습니다.');
       }
       return $this->executeCURL('/KakaoTalk/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
+    }
+
+    public function CancelReserveRN($CorpNum,$RequestNum,$UserID = null) {
+      if(empty($RequestNum)) {
+          throw new PopbillException('예약전송을 취소할 전송요청번호를 입력하지 않았습니다.');
+      }
+      return $this->executeCURL('/KakaoTalk/Cancel/'.$RequestNum, $CorpNum,$UserID);
     }
 
     public function GetURL($CorpNum ,$UserID, $TOGO) {
@@ -130,18 +150,19 @@ class KakaoService extends PopbillBase {
     return $ChargeInfo;
   }
 
-  public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null) {
+  public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null, $RequestNum = null) {
 
     $Request = array();
 
-    if(empty($PlusFriendID) == false)        $Request['plusFriendID'] = $PlusFriendID;
+    if(empty($PlusFriendID) == false)  $Request['plusFriendID'] = $PlusFriendID;
     if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)    $Request['content'] = $Content;
+    if(empty($Content) == false)       $Request['content'] = $Content;
     if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)    $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)    $Request['sndDT'] = $ReserveDT;
-    if(empty($AdsYN) == false)    $Request['adsYN'] = $AdsYN;
-    if(empty($ImageURL) == false)    $Request['imageURL'] = $ImageURL;
+    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
+    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
+    if(empty($AdsYN) == false)         $Request['adsYN'] = $AdsYN;
+    if(empty($ImageURL) == false)      $Request['imageURL'] = $ImageURL;
+    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
 
     $Request['msgs'] = $Messages;
     $Request['btns'] = $Btns;
@@ -157,16 +178,17 @@ class KakaoService extends PopbillBase {
     return $this->executeCURL('/FMS', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
   }
 
-  public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null) {
+  public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null, $RequestNum = null) {
     $Request = array();
 
-    if(empty($PlusFriendID) == false)        $Request['plusFriendID'] = $PlusFriendID;
+    if(empty($PlusFriendID) == false)  $Request['plusFriendID'] = $PlusFriendID;
     if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)    $Request['content'] = $Content;
+    if(empty($Content) == false)       $Request['content'] = $Content;
     if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)    $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)    $Request['sndDT'] = $ReserveDT;
-    if(empty($AdsYN) == false)    $Request['adsYN'] = $AdsYN;
+    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
+    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
+    if(empty($AdsYN) == false)         $Request['adsYN'] = $AdsYN;
+    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
 
     $Request['msgs'] = $Messages;
     $Request['btns'] = $Btns;
@@ -175,15 +197,16 @@ class KakaoService extends PopbillBase {
     return $this->executeCURL('/FTS',$CorpNum,$UserID,true,null,$postdata)->receiptNum;
   }
 
-  public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null) {
+  public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null) {
     $Request = array();
 
-    if(empty($TemplateCode) == false)        $Request['templateCode'] = $TemplateCode;
+    if(empty($TemplateCode) == false)  $Request['templateCode'] = $TemplateCode;
     if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)    $Request['content'] = $Content;
+    if(empty($Content) == false)       $Request['content'] = $Content;
     if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)    $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)    $Request['sndDT'] = $ReserveDT;
+    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
+    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
+    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
     $Request['msgs'] = $Messages;
 
     $postdata = json_encode($Request);

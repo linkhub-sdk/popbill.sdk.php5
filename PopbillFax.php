@@ -13,6 +13,8 @@
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Updated : 2017-06-01
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-06-27
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
