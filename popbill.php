@@ -13,6 +13,9 @@
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Updated : 2016-07-06
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-06-28
+*
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anythings.
 * ======================================================================================
@@ -171,7 +174,7 @@ class PopbillBase
   	}
   }
 
-  protected function executeCURL($uri,$CorpNum = null,$userID = null,$isPost = false, $action = null, $postdata = null,$isMultiPart=false) {
+  protected function executeCURL($uri,$CorpNum = null,$userID = null,$isPost = false, $action = null, $postdata = null,$isMultiPart = false, $contentsType = null) {
   	if($this->__requestMode != "STREAM") {
 		$http = curl_init(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL).$uri);
 		$header = array();
@@ -187,9 +190,13 @@ class PopbillBase
 		}
 
 		if ( $isMultiPart == false ) {
+			if (is_null($contentsType) == false ) {
+				$header[] = 'Content-Type: '.$contentsType;
+			} else {
 			$header[] = 'Content-Type: Application/json';
+			}
 		} else {
-      // PHP 5.6 이상 CURL 파일전송 처리
+      // PHP 5.6 이상 CURL 파일전송 s
       if ( (version_compare(PHP_VERSION, '5.5') >= 0) ) {
         curl_setopt($http, CURLOPT_SAFE_UPLOAD, true);
 
@@ -230,7 +237,6 @@ class PopbillBase
 
 		$header[] = 'Accept-Encoding: gzip,deflate';
 		$header[] = 'Connection: close';
-
 		if(is_null($CorpNum) == false) {
 			$header[] = 'Authorization: Bearer '.$this->getsession_Token($CorpNum);
 		}
@@ -241,7 +247,11 @@ class PopbillBase
 			$header[] = 'X-HTTP-Method-Override: '.$action;
 		}
 		if($isMultiPart == false) {
+			if (is_null($contentsType) == false) {
+				$header[] = 'Content-Type: '.$contentsType;
+			} else {
 			$header[] = 'Content-Type: Application/json';
+			}
 			$postbody = $postdata;
 		} else { //Process MultipartBody.
 			$eol = "\r\n";
@@ -308,7 +318,6 @@ class PopbillBase
 			$params['http']['method'] = 'POST';
 			$params['http']['content'] = $postbody;
         }
-
 
 
   		if($header !== null) {

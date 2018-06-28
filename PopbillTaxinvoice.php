@@ -13,6 +13,8 @@
 * Written : 2015-06-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Updated : 2017-12-05
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-06-28
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -523,6 +525,17 @@ class TaxinvoiceService extends PopbillBase {
 
     return $ChargeInfo;
   }
+
+  // 문서관리번호 할당
+	public function AssignMgtKey( $CorpNum, $MgtKeyType, $itemKey, $MgtKey, $UserID = null ){
+		if(is_null($MgtKey) || empty($MgtKey)) {
+			throw new PopbillException('할당할 문서관리번호가 입력되지 않았습니다.');
+		}
+		$uri = '/Taxinvoice/'.$itemKey.'/'.$MgtKeyType;
+		$postdata = 'MgtKey='.$MgtKey;
+
+		return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata, false, 'application/x-www-form-urlencoded; charset=utf-8');
+	}
 }
 
 class Taxinvoice
