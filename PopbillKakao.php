@@ -10,7 +10,7 @@
 *
 * http://www.linkhub.co.kr
 * Author : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2018-03-02
+* Written : 2018-03-02
 * Contributor : Kim EunHye (code@linkhub.co.kr)
 * Updated : 2018-06-27
 *

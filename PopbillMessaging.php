@@ -12,7 +12,6 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-09-27
 * Contributor : Kim EunHye (code@linkhub.co.kr)
 * Updated : 2018-06-27
 *

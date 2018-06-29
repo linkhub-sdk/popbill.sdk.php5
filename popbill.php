@@ -12,9 +12,8 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2016-07-06
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-28
+* Updated : 2018-06-29
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anythings.
@@ -391,6 +390,7 @@ class ContactInfo
 	public $fax;
 	public $mgrYN;
 	public $regDT;
+	public $state;
 
 	public function fromJsonInfo($jsonInfo) {
 		isset($jsonInfo->id ) ? $this->id = $jsonInfo->id : null;
@@ -402,6 +402,7 @@ class ContactInfo
 		isset($jsonInfo->fax ) ? $this->fax = $jsonInfo->fax : null;
 		isset($jsonInfo->mgrYN ) ? $this->mgrYN = $jsonInfo->mgrYN : null;
 		isset($jsonInfo->regDT ) ? $this->regDT = $jsonInfo->regDT : null;
+		isset($jsonInfo->state ) ? $this->state = $jsonInfo->state : null;
 	}
 }
 

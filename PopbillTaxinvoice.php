@@ -12,9 +12,8 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2015-06-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-12-05
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-28
+* Updated : 2018-06-29
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
