@@ -353,7 +353,8 @@ class CashbillService extends PopbillBase {
   }
 
 	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
-		$uri = '/Cashbill/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+		$sendYNString = $sendYN ? 'True' : 'False';
+		$uri = '/Cashbill/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
 		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
 	}

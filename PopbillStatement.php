@@ -393,7 +393,8 @@ class StatementService extends PopbillBase {
 
   // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
 	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
-		$uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+		$sendYNString = $sendYN ? 'True' : 'False';		
+		$uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
 		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
 	}

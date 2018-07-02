@@ -549,7 +549,8 @@ class TaxinvoiceService extends PopbillBase {
 
   // 전자세금계산서 관련 메일전송 항목에 대한 전송여부를 수정
 	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
-		$uri = '/Taxinvoice/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+		$sendYNString = $sendYN ? 'True' : 'False';
+		$uri = '/Taxinvoice/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
 		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
 	}
