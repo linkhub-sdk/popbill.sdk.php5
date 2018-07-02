@@ -13,7 +13,7 @@
 * Written : 2015-06-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-29
+* Updated : 2018-07-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -296,7 +296,6 @@ class TaxinvoiceService extends PopbillBase {
 
     $result = $this->executeCURL('/Taxinvoice/'.$MgtKeyType, $CorpNum, null, true,null,$postdata);
 
-
 		for($i=0; $i<Count($result); $i++){
 			$TaxinvoiceInfo = new TaxinvoiceInfo();
 			$TaxinvoiceInfo->fromJsonInfo($result[$i]);
@@ -480,8 +479,6 @@ class TaxinvoiceService extends PopbillBase {
 		$uri .= '&PerPage=' . $PerPage;
     $uri .= '&InterOPYN=' . $InterOPYN;
 
-    var_dump($uri);
-
     $response = $this->executeCURL($uri,$CorpNum,$UserID);
 
 		$SearchList = new TISearchResult();
@@ -534,6 +531,27 @@ class TaxinvoiceService extends PopbillBase {
 		$postdata = 'MgtKey='.$MgtKey;
 
 		return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata, false, 'application/x-www-form-urlencoded; charset=utf-8');
+	}
+
+	//세금계산서 관련 메일전송 항목에 대한 전송여부 목록 반환
+  public function ListEmailConfig($CorpNum, $UserID = null) {
+		$EmailSendConfigList = array();
+
+		$result = $this->executeCURL('/Taxinvoice/EmailSendConfig', $CorpNum, $userID);
+
+		for($i=0; $i<Count($result); $i++){
+			$EmailSendConfig = new EmailSendConfig();
+			$EmailSendConfig->fromJsonInfo($result[$i]);
+			$EmailSendConfigList[$i] = $EmailSendConfig;
+		}
+		return $EmailSendConfigList;
+  }
+
+  // 전자세금계산서 관련 메일전송 항목에 대한 전송여부를 수정
+	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
+		$uri = '/Taxinvoice/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+
+		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
 	}
 }
 
@@ -922,6 +940,16 @@ class IssueRequest {
 class StmtRequest {
   public $ItemCode;
   public $MgtKey;
+}
+
+class EmailSendConfig {
+	public $emailType;
+	public $sendYN;
+
+	function fromJsonInfo($jsonInfo){
+		isset($jsonInfo->emailType) ? $this->emailType = $jsonInfo->emailType : null;
+		isset($jsonInfo->sendYN) ? $this->sendYN = $jsonInfo->sendYN : null;
+	}
 }
 
 ?>

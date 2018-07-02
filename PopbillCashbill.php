@@ -12,7 +12,8 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-11-14
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-07-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -337,6 +338,25 @@ class CashbillService extends PopbillBase {
 
     return $ChargeInfo;
   }
+
+  public function ListEmailConfig($CorpNum, $UserID = null) {
+		$EmailSendConfigList = array();
+
+		$result = $this->executeCURL('/Cashbill/EmailSendConfig', $CorpNum, $userID);
+
+		for($i=0; $i<Count($result); $i++){
+			$EmailSendConfig = new EmailSendConfig();
+			$EmailSendConfig->fromJsonInfo($result[$i]);
+			$EmailSendConfigList[$i] = $EmailSendConfig;
+		}
+		return $EmailSendConfigList;
+  }
+
+	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
+		$uri = '/Cashbill/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+
+		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
+	}
 }
 
 class Cashbill {
@@ -509,5 +529,15 @@ class CBSearchResult {
     }
     $this->list = $InfoList;
   }
+}
+
+class EmailSendConfig {
+	public $emailType;
+	public $sendYN;
+
+	function fromJsonInfo($jsonInfo){
+		isset($jsonInfo->emailType) ? $this->emailType = $jsonInfo->emailType : null;
+		isset($jsonInfo->sendYN) ? $this->sendYN = $jsonInfo->sendYN : null;
+	}
 }
 ?>

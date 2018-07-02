@@ -12,7 +12,8 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2017-03-02
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-07-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -375,6 +376,27 @@ class StatementService extends PopbillBase {
 
     return $ChargeInfo;
   }
+
+  // 전자명세서 관련 메일전송 항목에 대한 전송여부 목록 반환
+  public function ListEmailConfig($CorpNum, $UserID = null) {
+		$EmailSendConfigList = array();
+
+		$result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $userID);
+
+		for($i=0; $i<Count($result); $i++){
+			$EmailSendConfig = new EmailSendConfig();
+			$EmailSendConfig->fromJsonInfo($result[$i]);
+			$EmailSendConfigList[$i] = $EmailSendConfig;
+		}
+		return $EmailSendConfigList;
+  }
+
+  // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
+	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
+		$uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYN;
+
+		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
+	}
 }
 
 class Statement {
@@ -650,4 +672,13 @@ class StmtRequest {
   public $MgtKey;
 }
 
+class EmailSendConfig {
+	public $emailType;
+	public $sendYN;
+
+	function fromJsonInfo($jsonInfo){
+		isset($jsonInfo->emailType) ? $this->emailType = $jsonInfo->emailType : null;
+		isset($jsonInfo->sendYN) ? $this->sendYN = $jsonInfo->sendYN : null;
+	}
+}
 ?>
