@@ -101,7 +101,7 @@ class KakaoService extends PopbillBase {
     }
 
 
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString){
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString = null){
       if ( is_null( $SDate ) || $SDate === "" ) {
           throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
       }

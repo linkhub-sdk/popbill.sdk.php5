@@ -172,7 +172,7 @@ class FaxService extends PopbillBase {
     return $response->url;
   }
 
-  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString){
+  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString = null){
 
     if(is_null($SDate) || $SDate ===""){
 			throw new PopbillException('시작일자가 입력되지 않았습니다.');
