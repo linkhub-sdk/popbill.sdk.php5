@@ -13,7 +13,7 @@
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-27
+* Updated : 2018-07-03
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -172,7 +172,7 @@ class FaxService extends PopbillBase {
     return $response->url;
   }
 
-  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order){
+  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString){
 
     if(is_null($SDate) || $SDate ===""){
 			throw new PopbillException('시작일자가 입력되지 않았습니다.');
@@ -205,6 +205,10 @@ class FaxService extends PopbillBase {
     $uri .= '&Page=' . $Page;
     $uri .= '&PerPage=' . $PerPage;
     $uri .= '&Order=' . $Order;
+
+		if(!is_null($QString) || !empty($QString)){
+			$uri .= '&QString=' . $QString;
+		}
 
     $response = $this->executeCURL($uri, $CorpNum, "");
 
@@ -253,12 +257,13 @@ class FaxState {
 	public $sendResult;
   public $fileNames;
   public $receiptDT;
+	public $receiptNum;
+	public $requestNum;
 
 	function fromJsonInfo($jsonInfo){
     isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
     isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
     isset($jsonInfo->title) ? $this->title = $jsonInfo->title : null;
-
 		isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
 		isset($jsonInfo->convState) ? $this->convState = $jsonInfo->convState : null;
 		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
@@ -275,6 +280,8 @@ class FaxState {
 		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
 		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+		isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
+		isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
 
     if( isset ( $jsonInfo->fileNames ) ) {
       $fileNameList = array();

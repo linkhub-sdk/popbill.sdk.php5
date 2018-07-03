@@ -12,7 +12,7 @@
 * Author : Jeong YoHan (code@linkhub.co.kr)
 * Written : 2018-03-02
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-27
+* Updated : 2018-07-03
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -101,7 +101,7 @@ class KakaoService extends PopbillBase {
     }
 
 
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null){
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString){
       if ( is_null( $SDate ) || $SDate === "" ) {
           throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
       }
@@ -130,7 +130,10 @@ class KakaoService extends PopbillBase {
       $uri .= '&PerPage=' . $PerPage;
       $uri .= '&Order=' . $Order;
 
-      var_dump($uri);
+      if ( !is_null( $QString ) || !empty( $QString ) ) {
+          $uri .= '&QString=' . $QString;
+      }
+
       $response = $this->executeCURL($uri,$CorpNum,$UserID);
 
       $SearchList = new KakaoSearchResult();
@@ -325,6 +328,8 @@ class KakaoSentInfoDetail {
   public $altResult;
   public $altResultDT;
   public $reserveDT;
+  public $receiptNum;
+  public $requestNum;
 
   public function fromJsonInfo($jsonInfo){
     isset($jsonInfo->state) ? ($this->state = $jsonInfo->state) : null;
@@ -341,6 +346,8 @@ class KakaoSentInfoDetail {
     isset($jsonInfo->altResult) ? ($this->altResult = $jsonInfo->altResult) : null;
     isset($jsonInfo->altResultDT) ? ($this->altResultDT = $jsonInfo->altResultDT) : null;
     isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
+    isset($jsonInfo->receiptNum) ? ($this->receiptNum = $jsonInfo->receiptNum) : null;
+    isset($jsonInfo->requestNum) ? ($this->requestNum = $jsonInfo->requestNum) : null;
   }
 }
 

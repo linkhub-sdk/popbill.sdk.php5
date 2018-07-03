@@ -13,7 +13,7 @@
 * Written : 2014-04-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-06-27
+* Updated : 2018-07-03
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -239,7 +239,7 @@ class MessagingService extends PopbillBase {
     }
 
 	//문자 전송내역 조회
-	public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page, $PerPage, $Order, $UserID = null){
+	public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString){
 		if ( is_null( $SDate ) || $SDate === "" ) {
 			throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
 		}
@@ -268,6 +268,10 @@ class MessagingService extends PopbillBase {
 		$uri .= '&Page=' . $Page;
 		$uri .= '&PerPage=' . $PerPage;
 	  $uri .= '&Order=' . $Order;
+
+		if ( !is_null( $QString ) || !empty( $QString ) ) {
+			$uri .= '&QString='. $QString;
+		}
 
 		$response = $this->executeCURL($uri,$CorpNum,$UserID);
 
@@ -370,6 +374,8 @@ class MessageInfo{
 	public $resultDT;
 	public $sendResult;
   public $receiptDT;
+	public $receiptNum;
+	public $requestNum;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
@@ -387,6 +393,8 @@ class MessageInfo{
 		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
 		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
 		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+		isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
+		isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
 	}
 }
 
