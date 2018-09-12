@@ -195,9 +195,12 @@ class HTTaxinvoiceService extends PopbillBase {
   }
 
 	public function GetPopUpURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+		if(is_null($NTSConfirmNum) || empty($NTSConfirmNum)) {
+			throw new PopbillException('국세청승인번호가 입력되지 않았습니다.');
+	}
 		if ( strlen ($NTSConfirmNum) != 24 ) {
 			throw new PopbillException ('국세청승인번호가 올바르지 않습니다.');
-    }
+		}
 
   	$response = $this->executeCURL('/HomeTax/Taxinvoice/'.$NTSConfirmNum.'/PopUp', $CorpNum, $UserID);
   	return $response->url;
