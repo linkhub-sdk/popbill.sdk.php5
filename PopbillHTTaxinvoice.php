@@ -11,7 +11,8 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2016-07-07
-* Updated : 2017-03-02
+* Contributor : Kim EunHye (code@linkhub.co.kr)
+* Updated : 2018-09-12
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
 * ======================================================================================
@@ -194,6 +195,10 @@ class HTTaxinvoiceService extends PopbillBase {
   }
 
 	public function GetPopUpURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+		if ( strlen ($NTSConfirmNum) != 24 ) {
+			throw new PopbillException ('국세청승인번호가 올바르지 않습니다.');
+    }
+
   	$response = $this->executeCURL('/HomeTax/Taxinvoice/'.$NTSConfirmNum.'/PopUp', $CorpNum, $UserID);
   	return $response->url;
   }
