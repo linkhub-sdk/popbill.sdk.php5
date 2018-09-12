@@ -193,6 +193,12 @@ class HTTaxinvoiceService extends PopbillBase {
     return $this->executeCURL ('/HomeTax/Taxinvoice/CertInfo', $CorpNum )->certificateExpiration;
   }
 
+	public function GetPopUpURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+  	$response = $this->executeCURL('/HomeTax/Taxinvoice/'.$NTSConfirmNum.'/PopUp', $CorpNum, $UserID);
+  	return $response->url;
+  }
+
+
 }
 
 class FlatRate {
