@@ -1,3 +1,4 @@
+w
 <?php
 /**
 * =====================================================================================
@@ -406,6 +407,7 @@ class MessageBriefInfo {
   public $rDT;
   public $rlt;
   public $net;
+  public $srt;
 
   function fromJsonInfo($jsonInfo){
     isset($jsonInfo->sn) ? $this->sn = $jsonInfo->sn : null;
@@ -415,6 +417,7 @@ class MessageBriefInfo {
     isset($jsonInfo->rDT) ? $this->rDT = $jsonInfo->rDT : null;
     isset($jsonInfo->rlt) ? $this->rlt = $jsonInfo->rlt : null;
     isset($jsonInfo->net) ? $this->net = $jsonInfo->net : null;
+    isset($jsonInfo->srt) ? $this->srt = $jsonInfo->srt : null;
   }
 
 }
