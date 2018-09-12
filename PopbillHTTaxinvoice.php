@@ -203,7 +203,57 @@ class HTTaxinvoiceService extends PopbillBase {
   	return $response->url;
   }
 
+	// 홈택스 공인인증서 로그인 테스트
+	public function CheckCertValidation($CorpNum, $UserID = null){
+		if(is_null($CorpNum) || empty($CorpNum)) {
+      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+    }
+		return $this->executeCURL('/HomeTax/Taxinvoice/CertCheck', $CorpNum, $UserID);
+	}
 
+	// 부서사용자 계정등록
+	public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null){
+		if(is_null($CorpNum) || empty($CorpNum)) {
+      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+    }
+		if(is_null($deptUserID) || empty($deptUserID)) {
+      throw new PopbillException('홈택스 부서사용자 계정 아이디가 입력되지 않았습니다.');
+    }
+		if(is_null($deptUserPWD) || empty($deptUserPWD)) {
+      throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
+    }
+
+		$Request = new RegistDeptUserRequest();
+    $Request->id = $deptUserID;
+		$Request->pwd = $deptUserPWD;
+    $postdata = json_encode($Request);
+
+    return $this->executeCURL('/HomeTax/Taxinvoice/DeptUser', $CorpNum, $UserID, true, null, $postdata);
+	}
+
+	// 부서사용자 등록정보 확인
+	public function CheckDeptUser($CorpNum, $UserID = null){
+		if(is_null($CorpNum) || empty($CorpNum)) {
+      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+    }
+		return $this->executeCURL('/HomeTax/Taxinvoice/DeptUser', $CorpNum, $UserID);
+	}
+
+	// 부서사용자 로그인 테스트
+	public function CheckLoginDeptUser($CorpNum, $UserID = null){
+		if(is_null($CorpNum) || empty($CorpNum)) {
+      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+    }
+		return $this->executeCURL('/HomeTax/Taxinvoice/DeptUser/Check', $CorpNum, $UserID);
+	}
+
+	// 부서사용자 등록정보 삭제
+	public function DeleteDeptUser($CorpNum, $UserID = null){
+		if(is_null($CorpNum) || empty($CorpNum)) {
+      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+    }
+		return $this->executeCURL('/HomeTax/Taxinvoice/DeptUser', $CorpNum, $UserID, true, 'DELETE', null);
+	}
 }
 
 class FlatRate {
@@ -593,6 +643,17 @@ class KeyType {
   const SELL = 'SELL';
   const BUY = 'BUY';
   const TRUSTEE = 'TRUSTEE';
+}
+
+class RegistDeptUserRequest {
+	public $id;
+	public $pwd;
+
+	public function fromJsonInfo ( $jsonInfo )
+	{
+		isset ( $jsonInfo->id ) ? $this->id = $jsonInfo->id : null;
+		isset ( $jsonInfo->pwd ) ? $this->pwd = $jsonInfo->pwd : null;
+	}
 }
 
 ?>

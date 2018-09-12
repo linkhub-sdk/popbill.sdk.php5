@@ -13,7 +13,7 @@
 * Written : 2015-06-15
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-07-02
+* Updated : 2018-09-12
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -553,6 +553,11 @@ class TaxinvoiceService extends PopbillBase {
 		$uri = '/Taxinvoice/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
 		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
+	}
+
+	// 공인인증서 유요성 확인
+	public function CheckCertValidation($corpNum, $userID = null){
+		return $this->executeCURL('/Taxinvoice/CertCheck', $corpNum, $userID);
 	}
 }
 
