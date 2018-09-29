@@ -190,6 +190,7 @@ class HTCashbillSummary {
 
 class HTCashbill {
   public $ntsconfirmNum;
+  public $tradeDate;
   public $tradeDT;
   public $tradeUsage;
   public $tradeType;
@@ -215,6 +216,7 @@ class HTCashbill {
   public function fromJsonInfo ( $jsonInfo )
   {
     isset ( $jsonInfo->ntsconfirmNum ) ? $this->ntsconfirmNum = $jsonInfo->ntsconfirmNum : null;
+    isset ( $jsonInfo->tradeDate ) ? $this->tradeDate = $jsonInfo->tradeDate : null;
     isset ( $jsonInfo->tradeDT ) ? $this->tradeDT = $jsonInfo->tradeDT : null;
     isset ( $jsonInfo->tradeUsage ) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
     isset ( $jsonInfo->tradeType ) ? $this->tradeType = $jsonInfo->tradeType : null;
