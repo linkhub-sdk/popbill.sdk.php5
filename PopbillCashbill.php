@@ -13,7 +13,7 @@
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
 * Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-07-02
+* Updated : 2018-09-12
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -279,9 +279,9 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill?cfg=UNITCOST', $CorpNum)->unitCost;
   }
 
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order, $QString){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page, $PerPage, $Order, $QString, $TradeOpt = array(null)){
     if(is_null($DType) || empty($DType)) {
-      throw new PopbillException('날자유형(DType)이 입력되지 않았습니다.');
+      throw new PopbillException('일자유형(DType)이 입력되지 않았습니다.');
     }
 
     if(is_null($SDate) || empty($SDate)) {
@@ -307,6 +307,10 @@ class CashbillService extends PopbillBase {
 
     if(!is_null($TradeUsage) || !empty($TradeUsage)){
 			$uri .= '&TradeUsage=' . implode(',',$TradeUsage);
+		}
+
+		if(!is_null($TradeOpt) || !empty($TradeOpt)){
+			$uri .= '&TradeOpt=' . implode(',',$TradeOpt);
 		}
 
     if(!is_null($TaxationType) || !empty($TaxationType)){
@@ -363,49 +367,46 @@ class CashbillService extends PopbillBase {
 class Cashbill {
 
 	public $mgtKey;
-	public $memo;
-
-  public $tradeDate;
-  public $tradeUsage;
+	public $orgConfirmNum;
+  public $orgTradeDate;
   public $tradeType;
-
-  public $taxationType;
-  public $supplyCost;
+  public $tradeUsage;
+	public $tradeOpt;
+	public $taxationType;
+	public $totalAmount;
+	public $supplyCost;
   public $tax;
-  public $serviceFee;
-  public $totalAmount;
-
-  public $franchiseCorpNum;
+	public $serviceFee;
+	public $franchiseCorpNum;
   public $franchiseCorpName;
   public $franchiseCEOName;
   public $franchiseAddr;
   public $franchiseTEL;
-
-  public $identityNum;
+	public $identityNum;
   public $customerName;
   public $itemName;
   public $orderNumber;
-
-  public $email;
+	public $email;
   public $hp;
+	public $smssendYN;
+	public $memo;
+  public $tradeDate;
   public $fax;
-  public $smssendYN;
   public $faxsendYN;
-
-  public $orgConfirmNum;
-  public $orgTradeDate;
   public $cancelType;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
-		isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
-		isset($jsonInfo->tradeUsage) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
+		isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
+    isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
 		isset($jsonInfo->tradeType) ? $this->tradeType = $jsonInfo->tradeType : null;
+		isset($jsonInfo->tradeUsage) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
+		isset($jsonInfo->tradeOpt) ? $this->tradeOpt = $jsonInfo->tradeOpt : null;
 		isset($jsonInfo->taxationType) ? $this->taxationType = $jsonInfo->taxationType : null;
+		isset($jsonInfo->totalAmount) ? $this->totalAmount = $jsonInfo->totalAmount : null;
 		isset($jsonInfo->supplyCost) ? $this->supplyCost = $jsonInfo->supplyCost : null;
 		isset($jsonInfo->tax) ? $this->tax = $jsonInfo->tax : null;
 		isset($jsonInfo->serviceFee) ? $this->serviceFee = $jsonInfo->serviceFee : null;
-		isset($jsonInfo->totalAmount) ? $this->totalAmount = $jsonInfo->totalAmount : null;
 		isset($jsonInfo->franchiseCorpNum) ? $this->franchiseCorpNum = $jsonInfo->franchiseCorpNum : null;
 		isset($jsonInfo->franchiseCorpName) ? $this->franchiseCorpName = $jsonInfo->franchiseCorpName : null;
 		isset($jsonInfo->franchiseCEOName) ? $this->franchiseCEOName = $jsonInfo->franchiseCEOName : null;
@@ -417,11 +418,11 @@ class Cashbill {
 		isset($jsonInfo->orderNumber) ? $this->orderNumber = $jsonInfo->orderNumber : null;
 		isset($jsonInfo->email) ? $this->email = $jsonInfo->email : null;
 		isset($jsonInfo->hp) ? $this->hp = $jsonInfo->hp : null;
-		isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
 		isset($jsonInfo->smssendYN) ? $this->smssendYN = $jsonInfo->smssendYN : null;
+		isset($jsonInfo->memo) ? $this->memo = $jsonInfo->memo : null;
+		isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
+		isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
 		isset($jsonInfo->faxsendYN) ? $this->faxsendYN = $jsonInfo->faxsendYN : null;
-		isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
-    isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
     isset($jsonInfo->cancelType) ? $this->cancelType = $jsonInfo->cancelType : null;
 	}
 }
@@ -431,50 +432,55 @@ class CashbillInfo {
 	public $itemKey;
 	public $mgtKey;
 	public $tradeDate;
-	public $issueDT;
-	public $customerName;
-	public $itemName;
-	public $identityNum;
+	public $tradeType;
+	public $tradeUsage;
+	public $tradeOpt;
 	public $taxationType;
 	public $totalAmount;
-	public $tradeUsage;
-	public $tradeType;
+	public $issueDT;
+	public $regDT;
+	public $stateMemo;
 	public $stateCode;
 	public $stateDT;
-	public $printYN;
+	public $identityNum;
+	public $itemName;
+	public $customerName;
 	public $confirmNum;
-	public $orgTradeDate;
 	public $orgConfirmNum;
+	public $orgTradeDate;
 	public $ntssendDT;
-	public $ntsresult;
 	public $ntsresultDT;
 	public $ntsresultCode;
 	public $ntsresultMessage;
-	public $regDT;
+	public $printYN;
+	public $ntsresult;
 
 	function fromJsonInfo($jsonInfo){
 		isset($jsonInfo->itemKey) ? $this->itemKey = $jsonInfo->itemKey : null;
 		isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
 		isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
-		isset($jsonInfo->customerName) ? $this->customerName = $jsonInfo->customerName : null;
-		isset($jsonInfo->itemName) ? $this->itemName = $jsonInfo->itemName : null;
-		isset($jsonInfo->identityNum) ? $this->identityNum = $jsonInfo->identityNum : null;
+		isset($jsonInfo->tradeType) ? $this->tradeType = $jsonInfo->tradeType : null;
+		isset($jsonInfo->tradeUsage) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
+		isset($jsonInfo->tradeOpt) ? $this->tradeOpt = $jsonInfo->tradeOpt : null;
 		isset($jsonInfo->taxationType) ? $this->taxationType = $jsonInfo->taxationType : null;
 		isset($jsonInfo->totalAmount) ? $this->totalAmount = $jsonInfo->totalAmount : null;
-		isset($jsonInfo->tradeUsage) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
-		isset($jsonInfo->tradeType) ? $this->tradeType = $jsonInfo->tradeType : null;
+		isset($jsonInfo->issueDT) ? $this->issueDT = $jsonInfo->issueDT : null;
+		isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+		isset($jsonInfo->stateMemo) ? $this->stateMemo = $jsonInfo->stateMemo : null;
 		isset($jsonInfo->stateCode) ? $this->stateCode = $jsonInfo->stateCode : null;
 		isset($jsonInfo->stateDT) ? $this->stateDT = $jsonInfo->stateDT : null;
-		isset($jsonInfo->printYN) ? $this->printYN = $jsonInfo->printYN : null;
+		isset($jsonInfo->identityNum) ? $this->identityNum = $jsonInfo->identityNum : null;
+		isset($jsonInfo->itemName) ? $this->itemName = $jsonInfo->itemName : null;
+		isset($jsonInfo->customerName) ? $this->customerName = $jsonInfo->customerName : null;
 		isset($jsonInfo->confirmNum) ? $this->confirmNum = $jsonInfo->confirmNum : null;
+		isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
 		isset($jsonInfo->orgTradeDate) ? $this->orgTradeDate = $jsonInfo->orgTradeDate : null;
-    isset($jsonInfo->orgConfirmNum) ? $this->orgConfirmNum = $jsonInfo->orgConfirmNum : null;
 		isset($jsonInfo->ntssendDT) ? $this->ntssendDT = $jsonInfo->ntssendDT : null;
-		isset($jsonInfo->ntsresult) ? $this->ntsresult = $jsonInfo->ntsresult : null;
 		isset($jsonInfo->ntsresultDT) ? $this->ntsresultDT = $jsonInfo->ntsresultDT : null;
 		isset($jsonInfo->ntsresultCode) ? $this->ntsresultCode = $jsonInfo->ntsresultCode : null;
 		isset($jsonInfo->ntsresultMessage) ? $this->ntsresultMessage = $jsonInfo->ntsresultMessage : null;
-		isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+		isset($jsonInfo->printYN) ? $this->printYN = $jsonInfo->printYN : null;
+		isset($jsonInfo->ntsresult) ? $this->ntsresult = $jsonInfo->ntsresult : null;
 	}
 }
 
