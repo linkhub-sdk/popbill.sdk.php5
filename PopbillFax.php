@@ -236,93 +236,97 @@ class FaxService extends PopbillBase {
 }
 
 
-class FaxState {
-  public $state;
-	public $result;
-  public $title;
-	public $sendState;
-	public $convState;
-	public $sendNum;
-  public $senderName;
-	public $receiveNum;
-	public $receiveName;
-	public $sendPageCnt;
-	public $successPageCnt;
-	public $failPageCnt;
-	public $refundPageCnt;
-	public $cancelPageCnt;
-	public $reserveDT;
-	public $sendDT;
-	public $resultDT;
-	public $sendResult;
-  public $fileNames;
-  public $receiptDT;
-	public $receiptNum;
-	public $requestNum;
+class FaxState
+{
+    public $state;
+    public $result;
+    public $title;
+    public $sendState;
+    public $convState;
+    public $sendNum;
+    public $senderName;
+    public $receiveNum;
+    public $receiveName;
+    public $sendPageCnt;
+    public $successPageCnt;
+    public $failPageCnt;
+    public $refundPageCnt;
+    public $cancelPageCnt;
+    public $reserveDT;
+    public $sendDT;
+    public $resultDT;
+    public $sendResult;
+    public $fileNames;
+    public $receiptDT;
+    public $receiptNum;
+    public $requestNum;
 
-	function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
-    isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
-    isset($jsonInfo->title) ? $this->title = $jsonInfo->title : null;
-		isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
-		isset($jsonInfo->convState) ? $this->convState = $jsonInfo->convState : null;
-		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
-    isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
-		isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
-		isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
-		isset($jsonInfo->sendPageCnt) ? $this->sendPageCnt = $jsonInfo->sendPageCnt : null;
-		isset($jsonInfo->successPageCnt) ? $this->successPageCnt = $jsonInfo->successPageCnt : null;
-		isset($jsonInfo->failPageCnt) ? $this->failPageCnt = $jsonInfo->failPageCnt : null;
-		isset($jsonInfo->refundPageCnt) ? $this->refundPageCnt = $jsonInfo->refundPageCnt : null;
-		isset($jsonInfo->cancelPageCnt) ? $this->cancelPageCnt = $jsonInfo->cancelPageCnt : null;
-		isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;
-		isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
-		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
-		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
-		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
-		isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
-		isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
+        isset($jsonInfo->title) ? $this->title = $jsonInfo->title : null;
+        isset($jsonInfo->sendState) ? $this->sendState = $jsonInfo->sendState : null;
+        isset($jsonInfo->convState) ? $this->convState = $jsonInfo->convState : null;
+        isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
+        isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
+        isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
+        isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
+        isset($jsonInfo->sendPageCnt) ? $this->sendPageCnt = $jsonInfo->sendPageCnt : null;
+        isset($jsonInfo->successPageCnt) ? $this->successPageCnt = $jsonInfo->successPageCnt : null;
+        isset($jsonInfo->failPageCnt) ? $this->failPageCnt = $jsonInfo->failPageCnt : null;
+        isset($jsonInfo->refundPageCnt) ? $this->refundPageCnt = $jsonInfo->refundPageCnt : null;
+        isset($jsonInfo->cancelPageCnt) ? $this->cancelPageCnt = $jsonInfo->cancelPageCnt : null;
+        isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;
+        isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
+        isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
+        isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
+        isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+        isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
+        isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
         isset($jsonInfo->chargePageCnt) ? $this->chargePageCnt = $jsonInfo->chargePageCnt : null;
         isset($jsonInfo->tiffFileSize) ? $this->tiffFileSize = $jsonInfo->tiffFileSize : null;
 
-    if( isset ( $jsonInfo->fileNames ) ) {
-      $fileNameList = array();
+        if (isset ($jsonInfo->fileNames)) {
+            $fileNameList = array();
 
-      for ( $i = 0; $i < Count($jsonInfo->fileNames); $i++ ) {
-        $fileNameList[$i] = $jsonInfo->fileNames[$i];
-      }
+            for ($i = 0; $i < Count($jsonInfo->fileNames); $i++) {
+                $fileNameList[$i] = $jsonInfo->fileNames[$i];
+            }
 
-      $this->fileNames = $fileNameList;
+            $this->fileNames = $fileNameList;
+        }
     }
-	}
 
 }
 
-class FaxSearchResult {
-  public $code;
-  public $total;
-  public $perPage;
-  public $pageNum;
-  public $pageCount;
-  public $message;
+class FaxSearchResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $message;
 
-  function fromJsonInfo( $jsonInfo ){
-    isset( $jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
-    isset( $jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
-    isset( $jsonInfo->perPage ) ? $this->perPage = $jsonInfo->perPage : null;
-    isset( $jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
-    isset( $jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
-    isset( $jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
 
-    $InfoList = array();
+        $InfoList = array();
 
-    for ( $i = 0; $i < Count( $jsonInfo->list ); $i++ ) {
-      $InfoObj = new FaxState();
-      $InfoObj->fromJsonInfo( $jsonInfo->list[$i] );
-      $InfoList[$i] = $InfoObj;
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $InfoObj = new FaxState();
+            $InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+            $InfoList[$i] = $InfoObj;
+        }
+        $this->list = $InfoList;
     }
-    $this->list = $InfoList;
-  }
 }
 
 
