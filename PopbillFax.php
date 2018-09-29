@@ -282,6 +282,8 @@ class FaxState {
 		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
 		isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
 		isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
+        isset($jsonInfo->chargePageCnt) ? $this->chargePageCnt = $jsonInfo->chargePageCnt : null;
+        isset($jsonInfo->tiffFileSize) ? $this->tiffFileSize = $jsonInfo->tiffFileSize : null;
 
     if( isset ( $jsonInfo->fileNames ) ) {
       $fileNameList = array();
