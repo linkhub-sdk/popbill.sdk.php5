@@ -218,163 +218,174 @@ class KakaoService extends PopbillBase {
   }
 }
 
-class ENumKakaoType {
-  const ATS = 'ATS';
-  const FTS = 'FTS';
-  const FMS = 'FMS';
+class ENumKakaoType
+{
+    const ATS = 'ATS';
+    const FTS = 'FTS';
+    const FMS = 'FMS';
 }
 
-class KakaoSearchResult {
-  public $code;
-  public $message;
-  public $total;
-  public $perPage;
-  public $pageNum;
-  public $pageCount;
+class KakaoSearchResult
+{
+    public $code;
+    public $message;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
 
-  public $list;
+    public $list;
 
-  function fromJsonInfo($jsonInfo){
+    function fromJsonInfo($jsonInfo)
+    {
 
-    isset($jsonInfo->code) ? ($this->code = $jsonInfo->code) : null;
-    isset($jsonInfo->message) ? ($this->message = $jsonInfo->message) : null;
-    isset($jsonInfo->total) ? ($this->total = $jsonInfo->total) : null;
-    isset($jsonInfo->perPage) ? ($this->perPage = $jsonInfo->perPage) : null;
-    isset($jsonInfo->pageNum) ? ($this->pageNum = $jsonInfo->pageNum) : null;
-    isset($jsonInfo->pageCount) ? ($this->pageCount = $jsonInfo->pageCount) : null;
+        isset($jsonInfo->code) ? ($this->code = $jsonInfo->code) : null;
+        isset($jsonInfo->message) ? ($this->message = $jsonInfo->message) : null;
+        isset($jsonInfo->total) ? ($this->total = $jsonInfo->total) : null;
+        isset($jsonInfo->perPage) ? ($this->perPage = $jsonInfo->perPage) : null;
+        isset($jsonInfo->pageNum) ? ($this->pageNum = $jsonInfo->pageNum) : null;
+        isset($jsonInfo->pageCount) ? ($this->pageCount = $jsonInfo->pageCount) : null;
 
-    $DetailList = array();
-    for($i=0; $i<Count($jsonInfo->list);$i++){
-      $SentInfo = new KakaoSentInfoDetail();
-      $SentInfo->fromJsonInfo($jsonInfo->list[$i]);
-      $DetailList[$i] = $SentInfo;
+        $DetailList = array();
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $SentInfo = new KakaoSentInfoDetail();
+            $SentInfo->fromJsonInfo($jsonInfo->list[$i]);
+            $DetailList[$i] = $SentInfo;
+        }
+        $this->list = $DetailList;
     }
-    $this->list = $DetailList;
-  }
 }
 
-class KakaoSentInfo {
-  public $contentType;
-  public $temaplateCode;
-  public $plusFriendID;
-  public $sendNum;
-  public $altContent;
-  public $altSendType;
-  public $reserveDT;
-  public $adsYN;
-  public $imageURL;
-  public $sendCnt;
-  public $successCnt;
-  public $failCnt;
-  public $altCnt;
-  public $cancelCnt;
+class KakaoSentInfo
+{
+    public $contentType;
+    public $temaplateCode;
+    public $plusFriendID;
+    public $sendNum;
+    public $altContent;
+    public $altSendType;
+    public $reserveDT;
+    public $adsYN;
+    public $imageURL;
+    public $sendCnt;
+    public $successCnt;
+    public $failCnt;
+    public $altCnt;
+    public $cancelCnt;
 
-  public $msgs;
-  public $btns;
+    public $msgs;
+    public $btns;
 
-  function fromJsonInfo($jsonInfo) {
+    function fromJsonInfo($jsonInfo)
+    {
 
-    isset($jsonInfo->contentType) ? ($this->contentType = $jsonInfo->contentType) : null;
-    isset($jsonInfo->templateCode) ? ($this->templateCode = $jsonInfo->templateCode) : null;
-    isset($jsonInfo->plusFriendID) ? ($this->plusFriendID = $jsonInfo->plusFriendID) : null;
-    isset($jsonInfo->sendNum) ? ($this->sendNum = $jsonInfo->sendNum) : null;
-    isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
-    isset($jsonInfo->altSendType) ? ($this->altSendType = $jsonInfo->altSendType) : null;
-    isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
-    isset($jsonInfo->adsYN) ? ($this->adsYN = $jsonInfo->adsYN) : null;
-    isset($jsonInfo->imageURL) ? ($this->imageURL = $jsonInfo->imageURL) : null;
-    isset($jsonInfo->sendCnt) ? ($this->sendCnt = $jsonInfo->sendCnt) : null;
-    isset($jsonInfo->successCnt) ? ($this->successCnt = $jsonInfo->successCnt) : null;
-    isset($jsonInfo->failCnt) ? ($this->failCnt = $jsonInfo->failCnt) : null;
-    isset($jsonInfo->altCnt) ? ($this->altCnt = $jsonInfo->altCnt) : null;
-    isset($jsonInfo->cancelCnt) ? ($this->cancelCnt = $jsonInfo->cancelCnt) : null;
+        isset($jsonInfo->contentType) ? ($this->contentType = $jsonInfo->contentType) : null;
+        isset($jsonInfo->templateCode) ? ($this->templateCode = $jsonInfo->templateCode) : null;
+        isset($jsonInfo->plusFriendID) ? ($this->plusFriendID = $jsonInfo->plusFriendID) : null;
+        isset($jsonInfo->sendNum) ? ($this->sendNum = $jsonInfo->sendNum) : null;
+        isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
+        isset($jsonInfo->altSendType) ? ($this->altSendType = $jsonInfo->altSendType) : null;
+        isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
+        isset($jsonInfo->adsYN) ? ($this->adsYN = $jsonInfo->adsYN) : null;
+        isset($jsonInfo->imageURL) ? ($this->imageURL = $jsonInfo->imageURL) : null;
+        isset($jsonInfo->sendCnt) ? ($this->sendCnt = $jsonInfo->sendCnt) : null;
+        isset($jsonInfo->successCnt) ? ($this->successCnt = $jsonInfo->successCnt) : null;
+        isset($jsonInfo->failCnt) ? ($this->failCnt = $jsonInfo->failCnt) : null;
+        isset($jsonInfo->altCnt) ? ($this->altCnt = $jsonInfo->altCnt) : null;
+        isset($jsonInfo->cancelCnt) ? ($this->cancelCnt = $jsonInfo->cancelCnt) : null;
 
-    if (isset($jsonInfo->msgs)){
-      $msgsList = array();
-      for($i=0; $i<Count($jsonInfo->msgs); $i++){
-        $kakaoDetail = new KakaoSentInfoDetail();
-        $kakaoDetail->fromJsonInfo($jsonInfo->msgs[$i]);
-        $msgsList[$i] = $kakaoDetail;
-      }
-      $this->msgs = $msgsList;
-    } // end of if
+        if (isset($jsonInfo->msgs)) {
+            $msgsList = array();
+            for ($i = 0; $i < Count($jsonInfo->msgs); $i++) {
+                $kakaoDetail = new KakaoSentInfoDetail();
+                $kakaoDetail->fromJsonInfo($jsonInfo->msgs[$i]);
+                $msgsList[$i] = $kakaoDetail;
+            }
+            $this->msgs = $msgsList;
+        } // end of if
 
-    if (isset($jsonInfo->btns)) {
-      $btnsList = array();
-      for($i=0; $i<Count($jsonInfo->btns); $i++){
-        $buttonDetail = new KakaoButton();
-        $buttonDetail->fromJsonInfo($jsonInfo->btns[$i]);
-        $btnsList[$i] = $buttonDetail;
-      }
-      $this->btns = $btnsList;
+        if (isset($jsonInfo->btns)) {
+            $btnsList = array();
+            for ($i = 0; $i < Count($jsonInfo->btns); $i++) {
+                $buttonDetail = new KakaoButton();
+                $buttonDetail->fromJsonInfo($jsonInfo->btns[$i]);
+                $btnsList[$i] = $buttonDetail;
+            }
+            $this->btns = $btnsList;
+        }
+
     }
-
-  }
 
 } // end of KakaoSentInfo class
 
-class KakaoSentInfoDetail {
-  public $state;
-  public $sendDT;
-  public $receiveNum;
-  public $receiveName;
-  public $content;
-  public $result;
-  public $resultDT;
-  public $altContent;
-  public $contentType;
-  public $altContentType;
-  public $altSendDT;
-  public $altResult;
-  public $altResultDT;
-  public $reserveDT;
-  public $receiptNum;
-  public $requestNum;
+class KakaoSentInfoDetail
+{
+    public $state;
+    public $sendDT;
+    public $receiveNum;
+    public $receiveName;
+    public $content;
+    public $result;
+    public $resultDT;
+    public $altContent;
+    public $contentType;
+    public $altContentType;
+    public $altSendDT;
+    public $altResult;
+    public $altResultDT;
+    public $reserveDT;
+    public $receiptNum;
+    public $requestNum;
 
-  public function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->state) ? ($this->state = $jsonInfo->state) : null;
-    isset($jsonInfo->sendDT) ? ($this->sendDT = $jsonInfo->sendDT) : null;
-    isset($jsonInfo->receiveNum) ? ($this->receiveNum = $jsonInfo->receiveNum) : null;
-    isset($jsonInfo->receiveName) ? ($this->receiveName = $jsonInfo->receiveName) : null;
-    isset($jsonInfo->content) ? ($this->content = $jsonInfo->content) : null;
-    isset($jsonInfo->result) ? ($this->result = $jsonInfo->result) : null;
-    isset($jsonInfo->resultDT) ? ($this->resultDT = $jsonInfo->resultDT) : null;
-    isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
-    isset($jsonInfo->contentType) ? ($this->contentType = $jsonInfo->contentType) : null;
-    isset($jsonInfo->altContentType) ? ($this->altContentType = $jsonInfo->altContentType) : null;
-    isset($jsonInfo->altSendDT) ? ($this->altSendDT = $jsonInfo->altSendDT) : null;
-    isset($jsonInfo->altResult) ? ($this->altResult = $jsonInfo->altResult) : null;
-    isset($jsonInfo->altResultDT) ? ($this->altResultDT = $jsonInfo->altResultDT) : null;
-    isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
-    isset($jsonInfo->receiptNum) ? ($this->receiptNum = $jsonInfo->receiptNum) : null;
-    isset($jsonInfo->requestNum) ? ($this->requestNum = $jsonInfo->requestNum) : null;
-  }
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->state) ? ($this->state = $jsonInfo->state) : null;
+        isset($jsonInfo->sendDT) ? ($this->sendDT = $jsonInfo->sendDT) : null;
+        isset($jsonInfo->receiveNum) ? ($this->receiveNum = $jsonInfo->receiveNum) : null;
+        isset($jsonInfo->receiveName) ? ($this->receiveName = $jsonInfo->receiveName) : null;
+        isset($jsonInfo->content) ? ($this->content = $jsonInfo->content) : null;
+        isset($jsonInfo->result) ? ($this->result = $jsonInfo->result) : null;
+        isset($jsonInfo->resultDT) ? ($this->resultDT = $jsonInfo->resultDT) : null;
+        isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
+        isset($jsonInfo->contentType) ? ($this->contentType = $jsonInfo->contentType) : null;
+        isset($jsonInfo->altContentType) ? ($this->altContentType = $jsonInfo->altContentType) : null;
+        isset($jsonInfo->altSendDT) ? ($this->altSendDT = $jsonInfo->altSendDT) : null;
+        isset($jsonInfo->altResult) ? ($this->altResult = $jsonInfo->altResult) : null;
+        isset($jsonInfo->altResultDT) ? ($this->altResultDT = $jsonInfo->altResultDT) : null;
+        isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
+        isset($jsonInfo->receiptNum) ? ($this->receiptNum = $jsonInfo->receiptNum) : null;
+        isset($jsonInfo->requestNum) ? ($this->requestNum = $jsonInfo->requestNum) : null;
+    }
 }
 
-class KakaoButton {
-  public $n;
-  public $t;
-  public $u1;
-  public $u2;
+class KakaoButton
+{
+    public $n;
+    public $t;
+    public $u1;
+    public $u2;
 
-  function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->n) ? $this->n = $jsonInfo->n : null;
-    isset($jsonInfo->t) ? $this->t = $jsonInfo->t : null;
-    isset($jsonInfo->u1) ? $this->u1 = $jsonInfo->u1 : null;
-    isset($jsonInfo->u2) ? $this->u2 = $jsonInfo->u2 : null;
-  }
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->n) ? $this->n = $jsonInfo->n : null;
+        isset($jsonInfo->t) ? $this->t = $jsonInfo->t : null;
+        isset($jsonInfo->u1) ? $this->u1 = $jsonInfo->u1 : null;
+        isset($jsonInfo->u2) ? $this->u2 = $jsonInfo->u2 : null;
+    }
 }
 
-class PlusFriend {
-  public $plusFriendID;
-  public $plusFriendName;
-  public $regDT;
+class PlusFriend
+{
+    public $plusFriendID;
+    public $plusFriendName;
+    public $regDT;
 
-  function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->plusFriendID) ? $this->plusFriendID = $jsonInfo->plusFriendID : null;
-    isset($jsonInfo->plusFriendName) ? $this->plusFriendName = $jsonInfo->plusFriendName : null;
-    isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
-  }
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->plusFriendID) ? $this->plusFriendID = $jsonInfo->plusFriendID : null;
+        isset($jsonInfo->plusFriendName) ? $this->plusFriendName = $jsonInfo->plusFriendName : null;
+        isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+    }
 }
 
 

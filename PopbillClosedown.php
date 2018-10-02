@@ -85,22 +85,25 @@ class ClosedownService extends PopbillBase {
   }
 }
 
-class CorpState {
-	public $corpNum;
-	public $state;
-	public $type;
-	public $stateDate;
-	public $checkDate;
-  //과세유형 전환일자 추가 (2017/08/17)
-  public $typeDate;
+class CorpState
+{
+    public $corpNum;
+    public $state;
+    public $type;
+    public $stateDate;
+    public $checkDate;
+    //과세유형 전환일자 추가 (2017/08/17)
+    public $typeDate;
 
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->corpNum) ? $this->corpNum = $jsonInfo->corpNum : null;
-		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
-		isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
-		isset($jsonInfo->stateDate) ? $this->stateDate = $jsonInfo->stateDate : null;
-		isset($jsonInfo->checkDate) ? $this->checkDate = $jsonInfo->checkDate : null;
-    isset($jsonInfo->typeDate) ? $this->typeDate = $jsonInfo->typeDate : null;
-	}
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->corpNum) ? $this->corpNum = $jsonInfo->corpNum : null;
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
+        isset($jsonInfo->stateDate) ? $this->stateDate = $jsonInfo->stateDate : null;
+        isset($jsonInfo->checkDate) ? $this->checkDate = $jsonInfo->checkDate : null;
+        isset($jsonInfo->typeDate) ? $this->typeDate = $jsonInfo->typeDate : null;
+    }
 }
+
 ?>

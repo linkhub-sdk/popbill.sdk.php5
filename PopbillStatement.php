@@ -400,139 +400,142 @@ class StatementService extends PopbillBase {
 	}
 }
 
-class Statement {
-	public $sendNum;
-	public $receiveNum;
-	public $memo;
+class Statement
+{
+    public $sendNum;
+    public $receiveNum;
+    public $memo;
 
-	public $itemCode;
-	public $mgtKey;
-	public $invoiceNum;
-	public $formCode;
-	public $writeDate;
-	public $taxType;
+    public $itemCode;
+    public $mgtKey;
+    public $invoiceNum;
+    public $formCode;
+    public $writeDate;
+    public $taxType;
 
-	public $senderCorpNum;
-	public $senderTaxRegID;
-	public $senderCorpName;
-	public $senderCEOName;
-	public $senderAddr;
-	public $senderBizClass;
-	public $senderBizType;
-	public $senderContactName;
-	public $senderDeptName;
-	public $senderTEL;
-	public $senderHP;
-	public $senderEmail;
-	public $senderFAX;
+    public $senderCorpNum;
+    public $senderTaxRegID;
+    public $senderCorpName;
+    public $senderCEOName;
+    public $senderAddr;
+    public $senderBizClass;
+    public $senderBizType;
+    public $senderContactName;
+    public $senderDeptName;
+    public $senderTEL;
+    public $senderHP;
+    public $senderEmail;
+    public $senderFAX;
 
-	public $receiverCorpNum;
-	public $receiverTaxRegID;
-	public $receiverCorpName;
-	public $receiverCEOName;
-	public $receiverAddr;
-	public $receiverBizClass;
-	public $receiverBizType;
-	public $receiverContactName;
-	public $receiverDeptName;
-	public $receiverTEL;
-	public $receiverHP;
-	public $receiverEmail;
-	public $receiverFAX;
+    public $receiverCorpNum;
+    public $receiverTaxRegID;
+    public $receiverCorpName;
+    public $receiverCEOName;
+    public $receiverAddr;
+    public $receiverBizClass;
+    public $receiverBizType;
+    public $receiverContactName;
+    public $receiverDeptName;
+    public $receiverTEL;
+    public $receiverHP;
+    public $receiverEmail;
+    public $receiverFAX;
 
-	public $taxTotal;
-	public $supplyCostTotal;
-	public $totalAmount;
-	public $purposeType;
-	public $serialNum;
-	public $remark1;
-	public $remark2;
-	public $remark3;
-	public $businessLicenseYN;
-	public $bankBookYN;
-	public $faxsendYN;
-	public $smssendYN;
-	public $autoacceptYN;
+    public $taxTotal;
+    public $supplyCostTotal;
+    public $totalAmount;
+    public $purposeType;
+    public $serialNum;
+    public $remark1;
+    public $remark2;
+    public $remark3;
+    public $businessLicenseYN;
+    public $bankBookYN;
+    public $faxsendYN;
+    public $smssendYN;
+    public $autoacceptYN;
 
-	public $detailList;
-	public $propertyBag;
+    public $detailList;
+    public $propertyBag;
 
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->itemCode ) ? ($this->itemCode = $jsonInfo->itemCode ) : null;
-		isset($jsonInfo->mgtKey ) ? ($this->mgtKey = $jsonInfo->mgtKey ) : null;
-		isset($jsonInfo->invoiceNum ) ? ($this->invoiceNum = $jsonInfo->invoiceNum ) : null;
-		isset($jsonInfo->formCode ) ? ($this->formCode = $jsonInfo->formCode ) : null;
-		isset($jsonInfo->writeDate ) ? ($this->writeDate = $jsonInfo->writeDate ) : null;
-		isset($jsonInfo->taxType ) ? ($this->taxType = $jsonInfo->taxType ) : null;
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->itemCode) ? ($this->itemCode = $jsonInfo->itemCode) : null;
+        isset($jsonInfo->mgtKey) ? ($this->mgtKey = $jsonInfo->mgtKey) : null;
+        isset($jsonInfo->invoiceNum) ? ($this->invoiceNum = $jsonInfo->invoiceNum) : null;
+        isset($jsonInfo->formCode) ? ($this->formCode = $jsonInfo->formCode) : null;
+        isset($jsonInfo->writeDate) ? ($this->writeDate = $jsonInfo->writeDate) : null;
+        isset($jsonInfo->taxType) ? ($this->taxType = $jsonInfo->taxType) : null;
 
-		isset($jsonInfo->senderCorpNum ) ? ($this->senderCorpNum = $jsonInfo->senderCorpNum ) : null;
-		isset($jsonInfo->senderTaxRegID ) ? ($this->senderTaxRegID = $jsonInfo->senderTaxRegID ) : null;
-		isset($jsonInfo->senderCorpName ) ? ($this->senderCorpName = $jsonInfo->senderCorpName ) : null;
-		isset($jsonInfo->senderCEOName ) ? ($this->senderCEOName = $jsonInfo->senderCEOName ) : null;
-		isset($jsonInfo->senderAddr ) ? ($this->senderAddr = $jsonInfo->senderAddr ) : null;
-		isset($jsonInfo->senderBizClass ) ? ($this->senderBizClass = $jsonInfo->senderBizClass ) : null;
-		isset($jsonInfo->senderBizType ) ? ($this->senderBizType = $jsonInfo->senderBizType ) : null;
-		isset($jsonInfo->senderContactName ) ? ($this->senderContactName = $jsonInfo->senderContactName ) : null;
-		isset($jsonInfo->senderDeptName ) ? ($this->senderDeptName = $jsonInfo->senderDeptName ) : null;
-		isset($jsonInfo->senderTEL ) ? ($this->senderTEL = $jsonInfo->senderTEL ) : null;
-		isset($jsonInfo->senderHP ) ? ($this->senderHP = $jsonInfo->senderHP ) : null;
-		isset($jsonInfo->senderEmail ) ? ($this->senderEmail = $jsonInfo->senderEmail ) : null;
-		isset($jsonInfo->senderFAX ) ? ($this->senderFAX = $jsonInfo->senderFAX ) : null;
+        isset($jsonInfo->senderCorpNum) ? ($this->senderCorpNum = $jsonInfo->senderCorpNum) : null;
+        isset($jsonInfo->senderTaxRegID) ? ($this->senderTaxRegID = $jsonInfo->senderTaxRegID) : null;
+        isset($jsonInfo->senderCorpName) ? ($this->senderCorpName = $jsonInfo->senderCorpName) : null;
+        isset($jsonInfo->senderCEOName) ? ($this->senderCEOName = $jsonInfo->senderCEOName) : null;
+        isset($jsonInfo->senderAddr) ? ($this->senderAddr = $jsonInfo->senderAddr) : null;
+        isset($jsonInfo->senderBizClass) ? ($this->senderBizClass = $jsonInfo->senderBizClass) : null;
+        isset($jsonInfo->senderBizType) ? ($this->senderBizType = $jsonInfo->senderBizType) : null;
+        isset($jsonInfo->senderContactName) ? ($this->senderContactName = $jsonInfo->senderContactName) : null;
+        isset($jsonInfo->senderDeptName) ? ($this->senderDeptName = $jsonInfo->senderDeptName) : null;
+        isset($jsonInfo->senderTEL) ? ($this->senderTEL = $jsonInfo->senderTEL) : null;
+        isset($jsonInfo->senderHP) ? ($this->senderHP = $jsonInfo->senderHP) : null;
+        isset($jsonInfo->senderEmail) ? ($this->senderEmail = $jsonInfo->senderEmail) : null;
+        isset($jsonInfo->senderFAX) ? ($this->senderFAX = $jsonInfo->senderFAX) : null;
 
-		isset($jsonInfo->receiverCorpNum ) ? ($this->receiverCorpNum = $jsonInfo->receiverCorpNum ) : null;
-		isset($jsonInfo->receiverTaxRegID ) ? ($this->receiverTaxRegID = $jsonInfo->receiverTaxRegID ) : null;
-		isset($jsonInfo->receiverCorpName ) ? ($this->receiverCorpName = $jsonInfo->receiverCorpName ) : null;
-		isset($jsonInfo->receiverCEOName ) ? ($this->receiverCEOName = $jsonInfo->receiverCEOName ) : null;
-		isset($jsonInfo->receiverAddr ) ? ($this->receiverAddr = $jsonInfo->receiverAddr ) : null;
-		isset($jsonInfo->receiverBizClass ) ? ($this->receiverBizClass = $jsonInfo->receiverBizClass ) : null;
-		isset($jsonInfo->receiverBizType ) ? ($this->receiverBizType = $jsonInfo->receiverBizType ) : null;
-		isset($jsonInfo->receiverContactName ) ? ($this->receiverContactName = $jsonInfo->receiverContactName ) : null;
-		isset($jsonInfo->receiverDeptName ) ? ($this->receiverDeptName = $jsonInfo->receiverDeptName ) : null;
-		isset($jsonInfo->receiverTEL ) ? ($this->receiverTEL = $jsonInfo->receiverTEL ) : null;
-		isset($jsonInfo->receiverHP ) ? ($this->receiverHP = $jsonInfo->receiverHP ) : null;
+        isset($jsonInfo->receiverCorpNum) ? ($this->receiverCorpNum = $jsonInfo->receiverCorpNum) : null;
+        isset($jsonInfo->receiverTaxRegID) ? ($this->receiverTaxRegID = $jsonInfo->receiverTaxRegID) : null;
+        isset($jsonInfo->receiverCorpName) ? ($this->receiverCorpName = $jsonInfo->receiverCorpName) : null;
+        isset($jsonInfo->receiverCEOName) ? ($this->receiverCEOName = $jsonInfo->receiverCEOName) : null;
+        isset($jsonInfo->receiverAddr) ? ($this->receiverAddr = $jsonInfo->receiverAddr) : null;
+        isset($jsonInfo->receiverBizClass) ? ($this->receiverBizClass = $jsonInfo->receiverBizClass) : null;
+        isset($jsonInfo->receiverBizType) ? ($this->receiverBizType = $jsonInfo->receiverBizType) : null;
+        isset($jsonInfo->receiverContactName) ? ($this->receiverContactName = $jsonInfo->receiverContactName) : null;
+        isset($jsonInfo->receiverDeptName) ? ($this->receiverDeptName = $jsonInfo->receiverDeptName) : null;
+        isset($jsonInfo->receiverTEL) ? ($this->receiverTEL = $jsonInfo->receiverTEL) : null;
+        isset($jsonInfo->receiverHP) ? ($this->receiverHP = $jsonInfo->receiverHP) : null;
 
-		isset($jsonInfo->receiverEmail ) ? ($this->receiverEmail = $jsonInfo->receiverEmail ) : null;
-		isset($jsonInfo->receiverFAX ) ? ($this->receiverFAX = $jsonInfo->receiverFAX ) : null;
-		isset($jsonInfo->taxTotal ) ? ($this->taxTotal = $jsonInfo->taxTotal ) : null;
-		isset($jsonInfo->supplyCostTotal ) ? ($this->supplyCostTotal = $jsonInfo->supplyCostTotal ) : null;
-		isset($jsonInfo->totalAmount ) ? ($this->totalAmount = $jsonInfo->totalAmount ) : null;
-		isset($jsonInfo->purposeType ) ? ($this->purposeType = $jsonInfo->purposeType ) : null;
-		isset($jsonInfo->serialNum ) ? ($this->serialNum = $jsonInfo->serialNum ) : null;
+        isset($jsonInfo->receiverEmail) ? ($this->receiverEmail = $jsonInfo->receiverEmail) : null;
+        isset($jsonInfo->receiverFAX) ? ($this->receiverFAX = $jsonInfo->receiverFAX) : null;
+        isset($jsonInfo->taxTotal) ? ($this->taxTotal = $jsonInfo->taxTotal) : null;
+        isset($jsonInfo->supplyCostTotal) ? ($this->supplyCostTotal = $jsonInfo->supplyCostTotal) : null;
+        isset($jsonInfo->totalAmount) ? ($this->totalAmount = $jsonInfo->totalAmount) : null;
+        isset($jsonInfo->purposeType) ? ($this->purposeType = $jsonInfo->purposeType) : null;
+        isset($jsonInfo->serialNum) ? ($this->serialNum = $jsonInfo->serialNum) : null;
 
-		isset($jsonInfo->remark1 ) ? ($this->remark1 = $jsonInfo->remark1 ) : null;
-		isset($jsonInfo->remark2 ) ? ($this->remark2 = $jsonInfo->remark2 ) : null;
-		isset($jsonInfo->remark3 ) ? ($this->remark3 = $jsonInfo->remark3 ) : null;
-		isset($jsonInfo->businessLicenseYN ) ? ($this->businessLicenseYN = $jsonInfo->businessLicenseYN ) : null;
-		isset($jsonInfo->bankBookYN ) ? ($this->bankBookYN = $jsonInfo->bankBookYN ) : null;
+        isset($jsonInfo->remark1) ? ($this->remark1 = $jsonInfo->remark1) : null;
+        isset($jsonInfo->remark2) ? ($this->remark2 = $jsonInfo->remark2) : null;
+        isset($jsonInfo->remark3) ? ($this->remark3 = $jsonInfo->remark3) : null;
+        isset($jsonInfo->businessLicenseYN) ? ($this->businessLicenseYN = $jsonInfo->businessLicenseYN) : null;
+        isset($jsonInfo->bankBookYN) ? ($this->bankBookYN = $jsonInfo->bankBookYN) : null;
 
-		isset($jsonInfo->faxsendYN ) ? ($this->faxsendYN = $jsonInfo->faxsendYN ) : null;
-		isset($jsonInfo->bankBookYN ) ? ($this->bankBookYN = $jsonInfo->bankBookYN ) : null;
-		isset($jsonInfo->smssendYN ) ? ($this->smssendYN = $jsonInfo->smssendYN ) : null;
-		isset($jsonInfo->autoacceptYN ) ? ($this->autoacceptYN = $jsonInfo->autoacceptYN ) : null;
+        isset($jsonInfo->faxsendYN) ? ($this->faxsendYN = $jsonInfo->faxsendYN) : null;
+        isset($jsonInfo->bankBookYN) ? ($this->bankBookYN = $jsonInfo->bankBookYN) : null;
+        isset($jsonInfo->smssendYN) ? ($this->smssendYN = $jsonInfo->smssendYN) : null;
+        isset($jsonInfo->autoacceptYN) ? ($this->autoacceptYN = $jsonInfo->autoacceptYN) : null;
 
-		if(!is_null($jsonInfo->detailList)){
-			$StatementDetailList = array();
-			for($i=0; $i<Count($jsonInfo->detailList); $i++){
-				$StatementDetail = new StatementDetail();
-				$StatementDetail->fromJsonInfo($jsonInfo->detailList[$i]);
-				$StatementDetailList[$i] = $StatementDetail;
-			}
+        if (!is_null($jsonInfo->detailList)) {
+            $StatementDetailList = array();
+            for ($i = 0; $i < Count($jsonInfo->detailList); $i++) {
+                $StatementDetail = new StatementDetail();
+                $StatementDetail->fromJsonInfo($jsonInfo->detailList[$i]);
+                $StatementDetailList[$i] = $StatementDetail;
+            }
 
-			$this->detailList = $StatementDetailList;
-		}
+            $this->detailList = $StatementDetailList;
+        }
 
-		isset($jsonInfo->propertyBag  ) ? ($this->propertyBag  = $jsonInfo->propertyBag  ) : null;
+        isset($jsonInfo->propertyBag) ? ($this->propertyBag = $jsonInfo->propertyBag) : null;
 
-	}
+    }
 }
 
 
-class StatementDetail {
+class StatementDetail
+{
     public $serialNum;
     public $purchaseDT;
     public $itemName;
     public $spec;
-  	public $unit;
+    public $unit;
     public $qty;
     public $unitCost;
     public $supplyCost;
@@ -544,142 +547,156 @@ class StatementDetail {
     public $spare4;
     public $spare5;
 
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->serialNum ) ? ($this->serialNum = $jsonInfo->serialNum ) : null;
-		isset($jsonInfo->purchaseDT ) ? ($this->purchaseDT = $jsonInfo->purchaseDT ) : null;
-		isset($jsonInfo->itemName ) ? ($this->itemName = $jsonInfo->itemName ) : null;
-		isset($jsonInfo->spec ) ? ($this->spec = $jsonInfo->spec ) : null;
-		isset($jsonInfo->unit ) ? ($this->unit = $jsonInfo->unit ) : null;
-		isset($jsonInfo->qty ) ? ($this->qty = $jsonInfo->qty ) : null;
-		isset($jsonInfo->unitCost ) ? ($this->unitCost = $jsonInfo->unitCost ) : null;
-		isset($jsonInfo->supplyCost ) ? ($this->supplyCost = $jsonInfo->supplyCost ) : null;
-		isset($jsonInfo->tax ) ? ($this->tax = $jsonInfo->tax ) : null;
-		isset($jsonInfo->remark ) ? ($this->remark = $jsonInfo->remark ) : null;
-		isset($jsonInfo->spare1 ) ? ($this->spare1 = $jsonInfo->spare1 ) : null;
-		isset($jsonInfo->spare2 ) ? ($this->spare2 = $jsonInfo->spare2 ) : null;
-		isset($jsonInfo->spare3 ) ? ($this->spare3 = $jsonInfo->spare3 ) : null;
-		isset($jsonInfo->spare4 ) ? ($this->spare4 = $jsonInfo->spare4 ) : null;
-		isset($jsonInfo->spare5 ) ? ($this->spare5 = $jsonInfo->spare5 ) : null;
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->serialNum) ? ($this->serialNum = $jsonInfo->serialNum) : null;
+        isset($jsonInfo->purchaseDT) ? ($this->purchaseDT = $jsonInfo->purchaseDT) : null;
+        isset($jsonInfo->itemName) ? ($this->itemName = $jsonInfo->itemName) : null;
+        isset($jsonInfo->spec) ? ($this->spec = $jsonInfo->spec) : null;
+        isset($jsonInfo->unit) ? ($this->unit = $jsonInfo->unit) : null;
+        isset($jsonInfo->qty) ? ($this->qty = $jsonInfo->qty) : null;
+        isset($jsonInfo->unitCost) ? ($this->unitCost = $jsonInfo->unitCost) : null;
+        isset($jsonInfo->supplyCost) ? ($this->supplyCost = $jsonInfo->supplyCost) : null;
+        isset($jsonInfo->tax) ? ($this->tax = $jsonInfo->tax) : null;
+        isset($jsonInfo->remark) ? ($this->remark = $jsonInfo->remark) : null;
+        isset($jsonInfo->spare1) ? ($this->spare1 = $jsonInfo->spare1) : null;
+        isset($jsonInfo->spare2) ? ($this->spare2 = $jsonInfo->spare2) : null;
+        isset($jsonInfo->spare3) ? ($this->spare3 = $jsonInfo->spare3) : null;
+        isset($jsonInfo->spare4) ? ($this->spare4 = $jsonInfo->spare4) : null;
+        isset($jsonInfo->spare5) ? ($this->spare5 = $jsonInfo->spare5) : null;
 
-	}
-}
-
-
-class StatementInfo {
-
-	public $itemKey;
-  public $mgtKey;
-	public $stateCode;
-	public $taxType;
-	public $purposeType;
-	public $writeDate;
-	public $senderCorpName;
-	public $senderCorpNum;
-  public $senderPrintYN;
-	public $receiverCorpName;
-	public $receiverCorpNum;
-  public $receiverPrintYN;
-	public $supplyCostTotal;
-	public $taxTotal;
-	public $issueDT;
-	public $stateDT;
-	public $openYN;
-	public $openDT;
-	public $stateMemo;
-	public $regDT;
-
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->itemKey ) ? ($this->itemKey = $jsonInfo->itemKey ) : null;
-		isset($jsonInfo->mgtKey ) ? ($this->mgtKey = $jsonInfo->mgtKey ) : null;
-		isset($jsonInfo->stateCode ) ? ($this->stateCode = $jsonInfo->stateCode ) : null;
-		isset($jsonInfo->taxType ) ? ($this->taxType = $jsonInfo->taxType ) : null;
-		isset($jsonInfo->purposeType ) ? ($this->purposeType = $jsonInfo->purposeType ) : null;
-		isset($jsonInfo->writeDate ) ? ($this->writeDate = $jsonInfo->writeDate ) : null;
-		isset($jsonInfo->senderCorpName ) ? ($this->senderCorpName = $jsonInfo->senderCorpName ) : null;
-		isset($jsonInfo->senderCorpNum ) ? ($this->senderCorpNum = $jsonInfo->senderCorpNum ) : null;
-		isset($jsonInfo->senderPrintYN ) ? ($this->senderPrintYN = $jsonInfo->senderPrintYN ) : null;
-		isset($jsonInfo->receiverCorpName ) ? ($this->receiverCorpName = $jsonInfo->receiverCorpName ) : null;
-		isset($jsonInfo->receiverCorpNum ) ? ($this->receiverCorpNum = $jsonInfo->receiverCorpNum ) : null;
-		isset($jsonInfo->receiverPrintYN ) ? ($this->receiverPrintYN = $jsonInfo->receiverPrintYN ) : null;
-		isset($jsonInfo->supplyCostTotal ) ? ($this->supplyCostTotal = $jsonInfo->supplyCostTotal ) : null;
-		isset($jsonInfo->taxTotal ) ? ($this->taxTotal = $jsonInfo->taxTotal ) : null;
-		isset($jsonInfo->issueDT ) ? ($this->issueDT = $jsonInfo->issueDT ) : null;
-		isset($jsonInfo->stateDT ) ? ($this->stateDT = $jsonInfo->stateDT ) : null;
-		isset($jsonInfo->openYN ) ? ($this->openYN = $jsonInfo->openYN ) : null;
-		isset($jsonInfo->openDT ) ? ($this->openDT = $jsonInfo->openDT ) : null;
-		isset($jsonInfo->stateMemo ) ? ($this->stateMemo = $jsonInfo->stateMemo) : null;
-		isset($jsonInfo->regDT ) ? ($this->regDT = $jsonInfo->regDT ) : null;
-	}
-}
-
-class StatementLog {
-	public $docLogType;
-	public $log;
-	public $procType;
-	public $procCorpName;
-	public $procMemo;
-	public $regDT;
-	public $ip;
-
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->docLogType) ? ($this->docLogType = $jsonInfo->docLogType ) : null;
-		isset($jsonInfo->log) ? ($this->log = $jsonInfo->log ) : null;
-		isset($jsonInfo->procType) ? ($this->procType = $jsonInfo->procType ) : null;
-		isset($jsonInfo->procCorpName) ? ($this->procCorpName = $jsonInfo->procCorpName ) : null;
-		isset($jsonInfo->procMemo) ? ($this->procMemo = $jsonInfo->procMemo ) : null;
-		isset($jsonInfo->regDT) ? ($this->regDT = $jsonInfo->regDT ) : null;
-		isset($jsonInfo->ip) ? ($this->ip = $jsonInfo->ip ) : null;
-	}
-}
-
-class MemoRequest {
-	public $memo;
-}
-class IssueRequest {
-	public $memo;
-}
-
-class DocSearchResult {
-  public $code;
-  public $total;
-  public $perPage;
-  public $pageNum;
-  public $pageCount;
-  public $message;
-  public $list;
-
-  public function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
-    isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
-    isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
-    isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
-    isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
-    isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
-
-    $InfoList = array();
-
-    for ( $i = 0 ; $i < Count($jsonInfo->list) ; $i++ ) {
-      $InfoObj = new StatementInfo();
-      $InfoObj->fromJsonInfo($jsonInfo->list[$i]);
-      $InfoList[$i] = $InfoObj;
     }
-
-    $this->list = $InfoList;
-  }
 }
 
-class StmtRequest {
-  public $ItemCode;
-  public $MgtKey;
+
+class StatementInfo
+{
+
+    public $itemKey;
+    public $mgtKey;
+    public $stateCode;
+    public $taxType;
+    public $purposeType;
+    public $writeDate;
+    public $senderCorpName;
+    public $senderCorpNum;
+    public $senderPrintYN;
+    public $receiverCorpName;
+    public $receiverCorpNum;
+    public $receiverPrintYN;
+    public $supplyCostTotal;
+    public $taxTotal;
+    public $issueDT;
+    public $stateDT;
+    public $openYN;
+    public $openDT;
+    public $stateMemo;
+    public $regDT;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->itemKey) ? ($this->itemKey = $jsonInfo->itemKey) : null;
+        isset($jsonInfo->mgtKey) ? ($this->mgtKey = $jsonInfo->mgtKey) : null;
+        isset($jsonInfo->stateCode) ? ($this->stateCode = $jsonInfo->stateCode) : null;
+        isset($jsonInfo->taxType) ? ($this->taxType = $jsonInfo->taxType) : null;
+        isset($jsonInfo->purposeType) ? ($this->purposeType = $jsonInfo->purposeType) : null;
+        isset($jsonInfo->writeDate) ? ($this->writeDate = $jsonInfo->writeDate) : null;
+        isset($jsonInfo->senderCorpName) ? ($this->senderCorpName = $jsonInfo->senderCorpName) : null;
+        isset($jsonInfo->senderCorpNum) ? ($this->senderCorpNum = $jsonInfo->senderCorpNum) : null;
+        isset($jsonInfo->senderPrintYN) ? ($this->senderPrintYN = $jsonInfo->senderPrintYN) : null;
+        isset($jsonInfo->receiverCorpName) ? ($this->receiverCorpName = $jsonInfo->receiverCorpName) : null;
+        isset($jsonInfo->receiverCorpNum) ? ($this->receiverCorpNum = $jsonInfo->receiverCorpNum) : null;
+        isset($jsonInfo->receiverPrintYN) ? ($this->receiverPrintYN = $jsonInfo->receiverPrintYN) : null;
+        isset($jsonInfo->supplyCostTotal) ? ($this->supplyCostTotal = $jsonInfo->supplyCostTotal) : null;
+        isset($jsonInfo->taxTotal) ? ($this->taxTotal = $jsonInfo->taxTotal) : null;
+        isset($jsonInfo->issueDT) ? ($this->issueDT = $jsonInfo->issueDT) : null;
+        isset($jsonInfo->stateDT) ? ($this->stateDT = $jsonInfo->stateDT) : null;
+        isset($jsonInfo->openYN) ? ($this->openYN = $jsonInfo->openYN) : null;
+        isset($jsonInfo->openDT) ? ($this->openDT = $jsonInfo->openDT) : null;
+        isset($jsonInfo->stateMemo) ? ($this->stateMemo = $jsonInfo->stateMemo) : null;
+        isset($jsonInfo->regDT) ? ($this->regDT = $jsonInfo->regDT) : null;
+    }
 }
 
-class EmailSendConfig {
-	public $emailType;
-	public $sendYN;
+class StatementLog
+{
+    public $docLogType;
+    public $log;
+    public $procType;
+    public $procCorpName;
+    public $procMemo;
+    public $regDT;
+    public $ip;
 
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->emailType) ? $this->emailType = $jsonInfo->emailType : null;
-		isset($jsonInfo->sendYN) ? $this->sendYN = $jsonInfo->sendYN : null;
-	}
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->docLogType) ? ($this->docLogType = $jsonInfo->docLogType) : null;
+        isset($jsonInfo->log) ? ($this->log = $jsonInfo->log) : null;
+        isset($jsonInfo->procType) ? ($this->procType = $jsonInfo->procType) : null;
+        isset($jsonInfo->procCorpName) ? ($this->procCorpName = $jsonInfo->procCorpName) : null;
+        isset($jsonInfo->procMemo) ? ($this->procMemo = $jsonInfo->procMemo) : null;
+        isset($jsonInfo->regDT) ? ($this->regDT = $jsonInfo->regDT) : null;
+        isset($jsonInfo->ip) ? ($this->ip = $jsonInfo->ip) : null;
+    }
 }
+
+class MemoRequest
+{
+    public $memo;
+}
+
+class IssueRequest
+{
+    public $memo;
+}
+
+class DocSearchResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $message;
+    public $list;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
+
+        $InfoList = array();
+
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $InfoObj = new StatementInfo();
+            $InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+            $InfoList[$i] = $InfoObj;
+        }
+
+        $this->list = $InfoList;
+    }
+}
+
+class StmtRequest
+{
+    public $ItemCode;
+    public $MgtKey;
+}
+
+class EmailSendConfig
+{
+    public $emailType;
+    public $sendYN;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->emailType) ? $this->emailType = $jsonInfo->emailType : null;
+        isset($jsonInfo->sendYN) ? $this->sendYN = $jsonInfo->sendYN : null;
+    }
+}
+
 ?>

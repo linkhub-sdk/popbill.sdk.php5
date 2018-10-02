@@ -322,102 +322,109 @@ class MessagingService extends PopbillBase {
 
 }
 
-class ENumMessageType {
-	const SMS = 'SMS';
-	const LMS = 'LMS';
-	const XMS = 'XMS';
-	const MMS = 'MMS';
+class ENumMessageType
+{
+    const SMS = 'SMS';
+    const LMS = 'LMS';
+    const XMS = 'XMS';
+    const MMS = 'MMS';
 }
 
-class MsgSearchResult{
-	public $code;
-	public $total;
-	public $perPage;
-	public $pageNum;
-	public $pageCount;
-	public $message;
-	public $list;
+class MsgSearchResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $message;
+    public $list;
 
-	public function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->code ) ? $this->code = $jsonInfo->code : null;
-		isset($jsonInfo->total ) ? $this->total = $jsonInfo->total : null;
-		isset($jsonInfo->perPage ) ? $this->perPage = $jsonInfo->perPage : null;
-		isset($jsonInfo->pageCount ) ? $this->pageCount = $jsonInfo->pageCount : null;
-		isset($jsonInfo->pageNum ) ? $this->pageNum = $jsonInfo->pageNum : null;
-		isset($jsonInfo->message ) ? $this->message = $jsonInfo->message : null;
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
 
-		$InfoList = array();
+        $InfoList = array();
 
-		for($i=0; $i < Count($jsonInfo->list);$i++){
-			$InfoObj = new MessageInfo();
-			$InfoObj->fromJsonInfo($jsonInfo->list[$i]);
-			$InfoList[$i] = $InfoObj;
-		}
-		$this->list = $InfoList;
-	}
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $InfoObj = new MessageInfo();
+            $InfoObj->fromJsonInfo($jsonInfo->list[$i]);
+            $InfoList[$i] = $InfoObj;
+        }
+        $this->list = $InfoList;
+    }
 }
 
 
-class MessageInfo{
-	public $state;
-  public $result;
-	public $subject;
-	public $type;
-	public $content;
-	public $tranNet;
-	public $sendNum;
-  public $senderName;
-	public $receiveNum;
-	public $receiveName;
-	public $reserveDT;
-	public $sendDT;
-	public $resultDT;
-	public $sendResult;
-  public $receiptDT;
-	public $receiptNum;
-	public $requestNum;
+class MessageInfo
+{
+    public $state;
+    public $result;
+    public $subject;
+    public $type;
+    public $content;
+    public $tranNet;
+    public $sendNum;
+    public $senderName;
+    public $receiveNum;
+    public $receiveName;
+    public $reserveDT;
+    public $sendDT;
+    public $resultDT;
+    public $sendResult;
+    public $receiptDT;
+    public $receiptNum;
+    public $requestNum;
 
-	function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
-    isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
-		isset($jsonInfo->subject) ? $this->subject = $jsonInfo->subject : null;
-		isset($jsonInfo->tranNet) ? $this->tranNet = $jsonInfo->tranNet : null;
-		isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
-		isset($jsonInfo->content) ? $this->content = $jsonInfo->content : null;
-		isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
-    isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
-		isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
-		isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
-		isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;
-		isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
-		isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
-		isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
-		isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
-		isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
-		isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
-	}
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
+        isset($jsonInfo->subject) ? $this->subject = $jsonInfo->subject : null;
+        isset($jsonInfo->tranNet) ? $this->tranNet = $jsonInfo->tranNet : null;
+        isset($jsonInfo->type) ? $this->type = $jsonInfo->type : null;
+        isset($jsonInfo->content) ? $this->content = $jsonInfo->content : null;
+        isset($jsonInfo->sendNum) ? $this->sendNum = $jsonInfo->sendNum : null;
+        isset($jsonInfo->senderName) ? $this->senderName = $jsonInfo->senderName : null;
+        isset($jsonInfo->receiveNum) ? $this->receiveNum = $jsonInfo->receiveNum : null;
+        isset($jsonInfo->receiveName) ? $this->receiveName = $jsonInfo->receiveName : null;
+        isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;
+        isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
+        isset($jsonInfo->resultDT) ? $this->resultDT = $jsonInfo->resultDT : null;
+        isset($jsonInfo->sendResult) ? $this->sendResult = $jsonInfo->sendResult : null;
+        isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+        isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
+        isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
+    }
 }
 
-class MessageBriefInfo {
-  public $sn;
-  public $rNum;
-  public $stat;
-  public $sDT;
-  public $rDT;
-  public $rlt;
-  public $net;
-  public $srt;
+class MessageBriefInfo
+{
+    public $sn;
+    public $rNum;
+    public $stat;
+    public $sDT;
+    public $rDT;
+    public $rlt;
+    public $net;
+    public $srt;
 
-  function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->sn) ? $this->sn = $jsonInfo->sn : null;
-    isset($jsonInfo->rNum) ? $this->rNum = $jsonInfo->rNum : null;
-    isset($jsonInfo->stat) ? $this->stat = $jsonInfo->stat : null;
-    isset($jsonInfo->sDT) ? $this->sDT = $jsonInfo->sDT : null;
-    isset($jsonInfo->rDT) ? $this->rDT = $jsonInfo->rDT : null;
-    isset($jsonInfo->rlt) ? $this->rlt = $jsonInfo->rlt : null;
-    isset($jsonInfo->net) ? $this->net = $jsonInfo->net : null;
-    isset($jsonInfo->srt) ? $this->srt = $jsonInfo->srt : null;
-  }
-
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->sn) ? $this->sn = $jsonInfo->sn : null;
+        isset($jsonInfo->rNum) ? $this->rNum = $jsonInfo->rNum : null;
+        isset($jsonInfo->stat) ? $this->stat = $jsonInfo->stat : null;
+        isset($jsonInfo->sDT) ? $this->sDT = $jsonInfo->sDT : null;
+        isset($jsonInfo->rDT) ? $this->rDT = $jsonInfo->rDT : null;
+        isset($jsonInfo->rlt) ? $this->rlt = $jsonInfo->rlt : null;
+        isset($jsonInfo->net) ? $this->net = $jsonInfo->net : null;
+        isset($jsonInfo->srt) ? $this->srt = $jsonInfo->srt : null;
+    }
 }
+
 ?>

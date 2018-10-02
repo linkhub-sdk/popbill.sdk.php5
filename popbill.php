@@ -346,92 +346,96 @@ class PopbillBase
 
 class JoinForm
 {
-	public $LinkID;
-	public $CorpNum;
-	public $CEOName;
-	public $CorpName;
-	public $Addr;
-	public $ZipCode;
-	public $BizType;
-	public $BizClass;
-	public $ContactName;
-	public $ContactEmail;
-	public $ContactTEL;
-	public $ID;
-	public $PWD;
+    public $LinkID;
+    public $CorpNum;
+    public $CEOName;
+    public $CorpName;
+    public $Addr;
+    public $ZipCode;
+    public $BizType;
+    public $BizClass;
+    public $ContactName;
+    public $ContactEmail;
+    public $ContactTEL;
+    public $ID;
+    public $PWD;
 }
 
 class CorpInfo
 {
-	public $ceoname;
-	public $corpName;
-	public $addr;
-	public $bizType;
-	public $bizClass;
+    public $ceoname;
+    public $corpName;
+    public $addr;
+    public $bizType;
+    public $bizClass;
 
-	public function fromJsonInfo($jsonInfo){
-		isset($jsonInfo->ceoname ) ? $this->ceoname = $jsonInfo->ceoname : null;
-		isset($jsonInfo->corpName ) ? $this->corpName = $jsonInfo->corpName : null;
-		isset($jsonInfo->addr ) ? $this->addr = $jsonInfo->addr : null;
-		isset($jsonInfo->bizType ) ? $this->bizType = $jsonInfo->bizType : null;
-		isset($jsonInfo->bizClass ) ? $this->bizClass = $jsonInfo->bizClass : null;
-	}
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->ceoname) ? $this->ceoname = $jsonInfo->ceoname : null;
+        isset($jsonInfo->corpName) ? $this->corpName = $jsonInfo->corpName : null;
+        isset($jsonInfo->addr) ? $this->addr = $jsonInfo->addr : null;
+        isset($jsonInfo->bizType) ? $this->bizType = $jsonInfo->bizType : null;
+        isset($jsonInfo->bizClass) ? $this->bizClass = $jsonInfo->bizClass : null;
+    }
 }
 
 class ContactInfo
 {
-	public $id;
-	public $pwd;
-	public $email;
-	public $hp;
-	public $personName;
-	public $searchAllAllowYN;
-	public $tel;
-	public $fax;
-	public $mgrYN;
-	public $regDT;
-	public $state;
+    public $id;
+    public $pwd;
+    public $email;
+    public $hp;
+    public $personName;
+    public $searchAllAllowYN;
+    public $tel;
+    public $fax;
+    public $mgrYN;
+    public $regDT;
+    public $state;
 
-	public function fromJsonInfo($jsonInfo) {
-		isset($jsonInfo->id ) ? $this->id = $jsonInfo->id : null;
-		isset($jsonInfo->email ) ? $this->email = $jsonInfo->email : null;
-		isset($jsonInfo->hp ) ? $this->hp = $jsonInfo->hp : null;
-		isset($jsonInfo->personName ) ? $this->personName = $jsonInfo->personName : null;
-		isset($jsonInfo->searchAllAllowYN ) ? $this->searchAllAllowYN = $jsonInfo->searchAllAllowYN : null;
-		isset($jsonInfo->tel ) ? $this->tel = $jsonInfo->tel : null;
-		isset($jsonInfo->fax ) ? $this->fax = $jsonInfo->fax : null;
-		isset($jsonInfo->mgrYN ) ? $this->mgrYN = $jsonInfo->mgrYN : null;
-		isset($jsonInfo->regDT ) ? $this->regDT = $jsonInfo->regDT : null;
-		isset($jsonInfo->state ) ? $this->state = $jsonInfo->state : null;
-	}
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->id) ? $this->id = $jsonInfo->id : null;
+        isset($jsonInfo->email) ? $this->email = $jsonInfo->email : null;
+        isset($jsonInfo->hp) ? $this->hp = $jsonInfo->hp : null;
+        isset($jsonInfo->personName) ? $this->personName = $jsonInfo->personName : null;
+        isset($jsonInfo->searchAllAllowYN) ? $this->searchAllAllowYN = $jsonInfo->searchAllAllowYN : null;
+        isset($jsonInfo->tel) ? $this->tel = $jsonInfo->tel : null;
+        isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
+        isset($jsonInfo->mgrYN) ? $this->mgrYN = $jsonInfo->mgrYN : null;
+        isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+    }
 }
 
 class ChargeInfo
 {
-  public $unitCost;
-  public $chargeMethod;
-  public $rateSystem;
+    public $unitCost;
+    public $chargeMethod;
+    public $rateSystem;
 
-  public function fromJsonInfo($jsonInfo){
-    isset($jsonInfo->unitCost) ? $this->unitCost = $jsonInfo->unitCost : null;
-    isset($jsonInfo->chargeMethod) ? $this->chargeMethod = $jsonInfo->chargeMethod : null;
-    isset($jsonInfo->rateSystem) ? $this->rateSystem = $jsonInfo->rateSystem : null;
-  }
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->unitCost) ? $this->unitCost = $jsonInfo->unitCost : null;
+        isset($jsonInfo->chargeMethod) ? $this->chargeMethod = $jsonInfo->chargeMethod : null;
+        isset($jsonInfo->rateSystem) ? $this->rateSystem = $jsonInfo->rateSystem : null;
+    }
 }
 
 class PopbillException extends Exception
 {
-	public function __construct($response,$code = -99999999, Exception $previous = null) {
-       $Err = json_decode($response);
-       if(is_null($Err)) {
-       		parent::__construct($response, $code );
-       }
-       else {
-       		parent::__construct($Err->message, $Err->code);
-       }
+    public function __construct($response, $code = -99999999, Exception $previous = null)
+    {
+        $Err = json_decode($response);
+        if (is_null($Err)) {
+            parent::__construct($response, $code);
+        } else {
+            parent::__construct($Err->message, $Err->code);
+        }
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 }
