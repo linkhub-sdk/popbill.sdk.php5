@@ -1,238 +1,252 @@
 <?php
 /**
-* =====================================================================================
-* Class for base module for Popbill API SDK. It include base functionality for
-* RESTful web service request and parse json result. It uses Linkhub module
-* to accomplish authentication APIs.
-*
-* This module uses curl and openssl for HTTPS Request. So related modules must
-* be installed and enabled.
-*
-* http://www.linkhub.co.kr
-* Author : Kim Seongjun (pallet027@gmail.com)
-* Written : 2014-04-15
-* Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-07-03
-*
-* Thanks for your interest.
-* We welcome any suggestions, feedbacks, blames or anything.
-* ======================================================================================
-*/
+ * =====================================================================================
+ * Class for base module for Popbill API SDK. It include base functionality for
+ * RESTful web service request and parse json result. It uses Linkhub module
+ * to accomplish authentication APIs.
+ *
+ * This module uses curl and openssl for HTTPS Request. So related modules must
+ * be installed and enabled.
+ *
+ * http://www.linkhub.co.kr
+ * Author : Kim Seongjun (pallet027@gmail.com)
+ * Written : 2014-04-15
+ * Contributor : Jeong YoHan (code@linkhub.co.kr)
+ * Contributor : Kim EunHye (code@linkhub.co.kr)
+ * Updated : 2018-07-03
+ *
+ * Thanks for your interest.
+ * We welcome any suggestions, feedbacks, blames or anything.
+ * ======================================================================================
+ */
 require_once 'popbill.php';
 
-class FaxService extends PopbillBase {
+class FaxService extends PopbillBase
+{
 
-	public function __construct($LinkID,$SecretKey) {
-    parent::__construct($LinkID,$SecretKey);
-    $this->AddScope('160');
-  }
-
-  public function GetUnitCost($CorpNum) {
-    return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
-  }
-
-	public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False, $title = null, $RequestNum = null) {
-    if(empty($Receivers)) {
-			throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
-		}
-
-		if(empty($FilePaths)) {
-			throw new PopbillException('전송할 팩스파일경로가 입력되지 않았습니다.');
-		}
-
-		$RequestForm = array();
-		$RequestForm['snd'] = $Sender;
-    $RequestForm['sndnm'] = $SenderName;
-    $RequestForm['title'] = $title;
-    $RequestForm['fCnt'] = count($FilePaths);
-    $RequestForm['rcvs'] = $Receivers;
-
-
-    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
-		if(!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
-    if($adsYN) $RequestForm['adsYN'] = $adsYN;
-
-  	$postdata = array();
-  	$postdata['form'] = json_encode($RequestForm);
-
-  	$i = 0;
-
-  	foreach($FilePaths as $FilePath) {
-  		$postdata['file['.$i++.']'] = '@'.$FilePath;
-  	}
-
-  	return $this->executeCURL('/FAX', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
-	}
-
-  public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null, $UserID = null, $title = null, $RequestNum = null) {
-		if(empty($ReceiptNum)) {
-			throw new PopbillException('팩스접수번호(receiptNum)가 입력되지 않았습니다.');
-		}
-
-		$RequestForm = array();
-
-		if(!empty($SenderNum)) $RequestForm['snd'] = $SenderNum;
-    if(!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
-    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
-		if(!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
-
-
-    if( !is_null($Receivers)) {
-  		$RequestForm['rcvs'] = $Receivers;
+    public function __construct($LinkID, $SecretKey)
+    {
+        parent::__construct($LinkID, $SecretKey);
+        $this->AddScope('160');
     }
 
-    $RequestForm['title'] = $title;
-
-    $postdata = json_encode($RequestForm);
-
-  	return $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
-	}
-
-	public function ResendFAXRN($CorpNum, $RequestNum, $SenderNum, $SenderName, $Receivers, $originalFAXrequestNum, $ReserveDT = null, $UserID = null, $title = null) {
-		if(empty($RequestNum)) {
-			throw new PopbillException('전송요청번호(requestNum)가 입력되지 않았습니다.');
-		}
-
-		if(empty($originalFAXrequestNum)) {
-			throw new PopbillException('원본 팩스의 전송요청번호(originalFAXrequestNum)가 입력되지 않았습니다.');
-		}
-
-		$RequestForm = array();
-
-		if(!empty($SenderNum)) $RequestForm['snd'] = $SenderNum;
-    if(!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
-    if(!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
-
-
-    if( !is_null($Receivers)) {
-  		$RequestForm['rcvs'] = $Receivers;
+    public function GetUnitCost($CorpNum)
+    {
+        return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
     }
 
-    $RequestForm['title'] = $title;
-		$RequestForm['requestNum'] = $RequestNum;
+    public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False, $title = null, $RequestNum = null)
+    {
+        if (empty($Receivers)) {
+            throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
+        }
 
-    $postdata = json_encode($RequestForm);
+        if (empty($FilePaths)) {
+            throw new PopbillException('전송할 팩스파일경로가 입력되지 않았습니다.');
+        }
 
-  	return $this->executeCURL('/FAX/Resend/'.$originalFAXrequestNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
-	}
+        $RequestForm = array();
+        $RequestForm['snd'] = $Sender;
+        $RequestForm['sndnm'] = $SenderName;
+        $RequestForm['title'] = $title;
+        $RequestForm['fCnt'] = count($FilePaths);
+        $RequestForm['rcvs'] = $Receivers;
 
-	public function GetFaxDetail($CorpNum,$ReceiptNum,$UserID = null) {
-		if(empty($ReceiptNum)) {
-    		throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
-    }
-		$result = $this->executeCURL('/FAX/'.$ReceiptNum, $CorpNum,$UserID);
-		$FaxState = new FaxState();
 
-		$FaxInfoList = array();
+        if (!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+        if (!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
+        if ($adsYN) $RequestForm['adsYN'] = $adsYN;
 
-		for($i=0; $i<Count($result); $i++){
-			$FaxInfo = new FaxState();
-			$FaxInfo->fromJsonInfo($result[$i]);
-			$FaxInfoList[$i] = $FaxInfo;
+        $postdata = array();
+        $postdata['form'] = json_encode($RequestForm);
 
-		}
-		return $FaxInfoList;
-	}
+        $i = 0;
 
-	public function GetFaxDetailRN($CorpNum,$RequestNum,$UserID = null) {
-		if(empty($RequestNum)) {
-    		throw new PopbillException('팩스 전송요청번호가 입력되지 않았습니다.');
-    }
-		$result = $this->executeCURL('/FAX/Get/'.$RequestNum, $CorpNum,$UserID);
-		$FaxState = new FaxState();
+        foreach ($FilePaths as $FilePath) {
+            $postdata['file[' . $i++ . ']'] = '@' . $FilePath;
+        }
 
-		$FaxInfoList = array();
-
-		for($i=0; $i<Count($result); $i++){
-			$FaxInfo = new FaxState();
-			$FaxInfo->fromJsonInfo($result[$i]);
-			$FaxInfoList[$i] = $FaxInfo;
-
-		}
-		return $FaxInfoList;
-	}
-
-  public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
-    if(empty($ReceiptNum)) {
-      throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
-    }
-    return $this->executeCURL('/FAX/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
-  }
-
-	public function CancelReserveRN($CorpNum,$RequestNum,$UserID = null) {
-    if(empty($RequestNum)) {
-      throw new PopbillException('팩스 전송요청번호가 입력되지 않았습니다.');
-    }
-    return $this->executeCURL('/FAX/Cancel/'.$RequestNum, $CorpNum,$UserID);
-  }
-
-  public function GetURL($CorpNum ,$UserID, $TOGO) {
-    $response = $this->executeCURL('/FAX/?TG='.$TOGO,$CorpNum,$UserID);
-    return $response->url;
-  }
-
-  public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString = null){
-
-    if(is_null($SDate) || $SDate ===""){
-			throw new PopbillException('시작일자가 입력되지 않았습니다.');
-		}
-
-    if(is_null($EDate) || $EDate ===""){
-			throw new PopbillException('종료일자가 입력되지 않았습니다.');
-		}
-
-    $uri = '/FAX/Search';
-    $uri .= '?SDate=' . $SDate;
-    $uri .= '&EDate=' . $EDate;
-
-    if(!is_null($State) || !empty($State)){
-			$uri .= '&State=' . implode(',',$State);
-		}
-
-    if($ReserveYN) {
-      $uri .= '&ReserveYN=1';
-    }else {
-      $uri .= '&ReserveYN=0';
+        return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true)->receiptNum;
     }
 
-    if($SenderOnly){
-      $uri .= '&SenderOnly=1';
-    } else {
-      $uri .= '&SenderOnly=0';
+    public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null, $UserID = null, $title = null, $RequestNum = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('팩스접수번호(receiptNum)가 입력되지 않았습니다.');
+        }
+
+        $RequestForm = array();
+
+        if (!empty($SenderNum)) $RequestForm['snd'] = $SenderNum;
+        if (!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
+        if (!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+        if (!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
+
+
+        if (!is_null($Receivers)) {
+            $RequestForm['rcvs'] = $Receivers;
+        }
+
+        $RequestForm['title'] = $title;
+
+        $postdata = json_encode($RequestForm);
+
+        return $this->executeCURL('/FAX/' . $ReceiptNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
     }
 
-    $uri .= '&Page=' . $Page;
-    $uri .= '&PerPage=' . $PerPage;
-    $uri .= '&Order=' . $Order;
+    public function ResendFAXRN($CorpNum, $RequestNum, $SenderNum, $SenderName, $Receivers, $originalFAXrequestNum, $ReserveDT = null, $UserID = null, $title = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('전송요청번호(requestNum)가 입력되지 않았습니다.');
+        }
 
-		if(!is_null($QString) || !empty($QString)){
-			$uri .= '&QString=' . $QString;
-		}
+        if (empty($originalFAXrequestNum)) {
+            throw new PopbillException('원본 팩스의 전송요청번호(originalFAXrequestNum)가 입력되지 않았습니다.');
+        }
 
-    $response = $this->executeCURL($uri, $CorpNum, "");
+        $RequestForm = array();
 
-    $SearchList = new FaxSearchResult();
-    $SearchList->fromJsonInfo($response);
-
-    return $SearchList;
-  }
+        if (!empty($SenderNum)) $RequestForm['snd'] = $SenderNum;
+        if (!empty($SenderName)) $RequestForm['sndnm'] = $SenderName;
+        if (!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
 
 
-  public function GetChargeInfo ( $CorpNum, $UserID = null) {
-    $uri = '/FAX/ChargeInfo';
+        if (!is_null($Receivers)) {
+            $RequestForm['rcvs'] = $Receivers;
+        }
 
-    $response = $this->executeCURL($uri, $CorpNum, $UserID);
-    $ChargeInfo = new ChargeInfo();
-    $ChargeInfo->fromJsonInfo($response);
+        $RequestForm['title'] = $title;
+        $RequestForm['requestNum'] = $RequestNum;
 
-    return $ChargeInfo;
-  }
+        $postdata = json_encode($RequestForm);
 
-  // 발신번호 목록 조회
-  public function GetSenderNumberList($CorpNum, $UserID = null){
-    return $this->executeCURL('/FAX/SenderNumber', $CorpNum, $UserID);
-  }
+        return $this->executeCURL('/FAX/Resend/' . $originalFAXrequestNum, $CorpNum, $UserID, true, null, $postdata)->receiptNum;
+    }
+
+    public function GetFaxDetail($CorpNum, $ReceiptNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
+        }
+        $result = $this->executeCURL('/FAX/' . $ReceiptNum, $CorpNum, $UserID);
+        $FaxState = new FaxState();
+
+        $FaxInfoList = array();
+
+        for ($i = 0; $i < Count($result); $i++) {
+            $FaxInfo = new FaxState();
+            $FaxInfo->fromJsonInfo($result[$i]);
+            $FaxInfoList[$i] = $FaxInfo;
+
+        }
+        return $FaxInfoList;
+    }
+
+    public function GetFaxDetailRN($CorpNum, $RequestNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('팩스 전송요청번호가 입력되지 않았습니다.');
+        }
+        $result = $this->executeCURL('/FAX/Get/' . $RequestNum, $CorpNum, $UserID);
+        $FaxState = new FaxState();
+
+        $FaxInfoList = array();
+
+        for ($i = 0; $i < Count($result); $i++) {
+            $FaxInfo = new FaxState();
+            $FaxInfo->fromJsonInfo($result[$i]);
+            $FaxInfoList[$i] = $FaxInfo;
+
+        }
+        return $FaxInfoList;
+    }
+
+    public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('팩스 접수번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/FAX/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID);
+    }
+
+    public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('팩스 전송요청번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/FAX/Cancel/' . $RequestNum, $CorpNum, $UserID);
+    }
+
+    public function GetURL($CorpNum, $UserID, $TOGO)
+    {
+        $response = $this->executeCURL('/FAX/?TG=' . $TOGO, $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString = null)
+    {
+
+        if (is_null($SDate) || $SDate === "") {
+            throw new PopbillException('시작일자가 입력되지 않았습니다.');
+        }
+
+        if (is_null($EDate) || $EDate === "") {
+            throw new PopbillException('종료일자가 입력되지 않았습니다.');
+        }
+
+        $uri = '/FAX/Search';
+        $uri .= '?SDate=' . $SDate;
+        $uri .= '&EDate=' . $EDate;
+
+        if (!is_null($State) || !empty($State)) {
+            $uri .= '&State=' . implode(',', $State);
+        }
+
+        if ($ReserveYN) {
+            $uri .= '&ReserveYN=1';
+        } else {
+            $uri .= '&ReserveYN=0';
+        }
+
+        if ($SenderOnly) {
+            $uri .= '&SenderOnly=1';
+        } else {
+            $uri .= '&SenderOnly=0';
+        }
+
+        $uri .= '&Page=' . $Page;
+        $uri .= '&PerPage=' . $PerPage;
+        $uri .= '&Order=' . $Order;
+
+        if (!is_null($QString) || !empty($QString)) {
+            $uri .= '&QString=' . $QString;
+        }
+
+        $response = $this->executeCURL($uri, $CorpNum, "");
+
+        $SearchList = new FaxSearchResult();
+        $SearchList->fromJsonInfo($response);
+
+        return $SearchList;
+    }
+
+
+    public function GetChargeInfo($CorpNum, $UserID = null)
+    {
+        $uri = '/FAX/ChargeInfo';
+
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+        $ChargeInfo = new ChargeInfo();
+        $ChargeInfo->fromJsonInfo($response);
+
+        return $ChargeInfo;
+    }
+
+    // 발신번호 목록 조회
+    public function GetSenderNumberList($CorpNum, $UserID = null)
+    {
+        return $this->executeCURL('/FAX/SenderNumber', $CorpNum, $UserID);
+    }
 }
 
 

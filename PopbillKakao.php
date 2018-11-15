@@ -1,221 +1,238 @@
 <?php
 /**
-* =====================================================================================
-* Class for base module for Popbill API SDK. It include base functionality for
-* RESTful web service request and parse json result. It uses Linkhub module
-* to accomplish authentication APIs.
-*
-* This module uses curl and openssl for HTTPS Request. So related modules must
-* be installed and enabled.
-*
-* http://www.linkhub.co.kr
-* Author : Jeong YoHan (code@linkhub.co.kr)
-* Written : 2018-03-02
-* Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-07-03
-*
-* Thanks for your interest.
-* We welcome any suggestions, feedbacks, blames or anything.
-* ======================================================================================
-*/
+ * =====================================================================================
+ * Class for base module for Popbill API SDK. It include base functionality for
+ * RESTful web service request and parse json result. It uses Linkhub module
+ * to accomplish authentication APIs.
+ *
+ * This module uses curl and openssl for HTTPS Request. So related modules must
+ * be installed and enabled.
+ *
+ * http://www.linkhub.co.kr
+ * Author : Jeong YoHan (code@linkhub.co.kr)
+ * Written : 2018-03-02
+ * Contributor : Kim EunHye (code@linkhub.co.kr)
+ * Updated : 2018-07-03
+ *
+ * Thanks for your interest.
+ * We welcome any suggestions, feedbacks, blames or anything.
+ * ======================================================================================
+ */
 require_once 'popbill.php';
 
-class KakaoService extends PopbillBase {
+class KakaoService extends PopbillBase
+{
 
-    public function __construct($LinkID,$SecretKey) {
-      parent::__construct($LinkID,$SecretKey);
-      $this->AddScope('153');
-      $this->AddScope('154');
-      $this->AddScope('155');
-    }
-    public function GetUnitCost($CorpNum,$MessageType) {
-      return $this->executeCURL('/KakaoTalk/UnitCost?Type='.$MessageType, $CorpNum)->unitCost;
-    }
-
-    public function GetMessages($CorpNum,$ReceiptNum,$UserID = null) {
-      if(empty($ReceiptNum)) {
-          throw new PopbillException('카카오톡 접수번호를 입력하지 않았습니다.');
-      }
-      $response  = $this->executeCURL('/KakaoTalk/'.$ReceiptNum, $CorpNum,$UserID);
-      $DetailInfo = new KakaoSentInfo();
-  		$DetailInfo->fromJsonInfo($response);
-
-      return $DetailInfo;
+    public function __construct($LinkID, $SecretKey)
+    {
+        parent::__construct($LinkID, $SecretKey);
+        $this->AddScope('153');
+        $this->AddScope('154');
+        $this->AddScope('155');
     }
 
-    public function GetMessagesRN($CorpNum,$RequestNum,$UserID = null) {
-      if(empty($RequestNum)) {
-          throw new PopbillException('카카오톡 전송요청번호를 입력하지 않았습니다.');
-      }
-      $response  = $this->executeCURL('/KakaoTalk/Get/'.$RequestNum, $CorpNum,$UserID);
-      $DetailInfo = new KakaoSentInfo();
-  		$DetailInfo->fromJsonInfo($response);
-
-      return $DetailInfo;
+    public function GetUnitCost($CorpNum, $MessageType)
+    {
+        return $this->executeCURL('/KakaoTalk/UnitCost?Type=' . $MessageType, $CorpNum)->unitCost;
     }
 
-    public function ListPlusFriendID($CorpNum) {
-      $PlusFriendList = array();
-  		$response = $this->executeCURL('/KakaoTalk/ListPlusFriendID', $CorpNum);
+    public function GetMessages($CorpNum, $ReceiptNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('카카오톡 접수번호를 입력하지 않았습니다.');
+        }
+        $response = $this->executeCURL('/KakaoTalk/' . $ReceiptNum, $CorpNum, $UserID);
+        $DetailInfo = new KakaoSentInfo();
+        $DetailInfo->fromJsonInfo($response);
 
-  		for($i=0; $i<Count($response); $i++){
-  			$PlusFriendObj = new PlusFriend();
-  			$PlusFriendObj->fromJsonInfo($response[$i]);
-  			$PlusFriendList[$i] = $PlusFriendObj;
-  		}
-
-  		return $PlusFriendList;
+        return $DetailInfo;
     }
 
-    public function ListATSTemplate($CorpNum) {
-      return $this->executeCURL('/KakaoTalk/ListATSTemplate', $CorpNum);
+    public function GetMessagesRN($CorpNum, $RequestNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('카카오톡 전송요청번호를 입력하지 않았습니다.');
+        }
+        $response = $this->executeCURL('/KakaoTalk/Get/' . $RequestNum, $CorpNum, $UserID);
+        $DetailInfo = new KakaoSentInfo();
+        $DetailInfo->fromJsonInfo($response);
+
+        return $DetailInfo;
     }
 
-    public function GetSenderNumberList($CorpNum) {
-      return $this->executeCURL('/Message/SenderNumber', $CorpNum);
+    public function ListPlusFriendID($CorpNum)
+    {
+        $PlusFriendList = array();
+        $response = $this->executeCURL('/KakaoTalk/ListPlusFriendID', $CorpNum);
+
+        for ($i = 0; $i < Count($response); $i++) {
+            $PlusFriendObj = new PlusFriend();
+            $PlusFriendObj->fromJsonInfo($response[$i]);
+            $PlusFriendList[$i] = $PlusFriendObj;
+        }
+
+        return $PlusFriendList;
     }
 
-    public function CancelReserve($CorpNum,$ReceiptNum,$UserID = null) {
-      if(empty($ReceiptNum)) {
-          throw new PopbillException('예약전송을 취소할 접수번호를 입력하지 않았습니다.');
-      }
-      return $this->executeCURL('/KakaoTalk/'.$ReceiptNum.'/Cancel', $CorpNum,$UserID);
+    public function ListATSTemplate($CorpNum)
+    {
+        return $this->executeCURL('/KakaoTalk/ListATSTemplate', $CorpNum);
     }
 
-    public function CancelReserveRN($CorpNum,$RequestNum,$UserID = null) {
-      if(empty($RequestNum)) {
-          throw new PopbillException('예약전송을 취소할 전송요청번호를 입력하지 않았습니다.');
-      }
-      return $this->executeCURL('/KakaoTalk/Cancel/'.$RequestNum, $CorpNum,$UserID);
+    public function GetSenderNumberList($CorpNum)
+    {
+        return $this->executeCURL('/Message/SenderNumber', $CorpNum);
     }
 
-    public function GetURL($CorpNum ,$UserID, $TOGO) {
-      $URI = '/KakaoTalk/?TG=';
+    public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('예약전송을 취소할 접수번호를 입력하지 않았습니다.');
+        }
+        return $this->executeCURL('/KakaoTalk/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID);
+    }
 
-      if ( $TOGO=="SENDER" ) {
-        $URI = '/Message/?TG=';
-      }
+    public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('예약전송을 취소할 전송요청번호를 입력하지 않았습니다.');
+        }
+        return $this->executeCURL('/KakaoTalk/Cancel/' . $RequestNum, $CorpNum, $UserID);
+    }
 
-      $response = $this->executeCURL($URI.$TOGO, $CorpNum, $UserID);
-      return $response->url;
+    public function GetURL($CorpNum, $UserID, $TOGO)
+    {
+        $URI = '/KakaoTalk/?TG=';
+
+        if ($TOGO == "SENDER") {
+            $URI = '/Message/?TG=';
+        }
+
+        $response = $this->executeCURL($URI . $TOGO, $CorpNum, $UserID);
+        return $response->url;
     }
 
 
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString = null){
-      if ( is_null( $SDate ) || $SDate === "" ) {
-          throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
-      }
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString = null)
+    {
+        if (is_null($SDate) || $SDate === "") {
+            throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
+        }
 
-      if ( is_null( $EDate ) || $EDate ==="" ) {
-          throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
-      }
+        if (is_null($EDate) || $EDate === "") {
+            throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
+        }
 
-      $uri = '/KakaoTalk/Search?SDate=' . $SDate;
-      $uri .= '&EDate=' . $EDate;
+        $uri = '/KakaoTalk/Search?SDate=' . $SDate;
+        $uri .= '&EDate=' . $EDate;
 
-      if ( !is_null( $State ) || !empty( $State ) ) {
-          $uri .= '&State=' . implode(',',$State);
-      }
-      if ( !is_null( $Item ) || !empty( $Item ) ) {
-          $uri .= '&Item=' . implode(',',$Item);
-      }
+        if (!is_null($State) || !empty($State)) {
+            $uri .= '&State=' . implode(',', $State);
+        }
+        if (!is_null($Item) || !empty($Item)) {
+            $uri .= '&Item=' . implode(',', $Item);
+        }
 
-      $uri .= '&ReserveYN=' . $ReserveYN;
+        $uri .= '&ReserveYN=' . $ReserveYN;
 
-      if ( $SenderYN ) {
-          $uri .= '&SenderYN=1';
-      }
+        if ($SenderYN) {
+            $uri .= '&SenderYN=1';
+        }
 
-      $uri .= '&Page=' . $Page;
-      $uri .= '&PerPage=' . $PerPage;
-      $uri .= '&Order=' . $Order;
+        $uri .= '&Page=' . $Page;
+        $uri .= '&PerPage=' . $PerPage;
+        $uri .= '&Order=' . $Order;
 
-      if ( !is_null( $QString ) || !empty( $QString ) ) {
-          $uri .= '&QString=' . $QString;
-      }
+        if (!is_null($QString) || !empty($QString)) {
+            $uri .= '&QString=' . $QString;
+        }
 
-      $response = $this->executeCURL($uri,$CorpNum,$UserID);
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
-      $SearchList = new KakaoSearchResult();
-  		$SearchList->fromJsonInfo($response);
+        $SearchList = new KakaoSearchResult();
+        $SearchList->fromJsonInfo($response);
 
-  		return $SearchList;
+        return $SearchList;
 
     }
 
-  public function GetChargeInfo ( $CorpNum, $MessageType, $UserID = null) {
-    $uri = '/KakaoTalk/ChargeInfo?Type='.$MessageType;
+    public function GetChargeInfo($CorpNum, $MessageType, $UserID = null)
+    {
+        $uri = '/KakaoTalk/ChargeInfo?Type=' . $MessageType;
 
-    $response = $this->executeCURL($uri, $CorpNum, $UserID);
-    $ChargeInfo = new ChargeInfo();
-    $ChargeInfo->fromJsonInfo($response);
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+        $ChargeInfo = new ChargeInfo();
+        $ChargeInfo->fromJsonInfo($response);
 
-    return $ChargeInfo;
-  }
-
-  public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null, $RequestNum = null) {
-
-    $Request = array();
-
-    if(empty($PlusFriendID) == false)  $Request['plusFriendID'] = $PlusFriendID;
-    if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)       $Request['content'] = $Content;
-    if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
-    if(empty($AdsYN) == false)         $Request['adsYN'] = $AdsYN;
-    if(empty($ImageURL) == false)      $Request['imageURL'] = $ImageURL;
-    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
-
-    $Request['msgs'] = $Messages;
-    $Request['btns'] = $Btns;
-    $postdata = array();
-    $postdata['form'] = json_encode($Request);
-
-    $i = 0;
-
-    foreach($FilePaths as $FilePath) {
-      $postdata['file'] = '@'.$FilePath;
+        return $ChargeInfo;
     }
 
-    return $this->executeCURL('/FMS', $CorpNum, $UserID, true,null,$postdata,true)->receiptNum;
-  }
+    public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null, $RequestNum = null)
+    {
 
-  public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null, $RequestNum = null) {
-    $Request = array();
+        $Request = array();
 
-    if(empty($PlusFriendID) == false)  $Request['plusFriendID'] = $PlusFriendID;
-    if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)       $Request['content'] = $Content;
-    if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
-    if(empty($AdsYN) == false)         $Request['adsYN'] = $AdsYN;
-    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
+        if (empty($PlusFriendID) == false) $Request['plusFriendID'] = $PlusFriendID;
+        if (empty($Sender) == false) $Request['snd'] = $Sender;
+        if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
+        if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
+        if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
+        if (empty($AdsYN) == false) $Request['adsYN'] = $AdsYN;
+        if (empty($ImageURL) == false) $Request['imageURL'] = $ImageURL;
+        if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
 
-    $Request['msgs'] = $Messages;
-    $Request['btns'] = $Btns;
-    $postdata = json_encode($Request);
+        $Request['msgs'] = $Messages;
+        $Request['btns'] = $Btns;
+        $postdata = array();
+        $postdata['form'] = json_encode($Request);
 
-    return $this->executeCURL('/FTS',$CorpNum,$UserID,true,null,$postdata)->receiptNum;
-  }
+        $i = 0;
 
-  public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null) {
-    $Request = array();
+        foreach ($FilePaths as $FilePath) {
+            $postdata['file'] = '@' . $FilePath;
+        }
 
-    if(empty($TemplateCode) == false)  $Request['templateCode'] = $TemplateCode;
-    if(empty($Sender) == false)        $Request['snd'] = $Sender;
-    if(empty($Content) == false)       $Request['content'] = $Content;
-    if(empty($AltContent) == false)    $Request['altContent'] = $AltContent;
-    if(empty($AltSendType) == false)   $Request['altSendType'] = $AltSendType;
-    if(empty($ReserveDT) == false)     $Request['sndDT'] = $ReserveDT;
-    if(empty($RequestNum) == false)    $Request['requestNum'] = $RequestNum;
-    $Request['msgs'] = $Messages;
+        return $this->executeCURL('/FMS', $CorpNum, $UserID, true, null, $postdata, true)->receiptNum;
+    }
 
-    $postdata = json_encode($Request);
+    public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null, $RequestNum = null)
+    {
+        $Request = array();
 
-    return $this->executeCURL('/ATS',$CorpNum,$UserID,true,null,$postdata)->receiptNum;
-  }
+        if (empty($PlusFriendID) == false) $Request['plusFriendID'] = $PlusFriendID;
+        if (empty($Sender) == false) $Request['snd'] = $Sender;
+        if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
+        if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
+        if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
+        if (empty($AdsYN) == false) $Request['adsYN'] = $AdsYN;
+        if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
+
+        $Request['msgs'] = $Messages;
+        $Request['btns'] = $Btns;
+        $postdata = json_encode($Request);
+
+        return $this->executeCURL('/FTS', $CorpNum, $UserID, true, null, $postdata)->receiptNum;
+    }
+
+    public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null)
+    {
+        $Request = array();
+
+        if (empty($TemplateCode) == false) $Request['templateCode'] = $TemplateCode;
+        if (empty($Sender) == false) $Request['snd'] = $Sender;
+        if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
+        if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
+        if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
+        if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
+        $Request['msgs'] = $Messages;
+
+        $postdata = json_encode($Request);
+
+        return $this->executeCURL('/ATS', $CorpNum, $UserID, true, null, $postdata)->receiptNum;
+    }
 }
 
 class ENumKakaoType
