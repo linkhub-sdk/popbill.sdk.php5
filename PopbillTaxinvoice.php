@@ -192,6 +192,18 @@ class TaxinvoiceService extends PopbillBase
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey, $CorpNum, $UserID, true, 'CANCELISSUE', $postdata);
     }
 
+    //역)즉시 요청
+    public function RegistRequest($CorpNum, $Taxinvoice, $Memo = '', $UserID = null)
+    {
+        if (!is_null($Memo) || !empty($memo)) {
+            $Taxinvoice->memo = $Memo;
+        }
+
+        $postdata = json_encode($Taxinvoice);
+
+        return $this->executeCURL('/Taxinvoice', $CorpNum, $UserID, true, 'REQUEST', $postdata);
+    }
+
     //역)발행요청
     public function Request($CorpNum, $MgtKeyType, $MgtKey, $Memo = '', $UserID = null)
     {
