@@ -261,6 +261,12 @@ class FaxService extends PopbillBase
     {
         return $this->executeCURL('/FAX/SenderNumber', $CorpNum, $UserID);
     }
+
+    // 팩스 미리보기 URL
+    public function getPreviewURL($CorpNum, $ReceiptNum, $UserID)
+    {
+        return $this->executeCURL('/FAX/Preview/' + $ReceiptNum, $CorpNum, $UserID);
+    }
 }
 
 
