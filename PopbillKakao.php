@@ -112,6 +112,34 @@ class KakaoService extends PopbillBase
         return $response->url;
     }
 
+    //플러스친구 계정관리 팝업 URL
+    public function GetPlusFriendMgtURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/KakaoTalk/?TG=PLUSFRIEND', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //발신번호 관리 팝업 URL
+    public function GetSenderNumberMgtURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/Message/?TG=SENDER', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //알림톡 템플릿관리 팝업 URL
+    public function GetATSTemplateMgtURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/KakaoTalk/?TG=TEMPLATE', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //카카오톡 전송내역 팝업 URL
+    public function GetSentListURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/KakaoTalk/?TG=BOX', $CorpNum, $UserID);
+        return $response->url;
+    }
+
 
     public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = '', $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString = null)
     {

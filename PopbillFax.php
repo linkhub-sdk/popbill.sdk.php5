@@ -183,6 +183,20 @@ class FaxService extends PopbillBase
         return $response->url;
     }
 
+    //팩스 전송내역 팝업 URL
+    public function GetSentListURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/FAX/?TG=BOX', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //발신번호 관리 팝업 URL
+    public function GetSenderNumberMgtURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/FAX/?TG=SENDER', $CorpNum, $UserID);
+        return $response->url;
+    }
+
     public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString = null)
     {
 

@@ -604,6 +604,20 @@ class TaxinvoiceService extends PopbillBase
     {
         return $this->executeCURL('/Taxinvoice/CertCheck', $corpNum, $userID);
     }
+
+    //팝빌 인감 및 첨부문서 등록 URL
+    public function GetSealURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=SEAL', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //공인인증서 등록 URL
+    public function GetTaxCertURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=CERT', $CorpNum, $UserID);
+        return $response->url;
+    }
 }
 
 class Taxinvoice

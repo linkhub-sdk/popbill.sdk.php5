@@ -251,6 +251,20 @@ class MessagingService extends PopbillBase
         return $response->url;
     }
 
+    //문자 전송내역 팝업 URL
+    public function GetSentListURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/Message/?TG=BOX', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //발신번호 관리 팝업 URL
+    public function GetSenderNumberMgtURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/Message/?TG=SENDER', $CorpNum, $UserID);
+        return $response->url;
+    }
+
     //문자 전송내역 조회
     public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page, $PerPage, $Order, $UserID = null, $QString = null)
     {

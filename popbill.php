@@ -146,6 +146,20 @@ class PopbillBase
         return $response->url;
     }
 
+    //팝빌 로그인 URL
+    public function GetAccessURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=LOGIN', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //팝빌 연동회원 포인트 충전 URL
+    public function GetChargeURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=CHRG', $CorpNum, $UserID);
+        return $response->url;
+    }
+
     //가입여부 확인
     public function CheckIsMember($CorpNum, $LinkID)
     {
