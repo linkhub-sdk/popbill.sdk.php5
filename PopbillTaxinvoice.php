@@ -12,8 +12,8 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Contributor : Kim EunHye (code@linkhub.co.kr)
- * Updated : 2018-09-12
+ * Contributor : Kim HyunJin (code@linkhub.co.kr)
+ * Updated : 2018-11-27
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -611,7 +611,7 @@ class TaxinvoiceService extends PopbillBase
         return $result = $this->executeCURL($uri, $corpNum, $userID, true);
     }
 
-    // 공인인증서 유요성 확인
+    // 공인인증서 유효성 확인
     public function CheckCertValidation($corpNum, $userID = null)
     {
         return $this->executeCURL('/Taxinvoice/CertCheck', $corpNum, $userID);

@@ -26,10 +26,10 @@ class StatementService extends PopbillBase {
     parent::__construct($LinkID,$SecretKey);
     $this->AddScope('121');
     $this->AddScope('122');
-		$this->AddScope('123');
-		$this->AddScope('124');
-		$this->AddScope('125');
-		$this->AddScope('126');
+    $this->AddScope('123');
+	$this->AddScope('124');
+	$this->AddScope('125');
+	$this->AddScope('126');
   }
 
 	#전자명세서 발행단가 확인
