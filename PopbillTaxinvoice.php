@@ -592,7 +592,7 @@ class TaxinvoiceService extends PopbillBase
     {
         $EmailSendConfigList = array();
 
-        $result = $this->executeCURL('/Taxinvoice/EmailSendConfig', $CorpNum, $userID);
+        $result = $this->executeCURL('/Taxinvoice/EmailSendConfig', $CorpNum, $UserID);
 
         for ($i = 0; $i < Count($result); $i++) {
             $EmailSendConfig = new EmailSendConfig();
