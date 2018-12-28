@@ -105,7 +105,7 @@ class HTTaxinvoiceService extends PopbillBase {
 
     $uri .= '&Page=' . $Page;
     $uri .= '&PerPage=' . $PerPage;
-    $uri .= '&Oder=' . $Order;
+    $uri .= '&Order=' . $Order;
 
     $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
