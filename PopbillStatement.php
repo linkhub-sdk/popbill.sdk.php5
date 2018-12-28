@@ -381,7 +381,7 @@ class StatementService extends PopbillBase {
   public function ListEmailConfig($CorpNum, $UserID = null) {
 		$EmailSendConfigList = array();
 
-		$result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $userID);
+		$result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $UserID);
 
 		for($i=0; $i<Count($result); $i++){
 			$EmailSendConfig = new EmailSendConfig();
@@ -393,7 +393,7 @@ class StatementService extends PopbillBase {
 
   // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
 	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
-		$sendYNString = $sendYN ? 'True' : 'False';		
+		$sendYNString = $sendYN ? 'True' : 'False';
 		$uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
 		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
@@ -574,6 +574,7 @@ class StatementInfo
 
     public $itemKey;
     public $mgtKey;
+    public $itemCode;
     public $stateCode;
     public $taxType;
     public $purposeType;
@@ -597,6 +598,7 @@ class StatementInfo
     {
         isset($jsonInfo->itemKey) ? ($this->itemKey = $jsonInfo->itemKey) : null;
         isset($jsonInfo->mgtKey) ? ($this->mgtKey = $jsonInfo->mgtKey) : null;
+        isset($jsonInfo->itemCode) ? ($this->itemCode = $jsonInfo->itemCode) : null;
         isset($jsonInfo->stateCode) ? ($this->stateCode = $jsonInfo->stateCode) : null;
         isset($jsonInfo->taxType) ? ($this->taxType = $jsonInfo->taxType) : null;
         isset($jsonInfo->purposeType) ? ($this->purposeType = $jsonInfo->purposeType) : null;
