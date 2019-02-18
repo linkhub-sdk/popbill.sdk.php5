@@ -64,13 +64,17 @@ class StatementService extends PopbillBase {
 	}
 
 	# 전자명세서 즉시발행
-	public function RegistIssue($CorpNum,$Statement,$memo,$UserID = null){
+	public function RegistIssue($CorpNum,$Statement,$memo,$UserID = null, $EmailSubject = null){
 		if(!is_null($memo) || !empty($memo)){
 			$Statement->memo = $memo;
 		}
 
+    if(!is_null($EmailSubject) || !empty($EmailSubject)){
+			$Statement->emailSubject = $EmailSubject;
+		}
+
 		$postdata = json_encode($Statement);
-    	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'ISSUE',$postdata);
+    return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'ISSUE',$postdata);
 	}
 
 	# 전자명세서 임시저장
@@ -98,14 +102,20 @@ class StatementService extends PopbillBase {
 
 
 	# 전자명세서 발행
-	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null){
+	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null, $EmailSubject = null){
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
-		$Request = new IssueRequest();
-    	$Request->memo = $Memo;
-    	$postdata = json_encode($Request);
 
+		  $Request = new IssueRequest();
+    	$Request->memo = $Memo;
+
+      if(!is_null($EmailSubject) || !empty($EmailSubject)){
+  			$Request->emailSubject = $EmailSubject;
+  		}
+
+    	$postdata = json_encode($Request);
+      var_dump($postdata);
 		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'ISSUE',$postdata);
 	}
 
@@ -405,6 +415,7 @@ class Statement
     public $sendNum;
     public $receiveNum;
     public $memo;
+    public $emailSubject;
 
     public $itemCode;
     public $mgtKey;
@@ -650,6 +661,7 @@ class MemoRequest
 class IssueRequest
 {
     public $memo;
+    public $emailSubject;
 }
 
 class DocSearchResult
