@@ -47,11 +47,17 @@ class CashbillService extends PopbillBase {
     }
   }
 
-  public function RegistIssue($CorpNum, $Cashbill, $Memo, $UserID = null) {
-  if(!is_null($Memo) || !empty($Memo)){
-    $Cashbill->memo = $Memo;
-  }
+  public function RegistIssue($CorpNum, $Cashbill, $Memo, $UserID = null, $EmailSubject = null) {
+    if(!is_null($Memo) || !empty($Memo)){
+      $Cashbill->memo = $Memo;
+    }
+
+    if(!is_null($EmailSubject) || !empty($EmailSubject)){
+      $Cashbill->emailSubject = $EmailSubject;
+    }
+
     $postdata = json_encode($Cashbill);
+
     return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'ISSUE',$postdata);
   }
 
@@ -62,7 +68,7 @@ class CashbillService extends PopbillBase {
 
   // 취소현금영수증 즉시발행 추가(RevokeRegistIssue). 2017/08/17
   public function RevokeRegistIssue($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $memo = null,
-    $UserID = null, $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null){
+    $UserID = null, $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null, $emailSubject = null){
 
     $request = array(
       'mgtKey' => $mgtKey,
@@ -76,6 +82,7 @@ class CashbillService extends PopbillBase {
       'tax' => $tax,
       'serviceFee' => $serviceFee,
       'totalAmount' => $totalAmount,
+      'emailSubject' => $emailSubject,
     );
     $postdata = json_encode($request);
 
@@ -119,14 +126,16 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true, 'PATCH', $postdata);
   }
 
-  public function Issue($CorpNum,$MgtKey,$Memo = '', $UserID = null) {
+  public function Issue($CorpNum,$MgtKey,$Memo = '', $UserID = null, $EmailSubject = null) {
     if(is_null($MgtKey) || empty($MgtKey)) {
       throw new PopbillException('관리번호가 입력되지 않았습니다.');
     }
     $Request = new IssueRequest();
     $Request->memo = $Memo;
-    $postdata = json_encode($Request);
+    $Request->emailSubject = $EmailSubject;
 
+    $postdata = json_encode($Request);
+    
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'ISSUE',$postdata);
   }
 
@@ -395,6 +404,7 @@ class Cashbill
     public $fax;
     public $faxsendYN;
     public $cancelType;
+    public $emailSubject;
 
     function fromJsonInfo($jsonInfo)
     {
@@ -517,6 +527,7 @@ class MemoRequest
 class IssueRequest
 {
     public $memo;
+    public $emailSubject;
 }
 
 class CBSearchResult
