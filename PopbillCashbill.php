@@ -346,7 +346,7 @@ class CashbillService extends PopbillBase {
   public function ListEmailConfig($CorpNum, $UserID = null) {
 		$EmailSendConfigList = array();
 
-		$result = $this->executeCURL('/Cashbill/EmailSendConfig', $CorpNum, $userID);
+		$result = $this->executeCURL('/Cashbill/EmailSendConfig', $CorpNum, $UserID);
 
 		for($i=0; $i<Count($result); $i++){
 			$EmailSendConfig = new EmailSendConfig();

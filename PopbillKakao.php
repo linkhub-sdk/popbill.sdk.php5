@@ -304,7 +304,7 @@ class KakaoSearchResult
 class KakaoSentInfo
 {
     public $contentType;
-    public $temaplateCode;
+    public $templateCode;
     public $plusFriendID;
     public $sendNum;
     public $altContent;
