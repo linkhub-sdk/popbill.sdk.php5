@@ -115,7 +115,7 @@ class StatementService extends PopbillBase {
   		}
 
     	$postdata = json_encode($Request);
-      var_dump($postdata);
+      
 		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'ISSUE',$postdata);
 	}
 
