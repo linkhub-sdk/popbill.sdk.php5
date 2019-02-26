@@ -244,7 +244,7 @@ class KakaoService extends PopbillBase
         return $this->executeCURL('/FTS', $CorpNum, $UserID, true, null, $postdata)->receiptNum;
     }
 
-    public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null)
+    public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null, $Btns = null)
     {
         $Request = array();
 
@@ -256,6 +256,7 @@ class KakaoService extends PopbillBase
         if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
         if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
         $Request['msgs'] = $Messages;
+        if (is_null($Btns) == false) $Request['btns'] = $Btns;
 
         $postdata = json_encode($Request);
 
