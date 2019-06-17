@@ -11,8 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2016-07-07
-* Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-09-12
+* Updated : 2019-06-17
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
 * ======================================================================================
@@ -85,7 +84,7 @@ class HTTaxinvoiceService extends PopbillBase {
     return $JobList;
   }
 
-  public function Search ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $Page, $PerPage, $Order, $UserID = null )
+  public function Search ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $Page, $PerPage, $Order, $UserID = null, $QString = null )
   {
     if ( strlen ( $JobID ) != 18 ) {
       throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
@@ -98,6 +97,10 @@ class HTTaxinvoiceService extends PopbillBase {
 
     if ( !empty( $TaxRegIDYN ) ) {
       $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+    }
+
+    if ( !empty( $QString ) ) {
+      $uri .= '&SearchString=' . $QString;
     }
 
     $uri .= '&TaxRegIDType=' . $TaxRegIDType;
@@ -115,7 +118,7 @@ class HTTaxinvoiceService extends PopbillBase {
     return $SearchResult;
   }
 
-  public function Summary ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $UserID = null )
+  public function Summary ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $UserID = null, $QString = null)
   {
     if ( strlen ( $JobID ) != 18 ) {
       throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다');
@@ -128,6 +131,10 @@ class HTTaxinvoiceService extends PopbillBase {
 
     if ( !empty( $TaxRegIDYN ) ) {
       $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+    }
+
+    if ( !empty( $QString ) ) {
+      $uri .= '&SearchString=' . $QString;
     }
 
     $uri .= '&TaxRegIDType=' . $TaxRegIDType;
@@ -203,6 +210,18 @@ class HTTaxinvoiceService extends PopbillBase {
 		}
 
   	$response = $this->executeCURL('/HomeTax/Taxinvoice/'.$NTSConfirmNum.'/PopUp', $CorpNum, $UserID);
+  	return $response->url;
+  }
+
+  public function GetPrintURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+		if(is_null($NTSConfirmNum) || empty($NTSConfirmNum)) {
+			throw new PopbillException('국세청승인번호가 입력되지 않았습니다.');
+	}
+		if ( strlen ($NTSConfirmNum) != 24 ) {
+			throw new PopbillException ('국세청승인번호가 올바르지 않습니다.');
+		}
+
+  	$response = $this->executeCURL('/HomeTax/Taxinvoice/'.$NTSConfirmNum.'/Print', $CorpNum, $UserID);
   	return $response->url;
   }
 
