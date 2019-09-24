@@ -12,8 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Contributor : Kim HyunJin (code@linkhub.co.kr)
- * Updated : 2018-11-27
+ * Updated : 2019-09-24
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -33,6 +32,7 @@ class PopbillBase
     private $Token_Table = array();
     private $Linkhub;
     private $IsTest = false;
+    private $IPRestrictOnOff = true;
     private $scopes = array();
     private $__requestMode = LINKHUB_COMM_MODE;
 
@@ -45,6 +45,11 @@ class PopbillBase
     public function IsTest($T)
     {
         $this->IsTest = $T;
+    }
+
+    public function IPRestrictOnOff($V)
+    {
+        $this->IPRestrictOnOff = $V;
     }
 
     protected function AddScope($scope)
@@ -73,7 +78,7 @@ class PopbillBase
 
         if ($Refresh) {
             try {
-                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes);
+                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes, $this->IPRestrictOnOff ? null : "*");
             } catch (LinkhubException $le) {
                 throw new PopbillException($le->getMessage(), $le->getCode());
             }
