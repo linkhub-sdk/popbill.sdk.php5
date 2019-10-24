@@ -12,8 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Contributor : Kim EunHye (code@linkhub.co.kr)
-* Updated : 2018-09-12
+* Updated : 2019-10-24
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -135,7 +134,7 @@ class CashbillService extends PopbillBase {
     $Request->emailSubject = $EmailSubject;
 
     $postdata = json_encode($Request);
-    
+
     return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'ISSUE',$postdata);
   }
 

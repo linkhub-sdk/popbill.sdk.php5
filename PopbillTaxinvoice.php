@@ -12,8 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Contributor : Kim HyunJin (code@linkhub.co.kr)
- * Updated : 2018-11-27
+ * Updated : 2019-10-24
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -732,6 +731,8 @@ class Taxinvoice
     public $detailList;
     public $addContactList;
 
+    public $orgNTSConfirmNum;
+
     function fromjsonInfo($jsonInfo)
     {
         isset($jsonInfo->closeDownState) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
@@ -814,6 +815,8 @@ class Taxinvoice
         isset($jsonInfo->faxsendYN) ? ($this->faxsendYN = $jsonInfo->faxsendYN) : null;
         isset($jsonInfo->faxreceiveNum) ? ($this->faxreceiveNum = $jsonInfo->faxreceiveNum) : null;
         isset($jsonInfo->originalTaxinvoiceKey) ? ($this->originalTaxinvoiceKey = $jsonInfo->originalTaxinvoiceKey) : null;
+
+        isset($jsonInfo->orgNTSConfirmNum) ? ($this->orgNTSConfirmNum = $jsonInfo->orgNTSConfirmNum) : null;
         isset($jsonInfo->ntsconfirmNum) ? ($this->ntsconfirmNum = $jsonInfo->ntsconfirmNum) : null;
 
         if (isset($jsonInfo->detailList)) {
