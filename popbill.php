@@ -263,6 +263,13 @@ class PopbillBase
             $responseJson = curl_exec($http);
             $http_status = curl_getinfo($http, CURLINFO_HTTP_CODE);
 
+
+            $is_gzip = 0 === mb_strpos($responseJson, "\x1f" . "\x8b" . "\x08");
+
+            if ($is_gzip) {
+                $responseJson = $this->Linkhub->gzdecode($responseJson);
+            }
+
             curl_close($http);
             if ($http_status != 200) {
                 throw new PopbillException($responseJson);
