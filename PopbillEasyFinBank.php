@@ -99,7 +99,7 @@ class EasyFinBankService extends PopbillBase {
     return $JobList;
   }
 
-  public function Search ( $CorpNum, $JobID, $TradeType, $SearchString, $Page, $PerPage, $Order, $UserID = null, $QString = null )
+  public function Search ( $CorpNum, $JobID, $TradeType, $SearchString, $Page, $PerPage, $Order, $UserID = null)
   {
     if ( strlen ( $JobID ) != 18 ) {
       throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
