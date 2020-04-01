@@ -389,6 +389,18 @@ class PopbillBase
             if ($http_response_header[0] != "HTTP/1.1 200 OK") {
                 throw new PopbillException($response);
             }
+
+            foreach( $http_response_header as $k=>$v )
+            {
+                $t = explode( ':', $v, 2 );
+                if( preg_match('/^Content-Type:/i', $v, $out )) {
+                    $contentType = trim($t[1]);
+                    if( 0 === mb_strpos($contentType, 'application/pdf')) {
+                      return $response;
+                    }
+                }
+            }
+
             return json_decode($response);
         }
     }
