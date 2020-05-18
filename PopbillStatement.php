@@ -287,6 +287,16 @@ class StatementService extends PopbillBase {
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=PRINT',$CorpNum,$UserID)->url;
 	}
 
+  # 뷰 URL
+  public function GetViewURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
+  {
+      if (is_null($MgtKey) || empty($MgtKey)) {
+          throw new PopbillException('관리번호가 입력되지 않았습니다.');
+      }
+
+      return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=VIEW', $CorpNum, $UserID)->url;
+  }
+
 	#인쇄 URL 호출(공급받는자용)
 	public function GetEPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
 		if(is_null($MgtKey) || empty($MgtKey)) {
