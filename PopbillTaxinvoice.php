@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-04-01
+ * Updated : 2020-05-18
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -480,7 +480,8 @@ class TaxinvoiceService extends PopbillBase
 
     //세금계산서 조회
     public function Search($CorpNum, $MgtKeyType, $DType, $SDate, $EDate, $State = array(), $Type = array(), $TaxType = array(), $LateOnly, $Page, $PerPage, $Order,
-                           $TaxRegIDType = null, $TaxRegIDYN = null, $TaxRegID = null, $QString = null, $InterOPYN = null, $UserID = null, $IssueType = array())
+                           $TaxRegIDType = null, $TaxRegIDYN = null, $TaxRegID = null, $QString = null, $InterOPYN = null, $UserID = null, $IssueType = array(),
+                           $CloseDownState = array())
     {
         if (is_null($DType) || $DType === "") {
             throw new PopbillException(-99999999, '일자유형이 입력되지 않았습니다.');
@@ -517,6 +518,10 @@ class TaxinvoiceService extends PopbillBase
 
         if (!is_null($LateOnly) || !empty($LateOnly)) {
             $uri .= '&LateOnly=' . $LateOnly;
+        }
+
+        if (!is_null($CloseDownState) || !empty($CloseDownState)) {
+            $uri .= '&CloseDownState=' . implode(',', $CloseDownState);
         }
 
         if (!empty($TaxRegIDType)) {
