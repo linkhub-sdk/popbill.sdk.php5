@@ -261,6 +261,12 @@ class PopbillBase
             curl_setopt($http, CURLOPT_ENCODING, 'gzip,deflate');
 
             $responseJson = curl_exec($http);
+
+            // curl Error 추가
+            if ($responseJson == false) {
+                throw new PopbillException(curl_error($http));
+            }
+
             $http_status = curl_getinfo($http, CURLINFO_HTTP_CODE);
 
             $is_gzip = 0 === mb_strpos($responseJson, "\x1f" . "\x8b" . "\x08");
