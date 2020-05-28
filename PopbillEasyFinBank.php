@@ -35,7 +35,21 @@ class EasyFinBankService extends PopbillBase {
   public function RegistBankAccount($CorpNum, $BankAccountInfo, $UserID = null)
   {
       $postdata = json_encode($BankAccountInfo);
-      return $this->executeCURL('/EasyFin/Bank/BankAccount/Regist', $CorpNum, $UserID, true, null, $postdata);
+
+      $uri = '/EasyFin/Bank/BankAccount/Regist';
+      $uri .= '?BankCode=' . $BankAccountInfo->BankCode;
+      $uri .= '&AccountNumber=' . $BankAccountInfo->AccountNumber;;
+      $uri .= '&AccountPWD=' . $BankAccountInfo->AccountPWD;;
+      $uri .= '&AccountType=' . $BankAccountInfo->AccountType;;
+      $uri .= '&IdentityNumber=' . $BankAccountInfo->IdentityNumber;;
+      $uri .= '&AccountName=' . $BankAccountInfo->AccountName;;
+      $uri .= '&BankID=' . $BankAccountInfo->BankID;;
+      $uri .= '&FastID=' . $BankAccountInfo->FastID;;
+      $uri .= '&FastPWD=' . $BankAccountInfo->FastPWD;;
+      $uri .= '&UsePeriod=' . $BankAccountInfo->UsePeriod;;
+      $uri .= '&Memo=' . $BankAccountInfo->Memo;
+
+      return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
   }
 
   public function UpdateBankAccount($CorpNum, $BankCode, $AccountNumber, $BankAccountInfo, $UserID = null)
@@ -48,9 +62,15 @@ class EasyFinBankService extends PopbillBase {
       throw new PopbillException ('계좌번호가 올바르지 않습니다.');
     }
 
-    $postdata = json_encode($BankAccountInfo);
+    $uri = '/EasyFin/Bank/BankAccount/'.$BankCode.'/'.$AccountNumber.'/Update';
+    $uri .= '?AccountPWD=' . $BankAccountInfo->AccountPWD;;
+    $uri .= '&AccountName=' . $BankAccountInfo->AccountName;;
+    $uri .= '&BankID=' . $BankAccountInfo->BankID;;
+    $uri .= '&FastID=' . $BankAccountInfo->FastID;;
+    $uri .= '&FastPWD=' . $BankAccountInfo->FastPWD;;
+    $uri .= '&Memo=' . $BankAccountInfo->Memo;
 
-    return $this->executeCURL('/EasyFin/Bank/BankAccount/'.$BankCode.'/'.$AccountNumber.'/'.'/Update', $CorpNum, $UserID, true, null, $postdata);
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
   }
 
   public function CloseBankAccount($CorpNum, $BankCode, $AccountNumber, $CloseType, $UserID = null)
@@ -67,15 +87,12 @@ class EasyFinBankService extends PopbillBase {
       throw new PopbillException ('정액제 해지유형이 올바르지 않습니다.');
     }
 
-    $request = array(
-      'BankCode' => $BankCode,
-      'AccountNumber' => $AccountNumber,
-      'CloseType' => $CloseType,
-    );
+    $uri = '/EasyFin/Bank/BankAccount/Close';
+    $uri .= '?BankCode=' . $BankCode;
+    $uri .= '&AccountNumber=' . $AccountNumber;
+    $uri .= '&CloseType=' . $CloseType;
 
-    $postdata = json_encode($request);
-
-    return $this->executeCURL('/EasyFin/Bank/BankAccount/Close', $CorpNum, $UserID, true, null, $postdata);
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
   }
 
   public function RevokeCloseBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
@@ -88,14 +105,11 @@ class EasyFinBankService extends PopbillBase {
       throw new PopbillException ('계좌번호가 올바르지 않습니다.');
     }
 
-    $request = array(
-      'BankCode' => $BankCode,
-      'AccountNumber' => $AccountNumber,
-    );
+    $uri = '/EasyFin/Bank/BankAccount/RevokeClose';
+    $uri .= '?BankCode=' . $BankCode;
+    $uri .= '&AccountNumber=' . $AccountNumber;
 
-    $postdata = json_encode($request);
-
-    return $this->executeCURL('/EasyFin/Bank/BankAccount/RevokeClose', $CorpNum, $UserID, true, null, $postdata);
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
   }
 
 
