@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2019-12-19
-* Updated : 2020-05-27
+* Updated : 2020-05-28
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -35,19 +35,13 @@ class EasyFinBankService extends PopbillBase {
   public function RegistBankAccount($CorpNum, $BankAccountInfo, $UserID = null)
   {
       $uri = '/EasyFin/Bank/BankAccount/Regist';
-      $uri .= '?BankCode=' . $BankAccountInfo->BankCode;
-      $uri .= '&AccountNumber=' . $BankAccountInfo->AccountNumber;;
-      $uri .= '&AccountPWD=' . $BankAccountInfo->AccountPWD;;
-      $uri .= '&AccountType=' . $BankAccountInfo->AccountType;;
-      $uri .= '&IdentityNumber=' . $BankAccountInfo->IdentityNumber;;
-      $uri .= '&AccountName=' . $BankAccountInfo->AccountName;;
-      $uri .= '&BankID=' . $BankAccountInfo->BankID;;
-      $uri .= '&FastID=' . $BankAccountInfo->FastID;;
-      $uri .= '&FastPWD=' . $BankAccountInfo->FastPWD;;
-      $uri .= '&UsePeriod=' . $BankAccountInfo->UsePeriod;;
-      $uri .= '&Memo=' . $BankAccountInfo->Memo;
+      $uri .= '?UsePeriod=' . $BankAccountInfo->UsePeriod;
 
-      return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
+      $postdata = json_encode($BankAccountInfo);
+
+      var_dump($postdata);
+
+      return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
   }
 
   public function UpdateBankAccount($CorpNum, $BankCode, $AccountNumber, $BankAccountInfo, $UserID = null)
@@ -61,14 +55,10 @@ class EasyFinBankService extends PopbillBase {
     }
 
     $uri = '/EasyFin/Bank/BankAccount/'.$BankCode.'/'.$AccountNumber.'/Update';
-    $uri .= '?AccountPWD=' . $BankAccountInfo->AccountPWD;;
-    $uri .= '&AccountName=' . $BankAccountInfo->AccountName;;
-    $uri .= '&BankID=' . $BankAccountInfo->BankID;;
-    $uri .= '&FastID=' . $BankAccountInfo->FastID;;
-    $uri .= '&FastPWD=' . $BankAccountInfo->FastPWD;;
-    $uri .= '&Memo=' . $BankAccountInfo->Memo;
 
-    return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
+    $postdata = json_encode($BankAccountInfo);
+
+    return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
   }
 
   public function CloseBankAccount($CorpNum, $BankCode, $AccountNumber, $CloseType, $UserID = null)
