@@ -34,8 +34,6 @@ class EasyFinBankService extends PopbillBase {
 
   public function RegistBankAccount($CorpNum, $BankAccountInfo, $UserID = null)
   {
-      $postdata = json_encode($BankAccountInfo);
-
       $uri = '/EasyFin/Bank/BankAccount/Regist';
       $uri .= '?BankCode=' . $BankAccountInfo->BankCode;
       $uri .= '&AccountNumber=' . $BankAccountInfo->AccountNumber;;
