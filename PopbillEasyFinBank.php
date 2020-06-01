@@ -39,8 +39,6 @@ class EasyFinBankService extends PopbillBase {
 
       $postdata = json_encode($BankAccountInfo);
 
-      var_dump($postdata);
-
       return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
   }
 
