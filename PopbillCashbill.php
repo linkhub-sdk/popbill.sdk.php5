@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2020-04-01
+* Updated : 2020-06-25
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -387,6 +387,17 @@ class CashbillService extends PopbillBase {
       }
 
       return $this->executeCURL('/Cashbill/' . $MgtKey . '?PDF', $CorpNum, $UserID);
+  }
+
+  public function AssignMgtKey($CorpNum, $itemKey, $MgtKey, $UserID = null)
+  {
+      if (is_null($MgtKey) || empty($MgtKey)) {
+          throw new PopbillException('할당할 문서번호가 입력되지 않았습니다.');
+      }
+      $uri = '/Cashbill/' . $itemKey;
+      $postdata = 'MgtKey=' . $MgtKey;
+
+      return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata, false, 'application/x-www-form-urlencoded; charset=utf-8');
   }
 
 
