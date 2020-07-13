@@ -82,7 +82,7 @@ class PopbillBase
         } else {
             $Expiration = new DateTime($targetToken->expiration, new DateTimeZone("UTC"));
 
-            $now = $this->Linkhub->getTime($this->$UseStaticIP);
+            $now = $this->Linkhub->getTime($this->UseStaticIP);
             $Refresh = $Expiration < $now;
         }
 
@@ -224,10 +224,10 @@ class PopbillBase
     {
         if ($this->__requestMode != "STREAM") {
 
-            if($this->$UseStaticIP){
-              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL
+            if($this->UseStaticIP){
+              $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
             } else {
-              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL
+              $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
             }
 
 
@@ -403,10 +403,10 @@ class PopbillBase
 
             $ctx = stream_context_create($params);
 
-            if($this->$UseStaticIP){
-              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL
+            if($this->UseStaticIP){
+              $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
             } else {
-              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL
+              $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
             }
 
             $response = file_get_contents($targetURL . $uri, false, $ctx);
