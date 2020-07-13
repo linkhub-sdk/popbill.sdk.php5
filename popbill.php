@@ -27,12 +27,17 @@ class PopbillBase
     const ServiceID_TEST = 'POPBILL_TEST';
     const ServiceURL_REAL = 'https://popbill.linkhub.co.kr';
     const ServiceURL_TEST = 'https://popbill-test.linkhub.co.kr';
+
+    const ServiceURL_GA_REAL = 'https://ga-popbill.linkhub.co.kr';
+    const ServiceURL_GA_TEST = 'https://ga-popbill-test.linkhub.co.kr';
     const Version = '1.0';
 
     private $Token_Table = array();
     private $Linkhub;
     private $IsTest = false;
     private $IPRestrictOnOff = true;
+    private $UseStaticIP = false;
+
     private $scopes = array();
     private $__requestMode = LINKHUB_COMM_MODE;
 
@@ -50,6 +55,11 @@ class PopbillBase
     public function IPRestrictOnOff($V)
     {
         $this->IPRestrictOnOff = $V;
+    }
+
+    public function UseStaticIP($V)
+    {
+        $this->UseStaticIP = $V;
     }
 
     protected function AddScope($scope)
@@ -72,13 +82,13 @@ class PopbillBase
         } else {
             $Expiration = new DateTime($targetToken->expiration, new DateTimeZone("UTC"));
 
-            $now = $this->Linkhub->getTime();
+            $now = $this->Linkhub->getTime($this->$UseStaticIP);
             $Refresh = $Expiration < $now;
         }
 
         if ($Refresh) {
             try {
-                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes, $this->IPRestrictOnOff ? null : "*");
+                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes, $this->IPRestrictOnOff ? null : "*", $this->UseStaticIP);
             } catch (LinkhubException $le) {
                 throw new PopbillException($le->getMessage(), $le->getCode());
             }
@@ -183,7 +193,7 @@ class PopbillBase
     public function GetBalance($CorpNum)
     {
         try {
-            return $this->Linkhub->getBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL);
+            return $this->Linkhub->getBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $this->$UseStaticIP);
         } catch (LinkhubException $le) {
             throw new PopbillException($le->message, $le->code);
         }
@@ -194,7 +204,7 @@ class PopbillBase
     public function GetPartnerURL($CorpNum, $TOGO)
     {
         try {
-            return $this->Linkhub->getPartnerURL($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $TOGO);
+            return $this->Linkhub->getPartnerURL($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $TOGO , $this->$UseStaticIP);
         } catch (LinkhubException $le) {
             throw new PopbillException($le->message, $le->code);
         }
@@ -204,7 +214,7 @@ class PopbillBase
     public function GetPartnerBalance($CorpNum)
     {
         try {
-            return $this->Linkhub->getPartnerBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL);
+            return $this->Linkhub->getPartnerBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $this->$UseStaticIP);
         } catch (LinkhubException $le) {
             throw new PopbillException($le->message, $le->code);
         }
@@ -213,7 +223,15 @@ class PopbillBase
     protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null)
     {
         if ($this->__requestMode != "STREAM") {
-            $http = curl_init(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL) . $uri);
+
+            if($this->$UseStaticIP){
+              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL
+            } else {
+              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL
+            }
+
+
+            $http = curl_init( $targetURL . $uri);
             $header = array();
 
             if (is_null($CorpNum) == false) {
@@ -384,7 +402,14 @@ class PopbillBase
             }
 
             $ctx = stream_context_create($params);
-            $response = file_get_contents(($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL) . $uri, false, $ctx);
+
+            if($this->$UseStaticIP){
+              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL
+            } else {
+              $targetURL = $this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL
+            }
+
+            $response = file_get_contents($targetURL . $uri, false, $ctx);
 
             $is_gzip = 0 === mb_strpos($response, "\x1f" . "\x8b" . "\x08");
 
