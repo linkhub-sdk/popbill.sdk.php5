@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-07-28
+ * Updated : 2020-07-29
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -1039,6 +1039,7 @@ class TaxinvoiceLog
     public $log;
     public $procType;
     public $procCorpName;
+    public $procContactName;
     public $procMemo;
     public $regDT;
 
@@ -1049,6 +1050,7 @@ class TaxinvoiceLog
         isset($jsonInfo->log) ? $this->log = $jsonInfo->log : null;
         isset($jsonInfo->procType) ? $this->procType = $jsonInfo->procType : null;
         isset($jsonInfo->procCorpName) ? $this->procCorpName = $jsonInfo->procCorpName : null;
+        isset($jsonInfo->procContactName) ? $this->procContactName = $jsonInfo->procContactName : null;
         isset($jsonInfo->procMemo) ? $this->procMemo = $jsonInfo->procMemo : null;
         isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
     }
