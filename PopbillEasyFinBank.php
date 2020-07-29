@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2019-12-19
-* Updated : 2020-05-28
+* Updated : 2020-07-29
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -326,6 +326,7 @@ class EasyFinBankSearchResult
     public $perPage;
     public $pageNum;
     public $pageCount;
+    public $lastScrapDT;
     public $list;
 
     public function fromJsonInfo($jsonInfo)
@@ -336,6 +337,7 @@ class EasyFinBankSearchResult
         isset ($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
         isset ($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
         isset ($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+        isset ($jsonInfo->lastScrapDT) ? $this->lastScrapDT = $jsonInfo->lastScrapDT : null;
 
         $SearchDetailList = array();
         for ($i = 0; $i < Count($jsonInfo->list); $i++) {
