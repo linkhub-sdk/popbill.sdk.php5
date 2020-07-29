@@ -381,6 +381,7 @@ class KakaoSentInfoDetail
     public $reserveDT;
     public $receiptNum;
     public $requestNum;
+    public $interOPRefKey;
 
     public function fromJsonInfo($jsonInfo)
     {
@@ -400,6 +401,7 @@ class KakaoSentInfoDetail
         isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
         isset($jsonInfo->receiptNum) ? ($this->receiptNum = $jsonInfo->receiptNum) : null;
         isset($jsonInfo->requestNum) ? ($this->requestNum = $jsonInfo->requestNum) : null;
+        isset($jsonInfo->interOPRefKey) ? ($this->interOPRefKey = $jsonInfo->interOPRefKey) : null;
     }
 }
 
