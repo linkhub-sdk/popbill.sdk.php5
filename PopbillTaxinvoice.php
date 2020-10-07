@@ -418,6 +418,16 @@ class TaxinvoiceService extends PopbillBase
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?TG=PRINT', $CorpNum, $UserID)->url;
     }
 
+    //구버전 양식 인쇄URL
+    public function GetOldPrintURL($CorpNum, $MgtKeyType, $MgtKey, $UserID = null)
+    {
+        if (is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('관리번호가 입력되지 않았습니다.');
+        }
+
+        return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?TG=PRINTOLD', $CorpNum, $UserID)->url;
+    }
+
     //인쇄URL
     public function GetViewURL($CorpNum, $MgtKeyType, $MgtKey, $UserID = null)
     {

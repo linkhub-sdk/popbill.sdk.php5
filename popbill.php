@@ -62,6 +62,11 @@ class PopbillBase
         $this->UseStaticIP = $V;
     }
 
+    public function UseLocalTimeYN($V)
+    {
+        $this->UseLocalTimeYN = $V;
+    }
+
     protected function AddScope($scope)
     {
         $this->scopes[] = $scope;
@@ -251,21 +256,25 @@ class PopbillBase
                     $header[] = 'Content-Type: Application/json';
                 }
             } else {
-                // PHP 5.6 이상 CURL 파일전송 처리
-                if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
-                    curl_setopt($http, CURLOPT_SAFE_UPLOAD, true);
-
-                    foreach ($postdata as $key => $value) {
-                        if (strpos($value, '@') === 0) {
-                            $filename = ltrim($value, '@');
-
-                            if ($key == 'Filedata') {
-                                $filename = substr($filename, 0, strpos($filename, ';filename'));
-                            }
-
-                            $postdata[$key] = new CURLFile($filename);
-                        }
-                    } // end of foreach
+                if (empty($postdata['binary']) !== true) {
+                  $boundary = md5(time());
+                  $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
+                  $postdata = $this -> buildPostbody($boundary, $postdata);
+                } else {
+                  // $postdata['file[0]'] = new CURLFile($postdata['$file[0]'], 'application/octet-stream');
+                  // PHP 5.6 이상 CURL 파일전송 처리
+                  if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
+                      curl_setopt($http, CURLOPT_SAFE_UPLOAD, true);
+                      foreach ($postdata as $key => $value) {
+                          if (strpos($value, '@') === 0) {
+                              $filename = ltrim($value, '@');
+                              if ($key == 'Filedata') {
+                                  $filename = substr($filename, 0, strpos($filename, ';filename'));
+                              }
+                              $postdata[$key] = new CURLFile($filename);
+                          }
+                      } // end of foreach
+                  }
                 }
             }
 
@@ -327,18 +336,20 @@ class PopbillBase
                 }
                 $postbody = $postdata;
             } else { //Process MultipartBody.
+              if (empty($postdata['binary']) !== true) {
+                $boundary = md5(time());
+                $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
+                $postbody = $this -> buildPostbody($boundary, $postdata);
+              } else {
                 $eol = "\r\n";
                 $postbody = '';
-
                 $mime_boundary = md5(time());
                 $header[] = 'Content-Type: multipart/form-data; boundary=' . $mime_boundary . $eol;
-
                 if (array_key_exists('form', $postdata)) {
                     $postbody .= '--' . $mime_boundary . $eol;
                     $postbody .= 'content-disposition: form-data; name="form"' . $eol;
                     $postbody .= 'content-type: Application/json;' . $eol . $eol;
                     $postbody .= $postdata['form'] . $eol;
-
                     foreach ($postdata as $key => $value) {
                         if (substr($key, 0, 4) == 'file') {
                             if (substr($value, 0, 1) == '@') {
@@ -355,7 +366,6 @@ class PopbillBase
                             $postbody .= "Content-Type: Application/octet-stream" . $eol . $eol;
                             $postbody .= $fileContents . $eol;
                         }
-
                     }
                 }
 
@@ -375,9 +385,8 @@ class PopbillBase
                     $postbody .= 'content-type: Application/octet-stream;' . $eol . $eol;
                     $postbody .= $fileContents . $eol;
                 }
-
                 $postbody .= '--' . $mime_boundary . '--' . $eol;
-
+              }
             }
 
             $params = array(
@@ -435,6 +444,29 @@ class PopbillBase
             return json_decode($response);
         }
     }
+    // build multipart/formdata , multipart 폼데이터 만들기
+  protected function buildPostbody($boundary, $postdata)
+  {
+      $postbody = '';
+      $eol = "\r\n";
+      $postbody .= "--" . $boundary . $eol
+        . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
+
+      foreach ($postdata as $key => $value) {
+        if (substr($key, 0, 4) == 'name') {
+            $fileName = $value;
+        }
+        if (substr($key, 0, 4) == 'file') {
+            $postbody .= "--" . $boundary . $eol
+              . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
+              . 'Content-Type: Application/octetstream' . $eol . $eol;
+            $postbody .= $value . $eol;
+        }
+      }
+      $postbody .= "--" . $boundary . "--". $eol;
+
+      return $postbody;
+  }
 }
 
 class JoinForm
