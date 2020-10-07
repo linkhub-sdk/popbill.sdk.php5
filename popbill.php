@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-07-13
+ * Updated : 2020-10-07
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -259,9 +259,8 @@ class PopbillBase
                 if (empty($postdata['binary']) !== true) {
                   $boundary = md5(time());
                   $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
-                  $postdata = $this -> buildPostbody($boundary, $postdata);
+                  $postbody = $this -> binaryPostbody($boundary, $postdata);
                 } else {
-                  // $postdata['file[0]'] = new CURLFile($postdata['$file[0]'], 'application/octet-stream');
                   // PHP 5.6 이상 CURL 파일전송 처리
                   if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
                       curl_setopt($http, CURLOPT_SAFE_UPLOAD, true);
@@ -280,7 +279,11 @@ class PopbillBase
 
             if ($isPost) {
                 curl_setopt($http, CURLOPT_POST, 1);
-                curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);
+                if(empty($postdata['binary']) !== true){
+                  curl_setopt($http, CURLOPT_POSTFIELDS, $postbody);
+                } else {
+                  curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);
+                }
             }
 
             curl_setopt($http, CURLOPT_HTTPHEADER, $header);
@@ -336,15 +339,13 @@ class PopbillBase
                 }
                 $postbody = $postdata;
             } else { //Process MultipartBody.
+              $eol = "\r\n";
+              $mime_boundary = md5(time());
+              $header[] = "Content-Type: multipart/form-data; boundary=" . $mime_boundary . $eol;
               if (empty($postdata['binary']) !== true) {
-                $boundary = md5(time());
-                $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
-                $postbody = $this -> buildPostbody($boundary, $postdata);
+                $postbody = $this -> binaryPostbody($mime_boundary, $postdata);
               } else {
-                $eol = "\r\n";
                 $postbody = '';
-                $mime_boundary = md5(time());
-                $header[] = 'Content-Type: multipart/form-data; boundary=' . $mime_boundary . $eol;
                 if (array_key_exists('form', $postdata)) {
                     $postbody .= '--' . $mime_boundary . $eol;
                     $postbody .= 'content-disposition: form-data; name="form"' . $eol;
@@ -445,11 +446,11 @@ class PopbillBase
         }
     }
     // build multipart/formdata , multipart 폼데이터 만들기
-  protected function buildPostbody($boundary, $postdata)
+  protected function binaryPostbody($mime_boundary, $postdata)
   {
       $postbody = '';
       $eol = "\r\n";
-      $postbody .= "--" . $boundary . $eol
+      $postbody .= "--" . $mime_boundary . $eol
         . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
 
       foreach ($postdata as $key => $value) {
@@ -457,13 +458,13 @@ class PopbillBase
             $fileName = $value;
         }
         if (substr($key, 0, 4) == 'file') {
-            $postbody .= "--" . $boundary . $eol
+            $postbody .= "--" . $mime_boundary . $eol
               . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
               . 'Content-Type: Application/octetstream' . $eol . $eol;
             $postbody .= $value . $eol;
         }
       }
-      $postbody .= "--" . $boundary . "--". $eol;
+      $postbody .= "--" . $mime_boundary . "--". $eol;
 
       return $postbody;
   }
