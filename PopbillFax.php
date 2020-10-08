@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2019-10-24
+ * Updated : 2020-10-07
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -74,7 +74,7 @@ class FaxService extends PopbillBase
       if (empty($Receivers)) {
           throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
       }
-  
+
       $RequestForm = array();
       $RequestForm['snd'] = $Sender;
       $RequestForm['sndnm'] = $SenderName;
