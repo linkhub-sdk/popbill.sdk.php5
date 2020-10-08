@@ -446,28 +446,28 @@ class PopbillBase
         }
     }
     // build multipart/formdata , multipart 폼데이터 만들기
-  protected function binaryPostbody($mime_boundary, $postdata)
-  {
-      $postbody = '';
-      $eol = "\r\n";
-      $postbody .= "--" . $mime_boundary . $eol
-        . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
+    protected function binaryPostbody($mime_boundary, $postdata)
+    {
+        $postbody = '';
+        $eol = "\r\n";
+        $postbody .= "--" . $mime_boundary . $eol
+          . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
 
-      foreach ($postdata as $key => $value) {
-        if (substr($key, 0, 4) == 'name') {
-            $fileName = $value;
+        foreach ($postdata as $key => $value) {
+          if (substr($key, 0, 4) == 'name') {
+              $fileName = $value;
+          }
+          if (substr($key, 0, 4) == 'file') {
+              $postbody .= "--" . $mime_boundary . $eol
+                . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
+                . 'Content-Type: Application/octetstream' . $eol . $eol;
+              $postbody .= $value . $eol;
+          }
         }
-        if (substr($key, 0, 4) == 'file') {
-            $postbody .= "--" . $mime_boundary . $eol
-              . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
-              . 'Content-Type: Application/octetstream' . $eol . $eol;
-            $postbody .= $value . $eol;
-        }
-      }
-      $postbody .= "--" . $mime_boundary . "--". $eol;
+        $postbody .= "--" . $mime_boundary . "--". $eol;
 
-      return $postbody;
-  }
+        return $postbody;
+    }
 }
 
 class JoinForm
