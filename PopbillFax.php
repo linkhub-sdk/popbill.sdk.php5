@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-10-07
+ * Updated : 2020-10-08
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -89,7 +89,6 @@ class FaxService extends PopbillBase
       $postdata = array();
       $postdata['form'] = json_encode($RequestForm);
 
-      $postdata['binary'] = 1;
       $i = 0;
       foreach ($FileDatas as $key => $data) {
           foreach ($data as $key => $value) {
@@ -101,7 +100,10 @@ class FaxService extends PopbillBase
             }
           }
       }
-      return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true)->receiptNum;
+
+      $isBinary= true;
+
+      return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true, null, $isBinary)->receiptNum;
     }
 
     public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null, $UserID = null, $title = null, $RequestNum = null)

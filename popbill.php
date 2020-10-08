@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-10-07
+ * Updated : 2020-10-08
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -226,7 +226,7 @@ class PopbillBase
         }
     }
 
-    protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null)
+    protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null, $isBinary = false)
     {
         if ($this->__requestMode != "STREAM") {
 
@@ -257,7 +257,7 @@ class PopbillBase
                     $header[] = 'Content-Type: Application/json';
                 }
             } else {
-                if (empty($postdata['binary']) !== true) {
+                if ($isBinary) {
                   $boundary = md5(time());
                   $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
                   $postbody = $this -> binaryPostbody($boundary, $postdata);
@@ -280,7 +280,7 @@ class PopbillBase
 
             if ($isPost) {
                 curl_setopt($http, CURLOPT_POST, 1);
-                if(empty($postdata['binary']) !== true){
+                if($isBinary){
                   curl_setopt($http, CURLOPT_POSTFIELDS, $postbody);
                 } else {
                   curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);
@@ -343,7 +343,7 @@ class PopbillBase
               $eol = "\r\n";
               $mime_boundary = md5(time());
               $header[] = "Content-Type: multipart/form-data; boundary=" . $mime_boundary . $eol;
-              if (empty($postdata['binary']) !== true) {
+              if ($isBinary) {
                 $postbody = $this -> binaryPostbody($mime_boundary, $postdata);
               } else {
                 $postbody = '';
