@@ -37,6 +37,7 @@ class PopbillBase
     private $IsTest = false;
     private $IPRestrictOnOff = true;
     private $UseStaticIP = false;
+    private $UseLocalTimeYN = true;
 
     private $scopes = array();
     private $__requestMode = LINKHUB_COMM_MODE;
@@ -87,13 +88,13 @@ class PopbillBase
         } else {
             $Expiration = new DateTime($targetToken->expiration, new DateTimeZone("UTC"));
 
-            $now = $this->Linkhub->getTime($this->UseStaticIP);
+            $now = $this->Linkhub->getTime($this->UseStaticIP, $this->UseLocalTimeYN);
             $Refresh = $Expiration < $now;
         }
 
         if ($Refresh) {
             try {
-                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes, $this->IPRestrictOnOff ? null : "*", $this->UseStaticIP);
+                $targetToken = $this->Linkhub->getToken($this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $CorpNum, $this->scopes, $this->IPRestrictOnOff ? null : "*", $this->UseStaticIP, $this->UseLocalTimeYN);
             } catch (LinkhubException $le) {
                 throw new PopbillException($le->getMessage(), $le->getCode());
             }
