@@ -367,7 +367,7 @@ class TaxinvoiceService extends PopbillBase
         }
 
         if (mb_detect_encoding(basename($FilePath)) == 'ASCII') {
-            $FileName = iconv('CP949', 'UTF8', $FilePath);
+            $FileName = iconv('CP949', 'UTF-8', $FilePath);
         } else {
             $FileName = basename($FilePath);
         }
