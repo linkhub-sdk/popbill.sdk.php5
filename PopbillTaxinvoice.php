@@ -366,8 +366,8 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException('관리번호가 입력되지 않았습니다.');
         }
 
-        if (mb_detect_encoding(basename($FilePath)) == 'ASCII') {
-            $FileName = iconv('CP949', 'UTF-8', $FilePath);
+        if (mb_detect_encoding(basename($FilePath)) == 'CP949') {
+            $FileName = iconv('CP949', 'UTF-8', basename($FilePath));
         } else {
             $FileName = basename($FilePath);
         }
