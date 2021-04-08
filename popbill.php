@@ -360,10 +360,9 @@ class PopbillBase
                             if (file_exists($value) == FALSE) {
                                 throw new PopbillException("전송할 파일이 존재하지 않습니다.", -99999999);
                             }
-
                             $fileContents = file_get_contents($value);
                             $postbody .= '--' . $mime_boundary . $eol;
-                            $postbody .= "Content-Disposition: form-data; name=\"file\"; filename=\"" . basename($value) . "\"" . $eol;
+                            $postbody .= "Content-Disposition: form-data; name=\"file\"; filename=\"" . $this->GetBasename($value) . "\"" . $eol;
 
                             $postbody .= "Content-Type: Application/octet-stream" . $eol . $eol;
                             $postbody .= $fileContents . $eol;
@@ -383,7 +382,7 @@ class PopbillBase
                         throw new PopbillException("전송할 파일이 존재하지 않습니다.", -99999999);
                     }
                     $fileContents = file_get_contents($path);
-                    $postbody .= 'content-disposition: form-data; name="Filedata"; filename="' . basename($fileName) . '"' . $eol;
+                    $postbody .= 'content-disposition: form-data; name="Filedata"; filename="' . $this->GetBasename($fileName) . '"' . $eol;
                     $postbody .= 'content-type: Application/octet-stream;' . $eol . $eol;
                     $postbody .= $fileContents . $eol;
                 }
@@ -468,6 +467,15 @@ class PopbillBase
         $postbody .= "--" . $mime_boundary . "--". $eol;
 
         return $postbody;
+    }
+
+    //파일명 추출
+    protected function GetBasename($path){
+        $pattern = '/[^\/\\\\]*$/';
+        if (preg_match($pattern, $path, $matches)){
+            return $matches[0];
+        }
+        throw new PopbillException("파일명 추출에 실패 하였습니다.", -99999999);
     }
 }
 
@@ -566,5 +574,6 @@ class PopbillException extends Exception
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 }
+
 
 ?>
