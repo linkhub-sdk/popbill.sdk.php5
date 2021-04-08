@@ -141,7 +141,8 @@ class StatementService extends PopbillBase {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
 
-    	$postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FilePath);
+        $FileName = $this->GetBasename($FilePath);
+        $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID, true, null, $postdata, true);
 	}

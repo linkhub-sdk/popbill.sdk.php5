@@ -369,8 +369,8 @@ class TaxinvoiceService extends PopbillBase
         if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
-
-        $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FilePath);
+        $FileName = $this->GetBasename($FilePath);
+        $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '/Files', $CorpNum, $UserID, true, null, $postdata, true);
     }
