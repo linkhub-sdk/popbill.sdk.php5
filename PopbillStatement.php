@@ -136,13 +136,12 @@ class StatementService extends PopbillBase {
     	if(is_null($MgtKey) || empty($MgtKey)) {
     		throw new PopbillException('관리번호가 입력되지 않았습니다.');
     	}
-		if(mb_detect_encoding(basename($FilePath),'ASCII, EUC-KR')){
-			$FileName = iconv('CP949','UTF8',$FilePath);
-		} else {
-			$FileName = basename($FilePath);
-		}
 
-    	$postdata = array('Filedata' => '@'.$FilePath.';filename='.$FileName);
+		if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
+            $FilePath = iconv('CP949', 'UTF-8', $FilePath);
+        }
+
+    	$postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FilePath);
 
 		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID, true, null, $postdata, true);
 	}

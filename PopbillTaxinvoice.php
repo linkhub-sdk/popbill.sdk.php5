@@ -366,16 +366,15 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException('관리번호가 입력되지 않았습니다.');
         }
 
-        if (mb_detect_encoding(basename($FilePath)) == 'CP949') {
-            $FileName = iconv('CP949', 'UTF-8', basename($FilePath));
-        } else {
-            $FileName = basename($FilePath);
+        if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
+            $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
 
-        $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
+        $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FilePath);
 
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '/Files', $CorpNum, $UserID, true, null, $postdata, true);
     }
+
 
     //첨부파일 목록 확인
     public function GetFiles($CorpNum, $MgtKeyType, $MgtKey)
