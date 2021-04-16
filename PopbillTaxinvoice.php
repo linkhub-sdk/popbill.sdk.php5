@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2020-10-07
+ * Updated : 2021-04-16
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -680,6 +680,12 @@ class TaxinvoiceService extends PopbillBase
         }
 
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?PDF', $CorpNum, $UserID);
+    }
+
+    // 국세청 즉시전송 확인함수
+    public function GetSendToNTSConfig($CorpNum, $UserID = null)
+    {
+        return $this->executeCURL('/Taxinvoice/SendToNTSConfig', $CorpNum, $UserID)->sendToNTS;
     }
 }
 
