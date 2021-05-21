@@ -236,7 +236,6 @@ class PopbillBase
               $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
             }
 
-
             $http = curl_init( $targetURL . $uri);
             $header = array();
 
