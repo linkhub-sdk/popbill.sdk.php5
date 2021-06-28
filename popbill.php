@@ -539,6 +539,7 @@ class ContactInfo
 {
     public $id;
     public $pwd;
+    public $Password;
     public $email;
     public $hp;
     public $personName;
@@ -556,6 +557,7 @@ class ContactInfo
         isset($jsonInfo->hp) ? $this->hp = $jsonInfo->hp : null;
         isset($jsonInfo->personName) ? $this->personName = $jsonInfo->personName : null;
         isset($jsonInfo->searchAllAllowYN) ? $this->searchAllAllowYN = $jsonInfo->searchAllAllowYN : null;
+        isset($jsonInfo->searchRole) ? $this->searchRole = $jsonInfo->searchRole : null;
         isset($jsonInfo->tel) ? $this->tel = $jsonInfo->tel : null;
         isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
         isset($jsonInfo->mgrYN) ? $this->mgrYN = $jsonInfo->mgrYN : null;
