@@ -110,7 +110,7 @@ class EasyFinBankService extends PopbillBase {
 
     $uri = '/EasyFin/Bank/BankAccount/Delete';
 
-    $postdata = '{"BankCode":' . $BankCode . ', "AccountNumber":' . $AccountNumber .'}';
+    $postdata = '{"BankCode":' . '"' . $BankCode . '"' . ', "AccountNumber":' . '"' . $AccountNumber . '"' .'}';
 
     return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
   }
