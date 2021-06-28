@@ -98,27 +98,19 @@ class EasyFinBankService extends PopbillBase {
     return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
   }
 
-  public function DeleteBankAccount($CorpNum, $BankAccountInfo, $UserID = null)
+  public function DeleteBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
   {
-    if ( is_null($BankAccountInfo) || empty($BankAccountInfo)) {
-      throw new PopbillException ('은행 계좌정보가 입력되지 않았습니다.');
+	if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
+        throw new PopbillException ('은행코드가 올바르지 않습니다.');
     }
 
-    if ( is_null($BankAccountInfo->BankCode) || empty($BankAccountInfo->BankCode)) {
-      throw new PopbilLException ('은행코드가 입력되지 않았습니다.');
-	}
-
-    if ( strlen ( $BankAccountInfo->BankCode ) != 4) {
-      throw new PopbilLException ('은행코드가 유효하지 않습니다.');
-    }
-
-    if ( is_null($BankAccountInfo->AccountNumber) || empty($BankAccountInfo->AccountNumber)) {
-      throw new PopbilLException ('은행 계좌번호가 입력되지 않았습니다.');
+    if ( empty($AccountNumber) || $AccountNumber === "" ) {
+        throw new PopbillException ('계좌번호가 올바르지 않습니다.');
     }
 
     $uri = '/EasyFin/Bank/BankAccount/Delete';
 
-    $postdata = json_encode($BankAccountInfo);
+    $postdata = '{"BankCode":' . $BankCode . ', "AccountNumber":' . $AccountNumber .'}';
 
     return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
   }
