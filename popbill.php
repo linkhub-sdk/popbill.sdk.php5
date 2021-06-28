@@ -126,6 +126,13 @@ class PopbillBase
         return $this->executeCURL('/IDs', $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 담당자 정보 확인
+    public function GetContactInfo($CorpNum, $ContactID, $UserID = null)
+    {
+        $postdata = '{"id":' . '"' . $ContactID . '"}';
+        return $this->executeCURL('/Contact', $CorpNum, $UserID, true, null, $postdata);
+    }
+
     // 담당자 목록 조회
     public function ListContact($CorpNum, $UserID = null)
     {
@@ -329,6 +336,7 @@ class PopbillBase
             if( 0 === mb_strpos($contentType, 'application/pdf')) {
               return $responseJson;
             }
+
             return json_decode($responseJson);
 
         } else {
