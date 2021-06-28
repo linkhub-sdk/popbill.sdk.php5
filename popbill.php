@@ -212,6 +212,7 @@ class PopbillBase
     public function JoinMember($JoinForm)
     {
         $postdata = json_encode($JoinForm);
+        var_dump($postdata);
         return $this->executeCURL('/Join', null, null, true, null, $postdata);
 
     }
@@ -515,6 +516,7 @@ class JoinForm
     public $ContactTEL;
     public $ID;
     public $PWD;
+    public $Password;
 }
 
 class CorpInfo
