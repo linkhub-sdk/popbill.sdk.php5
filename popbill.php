@@ -544,6 +544,7 @@ class ContactInfo
     public $hp;
     public $personName;
     public $searchAllAllowYN;
+    public $searchRole;
     public $tel;
     public $fax;
     public $mgrYN;
