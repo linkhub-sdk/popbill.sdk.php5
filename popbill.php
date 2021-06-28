@@ -181,6 +181,20 @@ class PopbillBase
         return $response->url;
     }
 
+    //팝빌 연동회원 포인트 결제내역 URL
+    public function GetPaymentURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=PAYMENT', $CorpNum, $UserID);
+        return $response->url;
+    }
+
+    //팝빌 연동회원 포인트 사용내역 URL
+    public function GetUseHistoryURL($CorpNum, $UserID)
+    {
+        $response = $this->executeCURL('/?TG=USEHISTORY', $CorpNum, $UserID);
+        return $response->url;
+    }
+
     //가입여부 확인
     public function CheckIsMember($CorpNum, $LinkID)
     {
