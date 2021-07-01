@@ -242,6 +242,36 @@ class TaxinvoiceService extends PopbillBase
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey, $CorpNum, $UserID, true, 'CANCELREQUEST', $postdata);
     }
 
+    // 전자세금계산서 초대량 발행 접수
+    public function BulkSubmit($CorpNum, $SubmitID, $taxinvoiceList, $ForceIssue, $UserID = null)
+    {
+        if (is_null($SubmitID) || empty($SubmitID)) {
+            throw new PopbillException('제출아이디가 입력되지 않았습니다.');
+        }
+
+        $Request = new BulkRequest();
+        $Request->forceIssue = $ForceIssue;
+        $Request->invoices = $taxinvoiceList;
+
+        $postdata = json_encode($Request);
+
+        return $this->executeCURL('/Taxinvoice', $CorpNum, $UserID, true, 'BULKISSUE', $postdata, false, null, false, $SubmitID);
+    }
+
+    // 초대량 접수결과 확인
+    public function GetBulkResult($CorpNum, $SubmitID, $UserID = null)
+    {
+        if (is_null($SubmitID) || empty($SubmitID)) {
+            throw new PopbillException('제출아이디가 입력되지 않았습니다.');
+        }
+
+        $response = $this->executeCURL('/Taxinvoice/BULK/' . $SubmitID . '/State', $CorpNum, $UserID);
+
+        $bulkResult = new BulkTaxinvoiceResult();
+        $bulkResult->fromJsonInfo($response);
+        return $bulkResult;
+    }
+
     //국세청 즉시전송 요청
     public function SendToNTS($CorpNum, $MgtKeyType, $MgtKey, $UserID = null)
     {
@@ -916,6 +946,72 @@ class TaxinvoiceDetail
         isset($jsonInfo->remark) ? $this->remark = $jsonInfo->remark : null;
     }
 
+}
+
+class BulkRequest
+{
+    public $forceIssue;
+    public $invoices;
+}
+
+class BulkTaxinvoiceResult
+{
+    public $code;
+    public $message;
+    public $submitID;
+    public $submitCount;
+    public $successCount;
+    public $failCount;
+    public $txState;
+    public $txResultCode;
+    public $txStartDT;
+    public $txEndDT;
+    public $receiptDT;
+    public $receiptID;
+    public $issueResult;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
+        isset($jsonInfo->submitID) ? $this->submitID = $jsonInfo->submitID : null;
+        isset($jsonInfo->submitCount) ? $this->submitCount = $jsonInfo->submitCount : null;
+        isset($jsonInfo->successCount) ? $this->successCount = $jsonInfo->successCount : null;
+        isset($jsonInfo->failCount) ? $this->failCount = $jsonInfo->failCount : null;
+        isset($jsonInfo->txState) ? $this->txState = $jsonInfo->txState : null;
+        isset($jsonInfo->txResultCode) ? $this->txResultCode = $jsonInfo->txResultCode : null;
+        isset($jsonInfo->txStartDT) ? $this->txStartDT = $jsonInfo->txStartDT : null;
+        isset($jsonInfo->txEndDT) ? $this->txEndDT = $jsonInfo->txEndDT : null;
+        isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+        isset($jsonInfo->receiptID) ? $this->receiptID = $jsonInfo->receiptID : null;
+
+        $InfoIssueResult = array();
+
+        for ($i = 0; $i < Count($jsonInfo->issueResult); $i++) {
+            $InfoObj = new BulkTaxinvoiceIssueResult();
+            $InfoObj->fromJsonInfo($jsonInfo->issueResult[$i]);
+            $InfoIssueResult[$i] = $InfoObj;
+        }
+        $this->issueResult = $InfoIssueResult;
+    }
+}
+
+class BulkTaxinvoiceIssueResult
+{
+    public $invoicerMgtKye;
+    public $trusteeMgtKye;
+    public $code;
+    public $ntsconfirmNum;
+    public $issueDT;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->invoicerMgtKey) ? $this->invoicerMgtKey = $jsonInfo->invoicerMgtKey : null;
+        isset($jsonInfo->trusteeMgtKey) ? $this->trusteeMgtKey = $jsonInfo->trusteeMgtKey : null;
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->ntsconfirmNum) ? $this->ntsconfirmNum = $jsonInfo->ntsconfirmNum : null;
+        isset($jsonInfo->issueDT) ? $this->issueDT = $jsonInfo->issueDT : null;
+    }
 }
 
 class TaxinvoiceAddContact

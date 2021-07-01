@@ -248,7 +248,7 @@ class PopbillBase
         }
     }
 
-    protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null, $isBinary = false)
+    protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null, $isBinary = false, $SubmitID = null)
     {
         if ($this->__requestMode != "STREAM") {
 
@@ -269,6 +269,10 @@ class PopbillBase
             }
             if (is_null($action) == false) {
                 $header[] = 'X-HTTP-Method-Override: ' . $action;
+                if($action == 'BULKISSUE') {
+                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1',$postdata,true));
+                    $header[] = 'x-pb-submit-id: ' . $SubmitID;
+                }
             }
 
             if ($isMultiPart == false) {
@@ -353,6 +357,10 @@ class PopbillBase
             }
             if (is_null($action) == false) {
                 $header[] = 'X-HTTP-Method-Override: ' . $action;
+                if($action == 'BULKISSUE') {
+                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1',$postdata,true));
+                    $header[] = 'x-pb-submit-id: ' . $SubmitID;
+                }
             }
             if ($isMultiPart == false) {
                 if (is_null($contentsType) == false) {
