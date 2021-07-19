@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhub.co.kr)
- * Updated : 2021-04-16
+ * Updated : 2021-07-01
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
