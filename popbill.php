@@ -212,7 +212,6 @@ class PopbillBase
     public function JoinMember($JoinForm)
     {
         $postdata = json_encode($JoinForm);
-        var_dump($postdata);
         return $this->executeCURL('/Join', null, null, true, null, $postdata);
 
     }
