@@ -253,7 +253,9 @@ class TaxinvoiceService extends PopbillBase
         }
 
         $Request = new BulkRequest();
-        $Request->forceIssue = $ForceIssue;
+        if($ForceIssue == true){
+            $Request->forceIssue = $ForceIssue;
+        }
         $Request->invoices = $taxinvoiceList;
 
         $postdata = json_encode($Request);
