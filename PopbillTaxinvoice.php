@@ -248,6 +248,9 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($SubmitID) || empty($SubmitID)) {
             throw new PopbillException('제출아이디가 입력되지 않았습니다.');
         }
+        if (is_null($taxinvoiceList) || empty($taxinvoiceList)) {
+            throw new PopbillException('세금계산 정보가 입력되지 않았습니다.');
+        }
 
         $Request = new BulkRequest();
         $Request->forceIssue = $ForceIssue;
