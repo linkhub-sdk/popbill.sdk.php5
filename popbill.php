@@ -260,13 +260,7 @@ class PopbillBase
     {
         if ($this->__requestMode != "STREAM") {
 
-            if($this->UseGAIP){
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
-            } else if($this->UseStaticIP){
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_Static_TEST : PopbillBase::ServiceURL_Static_REAL);
-            } else {
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
-            }
+            $targetURL = $this->getTargetURL();
 
             $http = curl_init( $targetURL . $uri);
             $header = array();
@@ -453,14 +447,8 @@ class PopbillBase
 
             $ctx = stream_context_create($params);
 
-            if($this->UseGAIP){
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
-            } else if($this->UseStaticIP){
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_Static_TEST : PopbillBase::ServiceURL_Static_REAL);
-            } else {
-                $targetURL = ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
-            }
-
+            $targetURL = $this->getTargetURL();
+            
             $response = file_get_contents($targetURL . $uri, false, $ctx);
 
             $is_gzip = 0 === mb_strpos($response, "\x1f" . "\x8b" . "\x08");
@@ -518,6 +506,17 @@ class PopbillBase
             return $matches[0];
         }
         throw new PopbillException("파일명 추출에 실패 하였습니다.", -99999999);
+    }
+
+    // 서비스 URL
+    private function getTargetURL(){
+        if($this->UseGAIP){
+            return ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
+        } else if($this->UseStaticIP){
+            return ($this->IsTest ? PopbillBase::ServiceURL_Static_TEST : PopbillBase::ServiceURL_Static_REAL);
+        } else {
+            return ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
+        }
     }
 }
 
