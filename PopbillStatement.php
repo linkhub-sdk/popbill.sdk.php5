@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2021-04-16
+* Updated : 2021-12-09
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -323,7 +323,7 @@ class StatementService extends PopbillBase {
 	}
 
   //전자명세서 목록조회
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page, $PerPage, $Order, $QString){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page = null, $PerPage = null, $Order = null, $QString = null){
     if(is_null($DType) || empty($DType)) {
     		throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
   	}

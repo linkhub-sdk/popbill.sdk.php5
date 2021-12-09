@@ -234,7 +234,7 @@ class FaxService extends PopbillBase
         return $response->url;
     }
 
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN, $SenderOnly, $Page, $PerPage, $Order, $UserID = null, $QString = null)
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN = null, $SenderOnly = null, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null)
     {
 
         if (is_null($SDate) || $SDate === "") {
