@@ -295,7 +295,8 @@ class CashbillService extends PopbillBase {
     return $this->executeCURL('/Cashbill?cfg=UNITCOST', $CorpNum)->unitCost;
   }
 
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(), $Page = null, $PerPage = null, $Order = null, $QString = null, $TradeOpt = array(null)){
+  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(),
+                            $Page = null, $PerPage = null, $Order = null, $QString = null, $TradeOpt = array(null), $FranchiseTaxRegID = null){
     if(is_null($DType) || empty($DType)) {
       throw new PopbillException('일자유형(DType)이 입력되지 않았습니다.');
     }
@@ -332,6 +333,9 @@ class CashbillService extends PopbillBase {
     if(!is_null($TaxationType) || !empty($TaxationType)){
 			$uri .= '&TaxationType=' . implode(',',$TaxationType);
 		}
+    if(!is_null($FranchiseTaxRegID) || !empty($FranchiseTaxRegID)){
+        $uri .= '&FranchiseTaxRegID=' . implode(',',$FranchiseTaxRegID);
+    }
 
     $uri .= '&Page='.$Page;
     $uri .= '&PerPage='.$PerPage;
@@ -443,6 +447,7 @@ class Cashbill
     public $faxsendYN;
     public $cancelType;
     public $emailSubject;
+    public $franchiseTaxRegID;
 
     function fromJsonInfo($jsonInfo)
     {
@@ -474,6 +479,8 @@ class Cashbill
         isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
         isset($jsonInfo->faxsendYN) ? $this->faxsendYN = $jsonInfo->faxsendYN : null;
         isset($jsonInfo->cancelType) ? $this->cancelType = $jsonInfo->cancelType : null;
+        isset($jsonInfo->emailSubject) ? $this->emailSubject = $jsonInfo->emailSubject : null;
+        isset($jsonInfo->franchiseTaxRegID) ? $this->franchiseTaxRegID = $jsonInfo->franchiseTaxRegID : null;
     }
 }
 
