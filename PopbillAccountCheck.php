@@ -52,7 +52,7 @@ class AccountCheckService extends PopbillBase {
     return $AccountInfo;
   }
 
-  // 예금주성명 조회
+  // 예금주실명 조회
   public function CheckDepositorInfo($MemberCorpNum, $BankCode, $AccountNumber, $IdentityNumType, $IdentityNum, $UserID = null) {
     if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
       throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
