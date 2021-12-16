@@ -320,7 +320,6 @@ class FaxState
     public $failPageCnt;
     public $refundPageCnt;
     public $cancelPageCnt;
-    public $iSuccessPageCnt;
     public $receiveNumType;
     public $reserveDT;
     public $sendDT;
@@ -349,7 +348,6 @@ class FaxState
         isset($jsonInfo->failPageCnt) ? $this->failPageCnt = $jsonInfo->failPageCnt : null;
         isset($jsonInfo->refundPageCnt) ? $this->refundPageCnt = $jsonInfo->refundPageCnt : null;
         isset($jsonInfo->cancelPageCnt) ? $this->cancelPageCnt = $jsonInfo->cancelPageCnt : null;
-        isset($jsonInfo->iSuccessPageCnt) ? $this->iSuccessPageCnt = $jsonInfo->iSuccessPageCnt : null;
         isset($jsonInfo->receiveNumType) ? $this->receiveNumType = $jsonInfo->receiveNumType : null;
         isset($jsonInfo->reserveDT) ? $this->reserveDT = $jsonInfo->reserveDT : null;
         isset($jsonInfo->sendDT) ? $this->sendDT = $jsonInfo->sendDT : null;
