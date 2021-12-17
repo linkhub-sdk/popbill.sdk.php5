@@ -118,6 +118,7 @@ class AccountCheckService extends PopbillBase {
 class AccountInfo
 {
   public $resultCode;
+  public $result;
   public $resultMessage;
   public $bankCode;
   public $accountNumber;
@@ -127,6 +128,7 @@ class AccountInfo
   function fromJsonInfo($jsonInfo)
   {
     isset($jsonInfo->resultCode) ? $this->resultCode = $jsonInfo->resultCode : null;
+    isset($jsonInfo->result) ? $this->result = $jsonInfo->result : null;
     isset($jsonInfo->resultMessage) ? $this->resultMessage = $jsonInfo->resultMessage : null;
     isset($jsonInfo->bankCode) ? $this->bankCode = $jsonInfo->bankCode : null;
     isset($jsonInfo->accountNumber) ? $this->accountNumber = $jsonInfo->accountNumber : null;
