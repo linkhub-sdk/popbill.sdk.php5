@@ -333,9 +333,8 @@ class CashbillService extends PopbillBase {
     if(!is_null($TaxationType) || !empty($TaxationType)){
     $uri .= '&TaxationType=' . implode(',',$TaxationType);
     }
-    if(!is_null($FranchiseTaxRegID) || !empty($FranchiseTaxRegID)){
-        $uri .= '&FranchiseTaxRegID=' . implode(',',$FranchiseTaxRegID);
-    }
+
+    $uri .= '&FranchiseTaxRegID=' . $FranchiseTaxRegID;
 
     $uri .= '&Page='.$Page;
     $uri .= '&PerPage='.$PerPage;
