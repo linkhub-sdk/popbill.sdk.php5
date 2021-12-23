@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhub.co.kr)
 * Written : 2019-12-19
-* Updated : 2021-06-28
+* Updated : 2021-12-23
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -45,7 +45,7 @@ class EasyFinBankService extends PopbillBase {
   public function UpdateBankAccount($CorpNum, $BankCode, $AccountNumber, $BankAccountInfo, $UserID = null)
   {
     if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-      throw new PopbillException ('은행코드가 올바르지 않습니다.');
+      throw new PopbillException ('기관코드가 올바르지 않습니다.');
     }
 
     if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -62,7 +62,7 @@ class EasyFinBankService extends PopbillBase {
   public function CloseBankAccount($CorpNum, $BankCode, $AccountNumber, $CloseType, $UserID = null)
   {
     if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-      throw new PopbillException ('은행코드가 올바르지 않습니다.');
+      throw new PopbillException ('기관코드가 올바르지 않습니다.');
     }
 
     if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -84,7 +84,7 @@ class EasyFinBankService extends PopbillBase {
   public function RevokeCloseBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
   {
     if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-      throw new PopbillException ('은행코드가 올바르지 않습니다.');
+      throw new PopbillException ('기관코드가 올바르지 않습니다.');
     }
 
     if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -101,7 +101,7 @@ class EasyFinBankService extends PopbillBase {
   public function DeleteBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
   {
 	if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-        throw new PopbillException ('은행코드가 올바르지 않습니다.');
+        throw new PopbillException ('기관코드가 올바르지 않습니다.');
     }
 
     if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -118,7 +118,7 @@ class EasyFinBankService extends PopbillBase {
   public function GetBankAccountInfo ( $CorpNum, $BankCode, $AccountNumber, $UserID = null)
   {
     if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-      throw new PopbillException ('은행코드가 올바르지 않습니다.');
+      throw new PopbillException ('기관코드가 올바르지 않습니다.');
     }
 
     if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -151,7 +151,7 @@ class EasyFinBankService extends PopbillBase {
   public function RequestJob ( $CorpNum, $BankCode, $AccountNumber, $SDate, $EDate, $UserID = null ) {
 
     if ( empty($BankCode) || $BankCode === "")	{
-      throw new PopbillException('은행코드가 입력되지 않았습니다.');
+      throw new PopbillException('기관코드가 입력되지 않았습니다.');
     }
 
     if(empty($AccountNumber) || $AccountNumber === "")	{
