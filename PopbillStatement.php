@@ -12,7 +12,7 @@
 * Author : Kim Seongjun (pallet027@gmail.com)
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhub.co.kr)
-* Updated : 2021-12-09
+* Updated : 2021-12-23
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -21,7 +21,7 @@
 require_once 'popbill.php';
 
 class StatementService extends PopbillBase {
-	public function __construct($LinkID,$SecretKey) {
+  public function __construct($LinkID,$SecretKey) {
     parent::__construct($LinkID,$SecretKey);
     $this->AddScope('121');
     $this->AddScope('122');
@@ -359,6 +359,13 @@ class StatementService extends PopbillBase {
 		$SearchList = new DocSearchResult();
 		$SearchList->fromJsonInfo($response);
 		return $SearchList;
+  }
+
+  //팝빌 인감 및 첨부문서 등록 URL
+  public function GetSealURL($CorpNum, $UserID = null) {
+
+    $response = $this->executeCURL('/?TG=SEAL', $CorpNum, $UserID);
+    return $response->url;
   }
 
   // 전자명세서 첨부
