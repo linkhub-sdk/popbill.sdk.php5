@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
- * Contributor : Jeong YoHan (code@linkhub.co.kr)
+ * Contributor : Jeong YoHan (code@linkhubcorp.com)
  * Updated : 2021-12-09
  *
  * Thanks for your interest.

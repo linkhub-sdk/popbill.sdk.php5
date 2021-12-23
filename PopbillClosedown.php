@@ -9,7 +9,7 @@
 * be installed and enabled.
 *
 * http://www.linkhub.co.kr
-* Author : Jeong Yohan (code@linkhub.co.kr)
+* Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2015-07-10
 * Updated : 2021-07-21
 *

@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
- * Contributor : Jeong YoHan (code@linkhub.co.kr)
+ * Contributor : Jeong YoHan (code@linkhubcorp.com)
  * Updated : 2021-06-28
  *
  * Thanks for your interest.
@@ -448,7 +448,7 @@ class PopbillBase
             $ctx = stream_context_create($params);
 
             $targetURL = $this->getTargetURL();
-            
+
             $response = file_get_contents($targetURL . $uri, false, $ctx);
 
             $is_gzip = 0 === mb_strpos($response, "\x1f" . "\x8b" . "\x08");
