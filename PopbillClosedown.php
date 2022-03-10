@@ -21,68 +21,68 @@ require_once 'popbill.php';
 
 class ClosedownService extends PopbillBase {
 
-	public function __construct($LinkID,$SecretKey) {
-    	parent::__construct($LinkID,$SecretKey);
-    	$this->AddScope('170');
+    public function __construct($LinkID,$SecretKey) {
+        parent::__construct($LinkID,$SecretKey);
+        $this->AddScope('170');
     }
 
     //휴폐업조회 - 단건
     public function CheckCorpNum($MemberCorpNum, $CheckCorpNum) {
-    	if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
-    		throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
-    	}
+        if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
 
-		  if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
-    		throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
-    	}
+          if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
+            throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
+        }
 
-    	$result = $this->executeCURL('/CloseDown?CN='.$CheckCorpNum, $MemberCorpNum);
+        $result = $this->executeCURL('/CloseDown?CN='.$CheckCorpNum, $MemberCorpNum);
 
-  		$CorpState = new CorpState();
-  		$CorpState->fromJsonInfo($result);
-  		return $CorpState;
+        $CorpState = new CorpState();
+        $CorpState->fromJsonInfo($result);
+        return $CorpState;
 
     }
 
-	//휴폐업조회 - 대량
-	public function CheckCorpNums($MemberCorpNum, $CheckCorpNumList){
-		if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
-    		throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+    //휴폐업조회 - 대량
+    public function CheckCorpNums($MemberCorpNum, $CheckCorpNumList){
+        if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
+        if(is_null($CheckCorpNumList) || empty($CheckCorpNumList)) {
+            throw new PopbillException('조회할 사업자번호 배열이 입력되지 않았습니다.');
+        }
+
+        $postData = json_encode($CheckCorpNumList);
+
+        $result = $this->executeCURL('/CloseDown', $MemberCorpNum, null, true, null, $postData);
+
+        $CorpStateList = array();
+
+        for($i = 0; $i < Count($result); $i++) {
+            $CorpState = new CorpState();
+            $CorpState->fromJsonInfo($result[$i]);
+            $CorpStateList[$i] = $CorpState;
+        }
+
+        return $CorpStateList;
     }
 
-		if(is_null($CheckCorpNumList) || empty($CheckCorpNumList)) {
-    		throw new PopbillException('조회할 사업자번호 배열이 입력되지 않았습니다.');
+    //조회단가 확인
+    public function GetUnitCost($CorpNum) {
+        return $this->executeCURL('/CloseDown/UnitCost', $CorpNum)->unitCost;
     }
 
-		$postData = json_encode($CheckCorpNumList);
+    public function GetChargeInfo ( $CorpNum, $UserID = null) {
+        $uri = '/CloseDown/ChargeInfo';
 
-		$result = $this->executeCURL('/CloseDown', $MemberCorpNum, null, true, null, $postData);
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+        $ChargeInfo = new ChargeInfo();
+        $ChargeInfo->fromJsonInfo($response);
 
-		$CorpStateList = array();
-
-		for($i = 0; $i < Count($result); $i++) {
-			$CorpState = new CorpState();
-			$CorpState->fromJsonInfo($result[$i]);
-			$CorpStateList[$i] = $CorpState;
-		}
-
-		return $CorpStateList;
-	}
-
-  //조회단가 확인
-  public function GetUnitCost($CorpNum) {
-	  return $this->executeCURL('/CloseDown/UnitCost', $CorpNum)->unitCost;
-  }
-
-  public function GetChargeInfo ( $CorpNum, $UserID = null) {
-    $uri = '/CloseDown/ChargeInfo';
-
-    $response = $this->executeCURL($uri, $CorpNum, $UserID);
-    $ChargeInfo = new ChargeInfo();
-    $ChargeInfo->fromJsonInfo($response);
-
-    return $ChargeInfo;
-  }
+        return $ChargeInfo;
+    }
 }
 
 class CorpState

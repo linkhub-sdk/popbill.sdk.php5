@@ -26,404 +26,404 @@ class StatementService extends PopbillBase {
     $this->AddScope('121');
     $this->AddScope('122');
     $this->AddScope('123');
-	$this->AddScope('124');
-	$this->AddScope('125');
-	$this->AddScope('126');
+    $this->AddScope('124');
+    $this->AddScope('125');
+    $this->AddScope('126');
   }
 
-	#전자명세서 발행단가 확인
-	public function GetUnitCost($CorpNum,$itemCode){
-    	return $this->executeCURL('/Statement/'.$itemCode.'?cfg=UNITCOST',$CorpNum)->unitCost;
-	}
+    #전자명세서 발행단가 확인
+    public function GetUnitCost($CorpNum,$itemCode){
+        return $this->executeCURL('/Statement/'.$itemCode.'?cfg=UNITCOST',$CorpNum)->unitCost;
+    }
 
-	#문서문서번호 사용유무 확인
-	public function CheckMgtKeyInuse($CorpNum, $itemCode, $MgtKey) {
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		try{
-			$response = $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey,$CorpNum);
-			return is_null($response->itemKey) == false;
-		}catch(PopbillException $pe){
-			if($pe->getCode() == -12000004) {return false;}
-		}
-	}
+    #문서문서번호 사용유무 확인
+    public function CheckMgtKeyInuse($CorpNum, $itemCode, $MgtKey) {
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        try{
+            $response = $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey,$CorpNum);
+            return is_null($response->itemKey) == false;
+        }catch(PopbillException $pe){
+            if($pe->getCode() == -12000004) {return false;}
+        }
+    }
 
-	# 전자명세서 선팩스 전송
-	public function FAXSend($CorpNum,$Statement,$SendNum,$ReceiveNum,$UserID = null){
-		if(!is_null($SendNum) || !empty($SendNum)){
-			$Statement->sendNum = $SendNum;
-		}
-		if(!is_null($ReceiveNum) || !empty($ReceiveNum)){
-			$Statement->receiveNum = $ReceiveNum;
-		}
+    # 전자명세서 선팩스 전송
+    public function FAXSend($CorpNum,$Statement,$SendNum,$ReceiveNum,$UserID = null){
+        if(!is_null($SendNum) || !empty($SendNum)){
+            $Statement->sendNum = $SendNum;
+        }
+        if(!is_null($ReceiveNum) || !empty($ReceiveNum)){
+            $Statement->receiveNum = $ReceiveNum;
+        }
 
-		$postdata = json_encode($Statement);
-    	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'FAX',$postdata)->receiptNum;
-	}
+        $postdata = json_encode($Statement);
+        return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'FAX',$postdata)->receiptNum;
+    }
 
-	# 전자명세서 즉시발행
-	public function RegistIssue($CorpNum,$Statement,$memo,$UserID = null, $EmailSubject = null){
-		if(!is_null($memo) || !empty($memo)){
-			$Statement->memo = $memo;
-		}
+    # 전자명세서 즉시발행
+    public function RegistIssue($CorpNum,$Statement,$memo,$UserID = null, $EmailSubject = null){
+        if(!is_null($memo) || !empty($memo)){
+            $Statement->memo = $memo;
+        }
 
-    if(!is_null($EmailSubject) || !empty($EmailSubject)){
-			$Statement->emailSubject = $EmailSubject;
-		}
+        if(!is_null($EmailSubject) || !empty($EmailSubject)){
+            $Statement->emailSubject = $EmailSubject;
+        }
 
-		$postdata = json_encode($Statement);
-    return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'ISSUE',$postdata);
-	}
+        $postdata = json_encode($Statement);
+        return $this->executeCURL('/Statement',$CorpNum,$UserID,true,'ISSUE',$postdata);
+    }
 
-	# 전자명세서 임시저장
+    # 전자명세서 임시저장
     public function Register($CorpNum, $Statement, $UserID = null) {
-    	$postdata = json_encode($Statement);
-    	return $this->executeCURL('/Statement',$CorpNum,$UserID,true,null,$postdata);
+        $postdata = json_encode($Statement);
+        return $this->executeCURL('/Statement',$CorpNum,$UserID,true,null,$postdata);
     }
 
-	# 전자명세서 수정
-	public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID = null) {
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		$postdata = json_encode($Statement);
-		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey,$CorpNum,$UserID,true,"PATCH",$postdata);
-	}
+    # 전자명세서 수정
+    public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID = null) {
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $postdata = json_encode($Statement);
+        return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey,$CorpNum,$UserID,true,"PATCH",$postdata);
+    }
 
-	# 전자명세서 삭제
-	public function Delete($CorpNum,$itemCode,$MgtKey,$UserID = null) {
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-    	return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID,true,'DELETE','');
+    # 전자명세서 삭제
+    public function Delete($CorpNum,$itemCode,$MgtKey,$UserID = null) {
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID,true,'DELETE','');
     }
 
 
-	# 전자명세서 발행
-	public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null, $EmailSubject = null){
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
+    # 전자명세서 발행
+    public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null, $EmailSubject = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
 
-		  $Request = new IssueRequest();
-    	$Request->memo = $Memo;
+        $Request = new IssueRequest();
+        $Request->memo = $Memo;
 
-      if(!is_null($EmailSubject) || !empty($EmailSubject)){
-  			$Request->emailSubject = $EmailSubject;
-  		}
+        if(!is_null($EmailSubject) || !empty($EmailSubject)){
+            $Request->emailSubject = $EmailSubject;
+        }
 
-    	$postdata = json_encode($Request);
+        $postdata = json_encode($Request);
 
-		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'ISSUE',$postdata);
-	}
+        return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'ISSUE',$postdata);
+    }
 
 
-	# 전자명세서 발행취소
-	public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null){
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		$Request = new MemoRequest();
-		$Request->memo = $Memo;
-		$postdata = json_encode($Request);
+    # 전자명세서 발행취소
+    public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $Request = new MemoRequest();
+        $Request->memo = $Memo;
+        $postdata = json_encode($Request);
 
-		return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'CANCEL',$postdata);
-	}
+        return $this->executeCURL('/Statement/'.$itemCode."/".$MgtKey, $CorpNum, $UserID, true, 'CANCEL',$postdata);
+    }
 
-	# 전자명세서 첨부파일 추가
-	public function AttachFile($CorpNum,$itemCode,$MgtKey,$FilePath,$UserID = null){
-    	if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
+    # 전자명세서 첨부파일 추가
+    public function AttachFile($CorpNum,$itemCode,$MgtKey,$FilePath,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
 
-		if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
+        if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
 
         $FileName = $this->GetBasename($FilePath);
         $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID, true, null, $postdata, true);
-	}
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID, true, null, $postdata, true);
+    }
 
-	# 첨부파일 목록확인
-	public function GetFiles($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID);
-	}
+    # 첨부파일 목록확인
+    public function GetFiles($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files',$CorpNum,$UserID);
+    }
 
-	# 첨부파일 삭제
-	public function DeleteFile($CorpNum,$itemCode,$MgtKey,$FileID,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files/'.$FileID,$CorpNum,$UserID, true,'DELETE',null);
-	}
+    # 첨부파일 삭제
+    public function DeleteFile($CorpNum,$itemCode,$MgtKey,$FileID,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files/'.$FileID,$CorpNum,$UserID, true,'DELETE',null);
+    }
 
-	# 다량 전자명세서 상태,요약 정보확인
-	public function GetInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		$result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID);
+    # 다량 전자명세서 상태,요약 정보확인
+    public function GetInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID);
 
-		$StatementInfo = new StatementInfo();
-		$StatementInfo->fromJsonInfo($result);
-		return $StatementInfo;
-	}
+        $StatementInfo = new StatementInfo();
+        $StatementInfo->fromJsonInfo($result);
+        return $StatementInfo;
+    }
 
-	# 다량 전자명세서 상태,요약 정보확인
-	public function GetInfos($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
-		if(is_null($MgtKeyList) || empty($MgtKeyList)) {
-    		throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
-    	}
-		$postdata = json_encode($MgtKeyList);
-		$result = $this->executeCURL('/Statement/'.$itemCode, $CorpNum,null,true,null,$postdata);
+    # 다량 전자명세서 상태,요약 정보확인
+    public function GetInfos($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
+        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
+            throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
+        }
+        $postdata = json_encode($MgtKeyList);
+        $result = $this->executeCURL('/Statement/'.$itemCode, $CorpNum,null,true,null,$postdata);
 
-		$StatementInfoList = array();
+        $StatementInfoList = array();
 
-		for($i=0; $i<Count($result); $i++){
-			$StmtInfoObj = new StatementInfo();
-			$StmtInfoObj->fromJsonInfo($result[$i]);
-			$StatementInfoList[$i] = $StmtInfoObj;
-		}
+        for($i=0; $i<Count($result); $i++){
+            $StmtInfoObj = new StatementInfo();
+            $StmtInfoObj->fromJsonInfo($result[$i]);
+            $StatementInfoList[$i] = $StmtInfoObj;
+        }
 
-		return $StatementInfoList;
-	}
+        return $StatementInfoList;
+    }
 
-	# 이력 확인
-	public function GetLogs($CorpNum,$itemCode,$MgtKey){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		$result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Logs',$CorpNum);
+    # 이력 확인
+    public function GetLogs($CorpNum,$itemCode,$MgtKey){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Logs',$CorpNum);
 
-		$StatementLogList = array();
+        $StatementLogList = array();
 
-		for($i=0; $i<Count($result); $i++){
-			$StmtLog = new StatementLog();
-			$StmtLog->fromJsonInfo($result[$i]);
-			$StatementLogList[$i] = $StmtLog;
-		}
-		return $StatementLogList;
-	}
+        for($i=0; $i<Count($result); $i++){
+            $StmtLog = new StatementLog();
+            $StmtLog->fromJsonInfo($result[$i]);
+            $StatementLogList[$i] = $StmtLog;
+        }
+        return $StatementLogList;
+    }
 
-	# 상세정보 확인
-	public function GetDetailInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		$result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?Detail',$CorpNum,$UserID);
+    # 상세정보 확인
+    public function GetDetailInfo($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $result = $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?Detail',$CorpNum,$UserID);
 
-		$StatementDetail = new Statement();
-		$StatementDetail->fromJsonInfo($result);
+        $StatementDetail = new Statement();
+        $StatementDetail->fromJsonInfo($result);
 
-		return $StatementDetail;
-	}
+        return $StatementDetail;
+    }
 
-	#알림메일 재전송
-	public function SendEmail($CorpNum,$itemCode,$MgtKey,$receiver,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-    	$Request = array('receiver' => $receiver);
-		$postdata = json_encode($Request);
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'EMAIL',$postdata);
-	}
+    #알림메일 재전송
+    public function SendEmail($CorpNum,$itemCode,$MgtKey,$receiver,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        $Request = array('receiver' => $receiver);
+        $postdata = json_encode($Request);
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'EMAIL',$postdata);
+    }
 
-	#알림문자 재전송
-	public function SendSMS($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$contents,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
+    #알림문자 재전송
+    public function SendSMS($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$contents,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
 
-		$Request = array(
-					'receiver' => $receiver,
-					'sender' => $sender,
-					'contents' => $contents
-		);
+        $Request = array(
+            'receiver' => $receiver,
+            'sender' => $sender,
+            'contents' => $contents
+        );
 
-		$postdata = json_encode($Request);
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'SMS',$postdata);
-	}
+        $postdata = json_encode($Request);
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'SMS',$postdata);
+    }
 
 
-	#전자명세서 팩스전송
-	public function SendFAX($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
+    #전자명세서 팩스전송
+    public function SendFAX($CorpNum,$itemCode,$MgtKey,$sender,$receiver,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
 
-		$Request = array (
-					'receiver' => $receiver,
-					'sender' => $sender
-		);
+        $Request = array (
+            'receiver' => $receiver,
+            'sender' => $sender
+        );
 
-		$postdata = json_encode($Request);
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'FAX',$postdata);
-	}
+        $postdata = json_encode($Request);
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey,$CorpNum,$UserID,true,'FAX',$postdata);
+    }
 
-	#팝빌 전자명세서 연결 URL
-	public function GetURL($CorpNum, $UserID, $TOGO) {
-		return $this->executeCURL('/Statement?TG='.$TOGO, $CorpNum,$UserID)->url;
-	}
+    #팝빌 전자명세서 연결 URL
+    public function GetURL($CorpNum, $UserID, $TOGO) {
+        return $this->executeCURL('/Statement?TG='.$TOGO, $CorpNum,$UserID)->url;
+    }
 
-	#전자명세서 보기 URL
-	public function GetPopUpURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=POPUP',$CorpNum,$UserID)->url;
-	}
+    #전자명세서 보기 URL
+    public function GetPopUpURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=POPUP',$CorpNum,$UserID)->url;
+    }
 
-	#인쇄 URL 호출
-	public function GetPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=PRINT',$CorpNum,$UserID)->url;
-	}
+    #인쇄 URL 호출
+    public function GetPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=PRINT',$CorpNum,$UserID)->url;
+    }
 
-  # 뷰 URL
-  public function GetViewURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
-  {
-      if (is_null($MgtKey) || empty($MgtKey)) {
-          throw new PopbillException('문서번호가 입력되지 않았습니다.');
-      }
+    # 뷰 URL
+    public function GetViewURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
+    {
+        if (is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
 
-      return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=VIEW', $CorpNum, $UserID)->url;
-  }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=VIEW', $CorpNum, $UserID)->url;
+    }
 
-	#인쇄 URL 호출(공급받는자용)
-	public function GetEPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=EPRINT',$CorpNum,$UserID)->url;
-	}
+    #인쇄 URL 호출(공급받는자용)
+    public function GetEPrintURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=EPRINT',$CorpNum,$UserID)->url;
+    }
 
-	#다량 인쇄 URL호출
-	public function GetMassPrintURL($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
-		if(is_null($MgtKeyList) || empty($MgtKeyList)) {
-    		throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
-    	}
-		$postdata = json_encode($MgtKeyList);
-		return $this->executeCURL('/Statement/'.$itemCode.'?Print',$CorpNum,$UserID,true,'',$postdata)->url;
-	}
+    #다량 인쇄 URL호출
+    public function GetMassPrintURL($CorpNum,$itemCode,$MgtKeyList,$UserID = null){
+        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
+            throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
+        }
+        $postdata = json_encode($MgtKeyList);
+        return $this->executeCURL('/Statement/'.$itemCode.'?Print',$CorpNum,$UserID,true,'',$postdata)->url;
+    }
 
-	#메일 링크 URL 호출
-	public function GetMailURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
-		if(is_null($MgtKey) || empty($MgtKey)) {
-    		throw new PopbillException('문서번호가 입력되지 않았습니다.');
-    	}
-		return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=MAIL',$CorpNum,$UserID)->url;
-	}
+    #메일 링크 URL 호출
+    public function GetMailURL($CorpNum,$itemCode,$MgtKey,$UserID = null){
+        if(is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'?TG=MAIL',$CorpNum,$UserID)->url;
+    }
 
-  //전자명세서 목록조회
-  public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page = null, $PerPage = null, $Order = null, $QString = null){
-    if(is_null($DType) || empty($DType)) {
-    		throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
-  	}
-    if(is_null($SDate) || empty($SDate)) {
-    		throw new PopbillException('시작일자가 입력되지 않았습니다.');
-  	}
-    if(is_null($EDate) || empty($EDate)) {
-    		throw new PopbillException('종료일자가 입력되지 않았습니다.');
-  	}
+    //전자명세서 목록조회
+    public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page = null, $PerPage = null, $Order = null, $QString = null){
+        if(is_null($DType) || empty($DType)) {
+            throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
+        }
+        if(is_null($SDate) || empty($SDate)) {
+            throw new PopbillException('시작일자가 입력되지 않았습니다.');
+        }
+        if(is_null($EDate) || empty($EDate)) {
+            throw new PopbillException('종료일자가 입력되지 않았습니다.');
+        }
 
-    $uri = '/Statement/Search?DType=' . $DType;
-    $uri .= '&SDate=' . $SDate;
-    $uri .= '&EDate=' . $EDate;
+        $uri = '/Statement/Search?DType=' . $DType;
+        $uri .= '&SDate=' . $SDate;
+        $uri .= '&EDate=' . $EDate;
 
-    if( !is_null( $State ) || !empty( $State ) ){
-			$uri .= '&State=' . implode(',',$State);
-		}
+        if( !is_null( $State ) || !empty( $State ) ){
+            $uri .= '&State=' . implode(',',$State);
+        }
 
-    if( !is_null( $ItemCode ) || !empty( $ItemCode ) ){
-			$uri .= '&ItemCode=' . implode(',',$ItemCode);
-		}
+        if( !is_null( $ItemCode ) || !empty( $ItemCode ) ){
+            $uri .= '&ItemCode=' . implode(',',$ItemCode);
+        }
 
-    if(!is_null($QString) || !empty($QString)){
-			$uri .= '&QString=' . $QString;
-		}
+        if(!is_null($QString) || !empty($QString)){
+            $uri .= '&QString=' . $QString;
+        }
 
-    $uri .= '&Page=' . $Page;
-    $uri .= '&PerPage=' . $PerPage;
-    $uri .= '&Order=' . $Order;
+        $uri .= '&Page=' . $Page;
+        $uri .= '&PerPage=' . $PerPage;
+        $uri .= '&Order=' . $Order;
 
-    $response = $this->executeCURL($uri,$CorpNum,"");
+        $response = $this->executeCURL($uri,$CorpNum,"");
 
-		$SearchList = new DocSearchResult();
-		$SearchList->fromJsonInfo($response);
-		return $SearchList;
-  }
+        $SearchList = new DocSearchResult();
+        $SearchList->fromJsonInfo($response);
+        return $SearchList;
+    }
 
-  //팝빌 인감 및 첨부문서 등록 URL
-  public function GetSealURL($CorpNum, $UserID = null) {
+    //팝빌 인감 및 첨부문서 등록 URL
+    public function GetSealURL($CorpNum, $UserID = null) {
 
-    $response = $this->executeCURL('/?TG=SEAL', $CorpNum, $UserID);
-    return $response->url;
-  }
+        $response = $this->executeCURL('/?TG=SEAL', $CorpNum, $UserID);
+        return $response->url;
+    }
 
-  // 전자명세서 첨부
-  public function AttachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
-    $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/AttachStmt';
+    // 전자명세서 첨부
+    public function AttachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
+        $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/AttachStmt';
 
-    $Request = new StmtRequest();
-  	$Request->ItemCode = $SubItemCode;
-		$Request->MgtKey= $SubMgtKey;
-   	$postdata = json_encode($Request);
+        $Request = new StmtRequest();
+        $Request->ItemCode = $SubItemCode;
+        $Request->MgtKey= $SubMgtKey;
+        $postdata = json_encode($Request);
 
-    return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
-  }
+        return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
+    }
 
-  // 전자명세서 첨부해제
-  public function DetachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
-    $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/DetachStmt';
+    // 전자명세서 첨부해제
+    public function DetachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
+        $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/DetachStmt';
 
-    $Request = new StmtRequest();
-  	$Request->ItemCode = $SubItemCode;
-		$Request->MgtKey= $SubMgtKey;
-   	$postdata = json_encode($Request);
+        $Request = new StmtRequest();
+        $Request->ItemCode = $SubItemCode;
+        $Request->MgtKey= $SubMgtKey;
+        $postdata = json_encode($Request);
 
-    return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
-  }
+        return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
+    }
 
-  // 과금정보 확인
-  public function GetChargeInfo ( $CorpNum, $ItemCode, $UserID = null){
-    $uri = '/Statement/ChargeInfo/'.$ItemCode;
+    // 과금정보 확인
+    public function GetChargeInfo ( $CorpNum, $ItemCode, $UserID = null){
+        $uri = '/Statement/ChargeInfo/'.$ItemCode;
 
-    $response = $this->executeCURL($uri, $CorpNum, $UserID);
-    $ChargeInfo = new ChargeInfo();
-    $ChargeInfo->fromJsonInfo($response);
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+        $ChargeInfo = new ChargeInfo();
+        $ChargeInfo->fromJsonInfo($response);
 
-    return $ChargeInfo;
-  }
+        return $ChargeInfo;
+    }
 
-  // 전자명세서 관련 메일전송 항목에 대한 전송여부 목록 반환
-  public function ListEmailConfig($CorpNum, $UserID = null) {
-		$EmailSendConfigList = array();
+    // 전자명세서 관련 메일전송 항목에 대한 전송여부 목록 반환
+    public function ListEmailConfig($CorpNum, $UserID = null) {
+        $EmailSendConfigList = array();
 
-		$result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $UserID);
+        $result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $UserID);
 
-		for($i=0; $i<Count($result); $i++){
-			$EmailSendConfig = new EmailSendConfig();
-			$EmailSendConfig->fromJsonInfo($result[$i]);
-			$EmailSendConfigList[$i] = $EmailSendConfig;
-		}
-		return $EmailSendConfigList;
-  }
+        for($i=0; $i<Count($result); $i++){
+            $EmailSendConfig = new EmailSendConfig();
+            $EmailSendConfig->fromJsonInfo($result[$i]);
+            $EmailSendConfigList[$i] = $EmailSendConfig;
+        }
+        return $EmailSendConfigList;
+    }
 
-  // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
-	public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
-		$sendYNString = $sendYN ? 'True' : 'False';
-		$uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
+    // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
+    public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
+        $sendYNString = $sendYN ? 'True' : 'False';
+        $uri = '/Statement/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
-		return $result = $this->executeCURL($uri, $corpNum, $userID, true);
-	}
+        return $result = $this->executeCURL($uri, $corpNum, $userID, true);
+    }
 }
 
 class Statement

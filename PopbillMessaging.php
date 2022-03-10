@@ -39,17 +39,17 @@ class MessagingService extends PopbillBase
 
 
     /* 단문메시지 전송
-    *	$CorpNum => 발송사업자번호
-    *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
-    *	$Content => 동보전송용 발신내용 미기재시 개별메시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
-    *	$Messages => 발신메시지 최대 1000건, 배열
-    *		'snd' => 개별발신번호
-    *		'rcv' => 수신번호, 필수
-    *		'rcvnm' => 수신자 성명
-    *		'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
-    *	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
-    *	$UserID		=> 발신자 팝빌 회원아이디
-    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
+    *    $CorpNum => 발송사업자번호
+    *    $Sender    => 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *    $Content => 동보전송용 발신내용 미기재시 개별메시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
+    *    $Messages => 발신메시지 최대 1000건, 배열
+    *        'snd' => 개별발신번호
+    *        'rcv' => 수신번호, 필수
+    *        'rcvnm' => 수신자 성명
+    *        'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
+    *    $ReserveDT    => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
+    *    $UserID        => 발신자 팝빌 회원아이디
+    *    $SenderName    => 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
     public function SendSMS($CorpNum, $Sender, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
@@ -57,19 +57,19 @@ class MessagingService extends PopbillBase
     }
 
     /* 장문메시지 전송
-    *	$CorpNum => 발송사업자번호
-    *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
-    *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
-    *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
-    *	$Messages => 발신메시지 최대 1000건, 배열
-    *		'snd' => 개별발신번호
-    *		'rcv' => 수신번호, 필수
-    *		'rcvnm' => 수신자 성명
-    *		'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
-    *		'sjt' => 제목, 미기재시 동보 제목으로 전송함.
-  	*	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
-  	*	$UserID		=> 발신자 팝빌 회원아이디
-    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
+    *    $CorpNum => 발송사업자번호
+    *    $Sender    => 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *    $Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
+    *    $Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
+    *    $Messages => 발신메시지 최대 1000건, 배열
+    *        'snd' => 개별발신번호
+    *        'rcv' => 수신번호, 필수
+    *        'rcvnm' => 수신자 성명
+    *        'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
+    *        'sjt' => 제목, 미기재시 동보 제목으로 전송함.
+      *    $ReserveDT    => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
+      *    $UserID        => 발신자 팝빌 회원아이디
+    *    $SenderName    => 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
     public function SendLMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
@@ -77,19 +77,19 @@ class MessagingService extends PopbillBase
     }
 
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
-    *	$CorpNum => 발송사업자번호
-    *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
-    *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
-    *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
-    *	$Messages => 발신메시지 최대 1000건, 배열
-    *		'snd' => 개별발신번호
-    *		'rcv' => 수신번호, 필수
-    *		'rcvnm' => 수신자 성명
-    *		'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
-    *		'sjt' => 제목, 미기재시 동보 제목으로 전송함.
-    *	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
-    *	$UserID		=> 발신자 팝빌 회원아이디
-    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
+    *    $CorpNum => 발송사업자번호
+    *    $Sender    => 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *    $Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
+    *    $Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
+    *    $Messages => 발신메시지 최대 1000건, 배열
+    *        'snd' => 개별발신번호
+    *        'rcv' => 수신번호, 필수
+    *        'rcvnm' => 수신자 성명
+    *        'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
+    *        'sjt' => 제목, 미기재시 동보 제목으로 전송함.
+    *    $ReserveDT    => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
+    *    $UserID        => 발신자 팝빌 회원아이디
+    *    $SenderName    => 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
     public function SendXMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
@@ -97,20 +97,20 @@ class MessagingService extends PopbillBase
     }
 
     /* MMS 메시지 전송
-    *	$CorpNum => 발송사업자번호
-    *	$Sender	=> 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
-    *	$Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
-    *	$Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
-    *	$Messages => 발신메시지 최대 1000건, 배열
-    *		'snd' => 개별발신번호
-    *		'rcv' => 수신번호, 필수
-    *		'rcvnm' => 수신자 성명
-    *		'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
-    *		'sjt' => 제목, 미기재시 동보 제목으로 전송함.
-    *	$FilePaths	=> 전송할 파일경로 문자열
-      *	$ReserveDT	=> 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
-      *	$UserID		=> 발신자 팝빌 회원아이디
-    *	$SenderName	=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
+    *    $CorpNum => 발송사업자번호
+    *    $Sender    => 동보전송용 발신번호 미기재시 개별메시지 발신번호로 전송. 발신번호가 없는 개별메시지에만 동보처리함.
+    *    $Subject => 동보전송용 제목 미기재시 개별메시지 제목으로 전송, 제목이 없는 개별메시지에만 동보처리함.
+    *    $Content => 동보전송용 발신내용 미기재시 개별베시지 내용으로 전송, 발신내용이 없는 개별메시지에만 동보처리함.
+    *    $Messages => 발신메시지 최대 1000건, 배열
+    *        'snd' => 개별발신번호
+    *        'rcv' => 수신번호, 필수
+    *        'rcvnm' => 수신자 성명
+    *        'msg' => 메시지 내용, 미기재시 동보메시지로 전송함.
+    *        'sjt' => 제목, 미기재시 동보 제목으로 전송함.
+    *    $FilePaths    => 전송할 파일경로 문자열
+      *    $ReserveDT    => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
+      *    $UserID        => 발신자 팝빌 회원아이디
+    *    $SenderName    => 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
     */
     public function SendMMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $FilePaths = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
@@ -150,9 +150,9 @@ class MessagingService extends PopbillBase
 
 
     /* 전송메시지 내역 및 전송상태 확인
-    *	$CorpNum => 발송사업자번호
-    *	$ReceiptNum	=> 접수번호
-    *	$UserID	=> 팝빌 회원아이디
+    *    $CorpNum => 발송사업자번호
+    *    $ReceiptNum    => 접수번호
+    *    $UserID    => 팝빌 회원아이디
     */
     public function GetMessages($CorpNum, $ReceiptNum, $UserID = null)
     {
@@ -172,9 +172,9 @@ class MessagingService extends PopbillBase
     }
 
     /* 전송메시지 내역 및 전송상태 확인
-*	$CorpNum => 발송사업자번호
-*	$RequestNum	=> 전송요청번호
-*	$UserID	=> 팝빌 회원아이디
+*    $CorpNum => 발송사업자번호
+*    $RequestNum    => 전송요청번호
+*    $UserID    => 팝빌 회원아이디
 */
     public function GetMessagesRN($CorpNum, $RequestNum, $UserID = null)
     {
@@ -194,9 +194,9 @@ class MessagingService extends PopbillBase
     }
 
     /* 예약전송 취소
-    *	$CorpNum => 발송사업자번호
-    *	$ReceiptNum	=> 접수번호
-    *	$UserID	=> 팝빌 회원아이디
+    *    $CorpNum => 발송사업자번호
+    *    $ReceiptNum    => 접수번호
+    *    $UserID    => 팝빌 회원아이디
     */
     public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
     {
@@ -207,9 +207,9 @@ class MessagingService extends PopbillBase
     }
 
     /* 예약전송 취소
-*	$CorpNum => 발송사업자번호
-*	$RequestNum	=> 전송요청번호
-*	$UserID	=> 팝빌 회원아이디
+*    $CorpNum => 발송사업자번호
+*    $RequestNum    => 전송요청번호
+*    $UserID    => 팝빌 회원아이디
 */
     public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
     {

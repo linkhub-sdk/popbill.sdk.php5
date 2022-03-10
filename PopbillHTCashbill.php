@@ -21,181 +21,181 @@ require_once 'popbill.php';
 
 class HTCashbillService extends PopbillBase {
 
-	public function __construct ( $LinkID, $SecretKey )
-  {
-    parent::__construct ( $LinkID, $SecretKey );
-    $this->AddScope ( '141' );
-  }
-
-  public function GetChargeInfo ( $CorpNum, $UserID = null)
-  {
-    $response = $this->executeCURL('/HomeTax/Cashbill/ChargeInfo', $CorpNum, $UserID);
-
-    $ChargeInfo = new ChargeInfo();
-    $ChargeInfo->fromJsonInfo($response);
-
-    return $ChargeInfo;
-  }
-
-  public function RequestJob ( $CorpNum, $CBType, $SDate, $EDate, $UserID = null ) {
-    if ( empty($SDate) || ( $SDate === "" ) )	{
-      throw new PopbillException('시작일자가 입력되지 않았습니다.');
+    public function __construct ( $LinkID, $SecretKey )
+    {
+        parent::__construct ( $LinkID, $SecretKey );
+        $this->AddScope ( '141' );
     }
 
-    if ( empty($EDate) || ( $EDate === "" ) )	{
-      throw new PopbillException('종료일자가 입력되지 않았습니다.');
+    public function GetChargeInfo ( $CorpNum, $UserID = null)
+    {
+        $response = $this->executeCURL('/HomeTax/Cashbill/ChargeInfo', $CorpNum, $UserID);
+
+        $ChargeInfo = new ChargeInfo();
+        $ChargeInfo->fromJsonInfo($response);
+
+        return $ChargeInfo;
     }
 
-    $uri = '/HomeTax/Cashbill/'.$CBType;
-    $uri .= '?SDate='.$SDate.'&EDate='.$EDate;
+    public function RequestJob ( $CorpNum, $CBType, $SDate, $EDate, $UserID = null ) {
+        if ( empty($SDate) || ( $SDate === "" ) )    {
+            throw new PopbillException('시작일자가 입력되지 않았습니다.');
+        }
 
-    return $this->executeCURL($uri, $CorpNum, $UserID, true, "", "")->jobID;
-  }
+        if ( empty($EDate) || ( $EDate === "" ) )    {
+            throw new PopbillException('종료일자가 입력되지 않았습니다.');
+        }
 
-  public function GetJobState ( $CorpNum, $JobID, $UserID = null )
-  {
-    if ( strlen ( $JobID ) != 18 ) {
-      throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+        $uri = '/HomeTax/Cashbill/'.$CBType;
+        $uri .= '?SDate='.$SDate.'&EDate='.$EDate;
+
+        return $this->executeCURL($uri, $CorpNum, $UserID, true, "", "")->jobID;
     }
 
-    $response = $this->executeCURL('/HomeTax/Cashbill/'.$JobID.'/State', $CorpNum, $UserID);
+    public function GetJobState ( $CorpNum, $JobID, $UserID = null )
+    {
+        if ( strlen ( $JobID ) != 18 ) {
+        throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+        }
 
-    $JobState = new JobState();
-    $JobState->fromJsonInfo($response);
+        $response = $this->executeCURL('/HomeTax/Cashbill/'.$JobID.'/State', $CorpNum, $UserID);
 
-    return $JobState;
-  }
+        $JobState = new JobState();
+        $JobState->fromJsonInfo($response);
 
-  public function ListActiveJob ( $CorpNum, $UserID = null )
-  {
-    $result = $this->executeCURL('/HomeTax/Cashbill/JobList', $CorpNum, $UserID);
-
-    $JobList = array();
-
-		for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-			$JobState = new JobState();
-			$JobState->fromJsonInfo($result[$i]);
-			$JobList[$i] = $JobState;
-		}
-
-    return $JobList;
-  }
-
-  public function Search ( $CorpNum, $JobID, $TradeType, $TradeUsage, $Page, $PerPage, $Order, $UserID = null )
-  {
-    if ( strlen ( $JobID ) != 18 ) {
-      throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+        return $JobState;
     }
 
-    $uri = '/HomeTax/Cashbill/'.$JobID;
-    $uri .= '?TradeType=' . implode ( ',' , $TradeType );
-    $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
-    $uri .= '&Page=' . $Page;
-    $uri .= '&PerPage=' . $PerPage;
-    $uri .= '&Oder=' . $Order;
+    public function ListActiveJob ( $CorpNum, $UserID = null )
+    {
+        $result = $this->executeCURL('/HomeTax/Cashbill/JobList', $CorpNum, $UserID);
 
-    $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
+        $JobList = array();
 
-    $SearchResult = new HTCashbillSearch();
-    $SearchResult->fromJsonInfo ( $response ) ;
+            for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
+                $JobState = new JobState();
+                $JobState->fromJsonInfo($result[$i]);
+                $JobList[$i] = $JobState;
+            }
 
-    return $SearchResult;
-  }
-
-  public function Summary ( $CorpNum, $JobID, $TradeType, $TradeUsage, $UserID = null )
-  {
-    if ( strlen ( $JobID ) != 18 ) {
-      throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다');
+        return $JobList;
     }
 
-    $uri = '/HomeTax/Cashbill/' . $JobID . '/Summary';
-    $uri .= '?TradeType=' . implode ( ',' , $TradeType );
-    $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
+    public function Search ( $CorpNum, $JobID, $TradeType, $TradeUsage, $Page, $PerPage, $Order, $UserID = null )
+    {
+        if ( strlen ( $JobID ) != 18 ) {
+            throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+        }
 
-    $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
+        $uri = '/HomeTax/Cashbill/'.$JobID;
+        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
+        $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
+        $uri .= '&Page=' . $Page;
+        $uri .= '&PerPage=' . $PerPage;
+        $uri .= '&Oder=' . $Order;
 
-    $Summary = new HTCashbillSummary();
-    $Summary->fromJsonInfo ( $response ) ;
+        $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
-    return $Summary;
-  }
+        $SearchResult = new HTCashbillSearch();
+        $SearchResult->fromJsonInfo ( $response ) ;
 
-  public function GetFlatRatePopUpURL ( $CorpNum, $UserID = null )
-  {
-    return $this->executeCURL ( '/HomeTax/Cashbill?TG=CHRG', $CorpNum, $UserID )->url;
-  }
-
-  public function GetFlatRateState ( $CorpNum, $UserID = null )
-  {
-    $response = $this->executeCURL ( '/HomeTax/Cashbill/Contract', $CorpNum, $UserID ) ;
-
-    $FlatRateState = new FlatRate();
-    $FlatRateState->fromJsonInfo ( $response );
-
-    return $FlatRateState;
-  }
-
-  public function GetCertificatePopUpURL ( $CorpNum, $UserID = null)
-  {
-    return $this->executeCURL ( '/HomeTax/Cashbill?TG=CERT', $CorpNum, $UserID )->url;
-  }
-
-  public function GetCertificateExpireDate ( $CorpNum )
-  {
-    return $this->executeCURL ( '/HomeTax/Cashbill/CertInfo', $CorpNum )->certificateExpiration;
-  }
-
-	// 홈택스 공인인증서 로그인 테스트
-	public function CheckCertValidation($CorpNum, $UserID = null){
-		if(is_null($CorpNum) || empty($CorpNum)) {
-      throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        return $SearchResult;
     }
-		return $this->executeCURL('/HomeTax/Cashbill/CertCheck', $CorpNum, $UserID);
-	}
 
-	// 부서사용자 계정등록
-	public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null){
-		if(is_null($CorpNum) || empty($CorpNum)) {
-			throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
-		}
-		if(is_null($deptUserID) || empty($deptUserID)) {
-			throw new PopbillException('홈택스 부서사용자 계정 아이디가 입력되지 않았습니다.');
-		}
-		if(is_null($deptUserPWD) || empty($deptUserPWD)) {
-			throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
-		}
+    public function Summary ( $CorpNum, $JobID, $TradeType, $TradeUsage, $UserID = null )
+    {
+        if ( strlen ( $JobID ) != 18 ) {
+            throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다');
+        }
 
-		$Request = new RegistDeptUserRequest();
-		$Request->id = $deptUserID;
-		$Request->pwd = $deptUserPWD;
-		$postdata = json_encode($Request);
+        $uri = '/HomeTax/Cashbill/' . $JobID . '/Summary';
+        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
+        $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
 
-		return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID, true, null, $postdata);
-	}
+        $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
-	// 부서사용자 등록정보 확인
-	public function CheckDeptUser($CorpNum, $UserID = null){
-		if(is_null($CorpNum) || empty($CorpNum)) {
-			throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
-		}
-		return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID);
-	}
+        $Summary = new HTCashbillSummary();
+        $Summary->fromJsonInfo ( $response ) ;
 
-	// 부서사용자 로그인 테스트
-	public function CheckLoginDeptUser($CorpNum, $UserID = null){
-		if(is_null($CorpNum) || empty($CorpNum)) {
-			throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
-		}
-		return $this->executeCURL('/HomeTax/Cashbill/DeptUser/Check', $CorpNum, $UserID);
-	}
+        return $Summary;
+    }
 
-	// 부서사용자 등록정보 삭제
-	public function DeleteDeptUser($CorpNum, $UserID = null){
-		if(is_null($CorpNum) || empty($CorpNum)) {
-			throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
-		}
-		return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID, true, 'DELETE', null);
-	}
+    public function GetFlatRatePopUpURL ( $CorpNum, $UserID = null )
+    {
+        return $this->executeCURL ( '/HomeTax/Cashbill?TG=CHRG', $CorpNum, $UserID )->url;
+    }
+
+    public function GetFlatRateState ( $CorpNum, $UserID = null )
+    {
+        $response = $this->executeCURL ( '/HomeTax/Cashbill/Contract', $CorpNum, $UserID ) ;
+
+        $FlatRateState = new FlatRate();
+        $FlatRateState->fromJsonInfo ( $response );
+
+        return $FlatRateState;
+    }
+
+    public function GetCertificatePopUpURL ( $CorpNum, $UserID = null)
+    {
+        return $this->executeCURL ( '/HomeTax/Cashbill?TG=CERT', $CorpNum, $UserID )->url;
+    }
+
+    public function GetCertificateExpireDate ( $CorpNum )
+    {
+        return $this->executeCURL ( '/HomeTax/Cashbill/CertInfo', $CorpNum )->certificateExpiration;
+    }
+
+    // 홈택스 공인인증서 로그인 테스트
+    public function CheckCertValidation($CorpNum, $UserID = null){
+        if(is_null($CorpNum) || empty($CorpNum)) {
+            throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/HomeTax/Cashbill/CertCheck', $CorpNum, $UserID);
+    }
+
+    // 부서사용자 계정등록
+    public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null){
+        if(is_null($CorpNum) || empty($CorpNum)) {
+            throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if(is_null($deptUserID) || empty($deptUserID)) {
+            throw new PopbillException('홈택스 부서사용자 계정 아이디가 입력되지 않았습니다.');
+        }
+        if(is_null($deptUserPWD) || empty($deptUserPWD)) {
+            throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
+        }
+
+        $Request = new RegistDeptUserRequest();
+        $Request->id = $deptUserID;
+        $Request->pwd = $deptUserPWD;
+        $postdata = json_encode($Request);
+
+        return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID, true, null, $postdata);
+    }
+
+    // 부서사용자 등록정보 확인
+    public function CheckDeptUser($CorpNum, $UserID = null){
+        if(is_null($CorpNum) || empty($CorpNum)) {
+            throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID);
+    }
+
+    // 부서사용자 로그인 테스트
+    public function CheckLoginDeptUser($CorpNum, $UserID = null){
+        if(is_null($CorpNum) || empty($CorpNum)) {
+            throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/HomeTax/Cashbill/DeptUser/Check', $CorpNum, $UserID);
+    }
+
+    // 부서사용자 등록정보 삭제
+    public function DeleteDeptUser($CorpNum, $UserID = null){
+        if(is_null($CorpNum) || empty($CorpNum)) {
+            throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/HomeTax/Cashbill/DeptUser', $CorpNum, $UserID, true, 'DELETE', null);
+    }
 }
 
 class FlatRate

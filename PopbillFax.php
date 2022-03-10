@@ -66,44 +66,44 @@ class FaxService extends PopbillBase
         }
 
         return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true)->receiptNum;
-      }
+    }
 
 
     public function SendFAXBinary($CorpNum, $Sender, $Receivers = array(), $FileDatas = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False, $title = null, $RequestNum = null)
     {
-      if (empty($Receivers)) {
-          throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
-      }
+        if (empty($Receivers)) {
+            throw new PopbillException('수신자 정보가 입력되지 않았습니다..');
+        }
 
-      $RequestForm = array();
-      $RequestForm['snd'] = $Sender;
-      $RequestForm['sndnm'] = $SenderName;
-      $RequestForm['title'] = $title;
-      $RequestForm['fCnt'] = count($FileDatas);
-      $RequestForm['rcvs'] = $Receivers;
+        $RequestForm = array();
+        $RequestForm['snd'] = $Sender;
+        $RequestForm['sndnm'] = $SenderName;
+        $RequestForm['title'] = $title;
+        $RequestForm['fCnt'] = count($FileDatas);
+        $RequestForm['rcvs'] = $Receivers;
 
-      if (!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
-      if (!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
-      if ($adsYN) $RequestForm['adsYN'] = $adsYN;
+        if (!empty($ReserveDT)) $RequestForm['sndDT'] = $ReserveDT;
+        if (!empty($RequestNum)) $RequestForm['requestNum'] = $RequestNum;
+        if ($adsYN) $RequestForm['adsYN'] = $adsYN;
 
-      $postdata = array();
-      $postdata['form'] = json_encode($RequestForm);
+        $postdata = array();
+        $postdata['form'] = json_encode($RequestForm);
 
-      $i = 0;
-      foreach ($FileDatas as $key => $data) {
-          foreach ($data as $key => $value) {
-            if ($key == 'fileName') {
-              $postdata['name[' . $i . ']'] = $value;
+        $i = 0;
+        foreach ($FileDatas as $key => $data) {
+            foreach ($data as $key => $value) {
+                if ($key == 'fileName') {
+                    $postdata['name[' . $i . ']'] = $value;
+                }
+                if ($key == 'fileData') {
+                    $postdata['file[' . $i++ . ']'] =  $value;
+                }
             }
-            if ($key == 'fileData') {
-              $postdata['file[' . $i++ . ']'] =  $value;
-            }
-          }
-      }
+        }
 
-      $isBinary= true;
+        $isBinary= true;
 
-      return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true, null, $isBinary)->receiptNum;
+        return $this->executeCURL('/FAX', $CorpNum, $UserID, true, null, $postdata, true, null, $isBinary)->receiptNum;
     }
 
     public function ResendFAX($CorpNum, $ReceiptNum, $SenderNum, $SenderName, $Receivers, $ReserveDT = null, $UserID = null, $title = null, $RequestNum = null)
@@ -403,8 +403,8 @@ class FaxSearchResult
 
 class FaxUploadFile
 {
-  public $fileName;
-  public $fileData;
+    public $fileName;
+    public $fileData;
 }
 
 
