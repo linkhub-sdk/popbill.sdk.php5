@@ -504,6 +504,16 @@ class TaxinvoiceService extends PopbillBase
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '?Print', $CorpNum, $UserID, true, null, $postdata)->url;
     }
 
+    // 공동인증서 정보확인
+    public function GetTaxCertInfo($CorpNum, $UserID = null)
+    {
+        $response = $this->executeCURL('/Taxinvoice/Certificate', $CorpNum, $UserID);
+        $TaxinvoiceCertificate = new TaxinvoiceCertificate();
+        $TaxinvoiceCertificate->fromJsonInfo($response);
+
+        return $TaxinvoiceCertificate;
+    }
+
     //회원인증서 만료일 확인
     public function GetCertificateExpireDate($CorpNum)
     {
@@ -1172,6 +1182,29 @@ class TaxinvoiceLog
     }
 }
 
+class TaxinvoiceCertificate
+{
+    public $regDT;
+    public $expireDT;
+    public $issuerDN;
+    public $subjectDN;
+    public $issuerName;
+    public $oid;
+    public $regContactName;
+    public $regContactID;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+        isset($jsonInfo->expireDT) ? $this->expireDT = $jsonInfo->expireDT : null;
+        isset($jsonInfo->issuerDN) ? $this->issuerDN = $jsonInfo->issuerDN : null;
+        isset($jsonInfo->subjectDN) ? $this->subjectDN = $jsonInfo->subjectDN : null;
+        isset($jsonInfo->issuerName) ? $this->issuerName = $jsonInfo->issuerName : null;
+        isset($jsonInfo->oid) ? $this->oid = $jsonInfo->oid : null;
+        isset($jsonInfo->regContactName) ? $this->regContactName = $jsonInfo->regContactName : null;
+        isset($jsonInfo->regContactID) ? $this->regContactID = $jsonInfo->regContactID : null;
+    }
+}
 
 class ENumMgtKeyType
 {
