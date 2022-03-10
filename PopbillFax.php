@@ -34,6 +34,14 @@ class FaxService extends PopbillBase
         return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
     }
 
+    public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
+    {
+        if (empty($SenderNumber)) {
+            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+        }
+        return $this->executeCURL('/FAX/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
+    }
+
     public function SendFAX($CorpNum, $Sender, $Receivers = array(), $FilePaths = array(), $ReserveDT = null, $UserID = null, $SenderName = null, $adsYN = False, $title = null, $RequestNum = null)
     {
         if (empty($Receivers)) {

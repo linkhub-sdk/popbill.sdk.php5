@@ -87,6 +87,14 @@ class KakaoService extends PopbillBase
         return $TemplateList;
     }
 
+    public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
+    {
+        if (empty($SenderNumber)) {
+            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+        }
+        return $this->executeCURL('/KakaoTalk/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
+    }
+
     public function GetSenderNumberList($CorpNum)
     {
         return $this->executeCURL('/Message/SenderNumber', $CorpNum);

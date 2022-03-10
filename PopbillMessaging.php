@@ -37,6 +37,13 @@ class MessagingService extends PopbillBase
         return $this->executeCURL('/Message/UnitCost?Type=' . $MessageType, $CorpNum)->unitCost;
     }
 
+    public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
+    {
+        if (empty($SenderNumber)) {
+            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+        }
+        return $this->executeCURL('/Message/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
+    }
 
     /* 단문메시지 전송
     *    $CorpNum => 발송사업자번호
