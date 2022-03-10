@@ -195,7 +195,7 @@ class KakaoService extends PopbillBase
         $uri .= '&Order=' . $Order;
 
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . $QString;
+            $uri .= '&QString=' . urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

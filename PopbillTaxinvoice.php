@@ -583,7 +583,7 @@ class TaxinvoiceService extends PopbillBase
         $uri .= '&TaxRegID=' . $TaxRegID;
 
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . $QString;
+            $uri .= '&QString=' . urlencode($QString);
         }
 
         $uri .= '&Order=' . $Order;

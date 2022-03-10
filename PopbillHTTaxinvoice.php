@@ -101,7 +101,7 @@ class HTTaxinvoiceService extends PopbillBase {
         }
 
         if ( !empty( $QString ) ) {
-            $uri .= '&SearchString=' . $QString;
+            $uri .= '&SearchString=' . urlencode($QString);
         }
 
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
@@ -135,7 +135,7 @@ class HTTaxinvoiceService extends PopbillBase {
         }
 
         if ( !empty( $QString ) ) {
-            $uri .= '&SearchString=' . $QString;
+            $uri .= '&SearchString=' . urlencode($QString);
         }
 
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
