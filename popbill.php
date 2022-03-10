@@ -533,6 +533,8 @@ class JoinForm
     public $ContactName;
     public $ContactEmail;
     public $ContactTEL;
+    public $contactHP;
+    public $contactFAX;
     public $ID;
     public $PWD;
     public $Password;
