@@ -60,6 +60,35 @@ class CashbillService extends PopbillBase {
         return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'ISSUE',$postdata);
     }
 
+    public function BulkSubmit($CorpNum, $SubmitID, $CashbillList, $UserID=null) {
+        if (is_null($SubmitID) || empty($SubmitID)) {
+            throw new PopbillException('제출아이디가 입력되지 않았습니다.');
+        }
+        if (is_null($CashbillList) || empty($CashbillList)) {
+            throw new PopbillException('현금영수증 정보가 입력되지 않았습니다.');
+        }
+
+        $Request = new BulkRequest();
+
+        $Request->cashbills = $CashbillList;
+
+        $postdata = json_encode($Request);
+
+        return $this->executeCURL('/Cashbill', $CorpNum, $UserID, true, 'BULKISSUE', $postdata, false, null, false, $SubmitID);
+    }
+
+    public function getBulkResult($CorpNum, $SubmitID, $UserID=null) {
+        if (is_null($SubmitID) || empty($SubmitID)) {
+            throw new PopbillException('제출아이디가 입력되지 않았습니다.');
+        }
+
+        $response = $this->executeCURL('/Cashbill/BULK/' . $SubmitID . '/State', $CorpNum, $UserID);
+
+        $bulkResult = new BulkCashbillResult();
+        $bulkResult->fromJsonInfo($response);
+        return $bulkResult;
+    }
+
     public function Register($CorpNum, $Cashbill, $UserID = null) {
         $postdata = json_encode($Cashbill);
         return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,null,$postdata);
@@ -538,6 +567,69 @@ class CashbillInfo
         isset($jsonInfo->ntsresultMessage) ? $this->ntsresultMessage = $jsonInfo->ntsresultMessage : null;
         isset($jsonInfo->printYN) ? $this->printYN = $jsonInfo->printYN : null;
         isset($jsonInfo->ntsresult) ? $this->ntsresult = $jsonInfo->ntsresult : null;
+    }
+}
+
+class BulkRequest
+{
+    public $cashbills;
+}
+
+class BulkCashbillResult
+{
+    public $code;
+    public $message;
+    public $receiptID;
+    public $receiptDT;
+    public $submitID;
+    public $submitCount;
+    public $successCount;
+    public $failCount;
+    public $txState;
+    public $txStartDT;
+    public $txEndDT;
+    public $txResultCode;
+    public $issueResult;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
+        isset($jsonInfo->receiptID) ? $this->receiptID = $jsonInfo->receiptID : null;
+        isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
+        isset($jsonInfo->submitID) ? $this->submitID = $jsonInfo->submitID : null;
+        isset($jsonInfo->submitCount) ? $this->submitCount = $jsonInfo->submitCount : null;
+        isset($jsonInfo->successCount) ? $this->successCount = $jsonInfo->successCount : null;
+        isset($jsonInfo->failCount) ? $this->failCount = $jsonInfo->failCount : null;
+        isset($jsonInfo->txState) ? $this->txState = $jsonInfo->txState : null;
+        isset($jsonInfo->txStartDT) ? $this->txStartDT = $jsonInfo->txStartDT : null;
+        isset($jsonInfo->txEndDT) ? $this->txEndDT = $jsonInfo->txEndDT : null;
+        isset($jsonInfo->txResultCode) ? $this->txResultCode = $jsonInfo->txResultCode : null;
+
+        $InfoIssueResult = array();
+
+        for ($i = 0; $i < Count($jsonInfo->issueResult); $i++) {
+            $InfoObj = new BulkCashbillIssueResult();
+            $InfoObj->fromJsonInfo($jsonInfo->issueResult[$i]);
+            $InfoIssueResult[$i] = $InfoObj;
+        }
+        $this->issueResult = $InfoIssueResult;
+    }
+}
+
+class BulkCashbillIssueResult
+{
+    public $mgtKey;
+    public $code;
+    public $confirmNum;
+    public $tradeDate;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->confirmNum) ? $this->confirmNum = $jsonInfo->confirmNum : null;
+        isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
     }
 }
 
