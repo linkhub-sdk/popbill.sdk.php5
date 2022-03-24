@@ -492,12 +492,16 @@ class PlusFriend
     public $plusFriendID;
     public $plusFriendName;
     public $regDT;
+    public $state;
+    public $stateDT;
 
     function fromJsonInfo($jsonInfo)
     {
         isset($jsonInfo->plusFriendID) ? $this->plusFriendID = $jsonInfo->plusFriendID : null;
         isset($jsonInfo->plusFriendName) ? $this->plusFriendName = $jsonInfo->plusFriendName : null;
         isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->stateDT) ? $this->stateDT = $jsonInfo->stateDT : null;
     }
 }
 
