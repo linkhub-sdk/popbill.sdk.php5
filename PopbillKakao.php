@@ -226,7 +226,7 @@ class KakaoService extends PopbillBase
         return $ChargeInfo;
     }
 
-    public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null, $RequestNum = null)
+    public function SendFMS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $FilePaths = array(), $ImageURL = null, $UserID = null, $RequestNum = null, $AltSubject = null)
     {
 
         $Request = array();
@@ -234,6 +234,7 @@ class KakaoService extends PopbillBase
         if (empty($PlusFriendID) == false) $Request['plusFriendID'] = $PlusFriendID;
         if (empty($Sender) == false) $Request['snd'] = $Sender;
         if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltSubject) == false) $Request['altSubject'] = $AltSubject;
         if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
         if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
         if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
@@ -255,13 +256,14 @@ class KakaoService extends PopbillBase
         return $this->executeCURL('/FMS', $CorpNum, $UserID, true, null, $postdata, true)->receiptNum;
     }
 
-    public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null, $RequestNum = null)
+    public function SendFTS($CorpNum, $PlusFriendID, $Sender, $Content, $AltContent, $AltSendType, $AdsYN, $Messages = array(), $Btns = array(), $ReserveDT = null, $UserID = null, $RequestNum = null, $AltSubject = null)
     {
         $Request = array();
 
         if (empty($PlusFriendID) == false) $Request['plusFriendID'] = $PlusFriendID;
         if (empty($Sender) == false) $Request['snd'] = $Sender;
         if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltSubject) == false) $Request['altSubject'] = $AltSubject;
         if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
         if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
         if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
@@ -275,13 +277,14 @@ class KakaoService extends PopbillBase
         return $this->executeCURL('/FTS', $CorpNum, $UserID, true, null, $postdata)->receiptNum;
     }
 
-    public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null, $Btns = null)
+    public function SendATS($CorpNum, $TemplateCode, $Sender, $Content, $AltContent, $AltSendType, $Messages = array(), $ReserveDT = null, $UserID = null, $RequestNum = null, $Btns = null, $AltSubject = null)
     {
         $Request = array();
 
         if (empty($TemplateCode) == false) $Request['templateCode'] = $TemplateCode;
         if (empty($Sender) == false) $Request['snd'] = $Sender;
         if (empty($Content) == false) $Request['content'] = $Content;
+        if (empty($AltSubject) == false) $Request['altSubject'] = $AltSubject;
         if (empty($AltContent) == false) $Request['altContent'] = $AltContent;
         if (empty($AltSendType) == false) $Request['altSendType'] = $AltSendType;
         if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
