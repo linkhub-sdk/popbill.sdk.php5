@@ -727,6 +727,16 @@ class TaxinvoiceService extends PopbillBase
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?PDF', $CorpNum, $UserID);
     }
 
+    // get XML
+    public function GetXML($CorpNum, $MgtKeyType, $MgtKey, $UserID = null)
+    {
+        if (is_null($MgtKey) || empty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+
+        return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?XML', $CorpNum, $UserID);
+    }
+
     // 국세청 즉시전송 확인함수
     public function GetSendToNTSConfig($CorpNum, $UserID = null)
     {
