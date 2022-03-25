@@ -734,7 +734,12 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?XML', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?XML', $CorpNum, $UserID);
+
+        $TaxinvoiceXML = new TaxinvoiceXML();
+        $TaxinvoiceXML->fromJsonInfo ( $response ) ;
+
+        return $TaxinvoiceXML;
     }
 
     // 국세청 즉시전송 확인함수
@@ -1213,6 +1218,20 @@ class TaxinvoiceCertificate
         isset($jsonInfo->oid) ? $this->oid = $jsonInfo->oid : null;
         isset($jsonInfo->regContactName) ? $this->regContactName = $jsonInfo->regContactName : null;
         isset($jsonInfo->regContactID) ? $this->regContactID = $jsonInfo->regContactID : null;
+    }
+}
+
+class TaxinvoiceXML
+{
+    public $code;
+    public $message;
+    public $retObject;
+
+    function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
+        isset($jsonInfo->retObject) ? $this->retObject = $jsonInfo->retObject : null;
     }
 }
 
