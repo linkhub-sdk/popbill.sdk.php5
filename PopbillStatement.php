@@ -634,6 +634,7 @@ class StatementInfo
 
     public $itemKey;
     public $mgtKey;
+    public $invoiceNum;
     public $itemCode;
     public $stateCode;
     public $taxType;
@@ -658,6 +659,7 @@ class StatementInfo
     {
         isset($jsonInfo->itemKey) ? ($this->itemKey = $jsonInfo->itemKey) : null;
         isset($jsonInfo->mgtKey) ? ($this->mgtKey = $jsonInfo->mgtKey) : null;
+        isset($jsonInfo->invoiceNum) ? ($this->invoiceNum = $jsonInfo->invoiceNum) : null;
         isset($jsonInfo->itemCode) ? ($this->itemCode = $jsonInfo->itemCode) : null;
         isset($jsonInfo->stateCode) ? ($this->stateCode = $jsonInfo->stateCode) : null;
         isset($jsonInfo->taxType) ? ($this->taxType = $jsonInfo->taxType) : null;
