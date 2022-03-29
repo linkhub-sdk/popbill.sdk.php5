@@ -12,7 +12,7 @@
  * Author : Kim Seongjun (pallet027@gmail.com)
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2021-12-23
+ * Updated : 2022-03-25
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -37,7 +37,7 @@ class FaxService extends PopbillBase
     public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
     {
         if (empty($SenderNumber)) {
-            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/FAX/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
     }

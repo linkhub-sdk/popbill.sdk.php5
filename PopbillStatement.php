@@ -9,10 +9,10 @@
 * be installed and enabled.
 *
 * http://www.linkhub.co.kr
-* Author : Kim Seongjun (pallet027@gmail.com)
+* Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2021-12-23
+* Updated : 2022-03-25
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.

@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Jeong YoHan (code@linkhubcorp.com)
  * Written : 2018-03-02
- * Updated : 2021-12-23
+ * Updated : 2022-03-25
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -38,7 +38,7 @@ class KakaoService extends PopbillBase
     public function GetMessages($CorpNum, $ReceiptNum, $UserID = null)
     {
         if (empty($ReceiptNum)) {
-            throw new PopbillException('카카오톡 접수번호를 입력하지 않았습니다.');
+            throw new PopbillException('카카오톡 접수번호가 입력되지 않았습니다.');
         }
         $response = $this->executeCURL('/KakaoTalk/' . $ReceiptNum, $CorpNum, $UserID);
         $DetailInfo = new KakaoSentInfo();
@@ -50,7 +50,7 @@ class KakaoService extends PopbillBase
     public function GetMessagesRN($CorpNum, $RequestNum, $UserID = null)
     {
         if (empty($RequestNum)) {
-            throw new PopbillException('카카오톡 전송요청번호를 입력하지 않았습니다.');
+            throw new PopbillException('카카오톡 전송요청번호가 입력되지 않았습니다.');
         }
         $response = $this->executeCURL('/KakaoTalk/Get/' . $RequestNum, $CorpNum, $UserID);
         $DetailInfo = new KakaoSentInfo();
@@ -90,7 +90,7 @@ class KakaoService extends PopbillBase
     public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
     {
         if (empty($SenderNumber)) {
-            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/KakaoTalk/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
     }
@@ -103,7 +103,7 @@ class KakaoService extends PopbillBase
     public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
     {
         if (empty($ReceiptNum)) {
-            throw new PopbillException('예약전송을 취소할 접수번호를 입력하지 않았습니다.');
+            throw new PopbillException('예약전송을 취소할 접수번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/KakaoTalk/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID);
     }
@@ -111,7 +111,7 @@ class KakaoService extends PopbillBase
     public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
     {
         if (empty($RequestNum)) {
-            throw new PopbillException('예약전송을 취소할 전송요청번호를 입력하지 않았습니다.');
+            throw new PopbillException('예약전송을 취소할 전송요청번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/KakaoTalk/Cancel/' . $RequestNum, $CorpNum, $UserID);
     }

@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2020-06-29
-* Updated : 2021-12-23
+* Updated : 2022-03-25
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -79,7 +79,7 @@ class AccountCheckService extends PopbillBase {
         }
 
         if(preg_match("/^\\d+$/", $IdentityNum) == false){
-            throw new PopbillException('등록번호는 숫자만 입력할 수 있습니다.');
+            throw new PopbillException('등록번호는 숫자만 입력될 수 있습니다.');
         }
 
         $uri = "/EasyFin/DepositorCheck";

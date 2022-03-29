@@ -9,10 +9,10 @@
  * be installed and enabled.
  *
  * http://www.linkhub.co.kr
- * Author : Kim Seongjun (pallet027@gmail.com)
+ * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2021-12-09
+ * Updated : 2022-03-25
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -40,7 +40,7 @@ class MessagingService extends PopbillBase
     public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
     {
         if (empty($SenderNumber)) {
-            throw new PopbillException('확인할 발신번호를 입력하지 않았습니다.');
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/Message/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
     }
@@ -164,7 +164,7 @@ class MessagingService extends PopbillBase
     public function GetMessages($CorpNum, $ReceiptNum, $UserID = null)
     {
         if (empty($ReceiptNum)) {
-            throw new PopbillException('확인할 접수번호를 입력하지 않았습니다.');
+            throw new PopbillException('접수번호가 입력되지 않았습니다.');
         }
         $result = $this->executeCURL('/Message/' . $ReceiptNum, $CorpNum, $UserID);
 
@@ -186,7 +186,7 @@ class MessagingService extends PopbillBase
     public function GetMessagesRN($CorpNum, $RequestNum, $UserID = null)
     {
         if (empty($RequestNum)) {
-            throw new PopbillException('확인할 전송요청번호를 입력하지 않았습니다.');
+            throw new PopbillException('전송요청번호가 입력되지 않았습니다.');
         }
         $result = $this->executeCURL('/Message/Get/' . $RequestNum, $CorpNum, $UserID);
 
@@ -208,7 +208,7 @@ class MessagingService extends PopbillBase
     public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
     {
         if (empty($ReceiptNum)) {
-            throw new PopbillException('예약전송 취소할 접수번호를 입력하지 않았습니다.');
+            throw new PopbillException('예약전송 취소할 접수번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/Message/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID);
     }
@@ -221,7 +221,7 @@ class MessagingService extends PopbillBase
     public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
     {
         if (empty($RequestNum)) {
-            throw new PopbillException('예약전송 취소할 전송요청번호를 입력하지 않았습니다.');
+            throw new PopbillException('예약전송 취소할 전송요청번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/Message/Cancel/' . $RequestNum, $CorpNum, $UserID);
     }
