@@ -342,6 +342,7 @@ class KakaoSentInfo
     public $templateCode;
     public $plusFriendID;
     public $sendNum;
+    public $altSubject;
     public $altContent;
     public $altSendType;
     public $reserveDT;
@@ -363,6 +364,7 @@ class KakaoSentInfo
         isset($jsonInfo->templateCode) ? ($this->templateCode = $jsonInfo->templateCode) : null;
         isset($jsonInfo->plusFriendID) ? ($this->plusFriendID = $jsonInfo->plusFriendID) : null;
         isset($jsonInfo->sendNum) ? ($this->sendNum = $jsonInfo->sendNum) : null;
+        isset($jsonInfo->altSubject) ? ($this->altSubject = $jsonInfo->altSubject) : null;
         isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
         isset($jsonInfo->altSendType) ? ($this->altSendType = $jsonInfo->altSendType) : null;
         isset($jsonInfo->reserveDT) ? ($this->reserveDT = $jsonInfo->reserveDT) : null;
@@ -407,6 +409,7 @@ class KakaoSentInfoDetail
     public $content;
     public $result;
     public $resultDT;
+    public $altSubject;
     public $altContent;
     public $contentType;
     public $altContentType;
@@ -427,6 +430,7 @@ class KakaoSentInfoDetail
         isset($jsonInfo->content) ? ($this->content = $jsonInfo->content) : null;
         isset($jsonInfo->result) ? ($this->result = $jsonInfo->result) : null;
         isset($jsonInfo->resultDT) ? ($this->resultDT = $jsonInfo->resultDT) : null;
+        isset($jsonInfo->altSubject) ? ($this->altSubject = $jsonInfo->altSubject) : null;
         isset($jsonInfo->altContent) ? ($this->altContent = $jsonInfo->altContent) : null;
         isset($jsonInfo->contentType) ? ($this->contentType = $jsonInfo->contentType) : null;
         isset($jsonInfo->altContentType) ? ($this->altContentType = $jsonInfo->altContentType) : null;
