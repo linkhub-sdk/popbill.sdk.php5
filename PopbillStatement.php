@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2022-03-25
+* Updated : 2022-06-21
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -106,7 +106,7 @@ class StatementService extends PopbillBase {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        $Request = new IssueRequest();
+        $Request = new STMIssueRequest();
         $Request->memo = $Memo;
 
         if(!is_null($EmailSubject) || !empty($EmailSubject)){
@@ -124,7 +124,7 @@ class StatementService extends PopbillBase {
         if(is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new STMMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -372,7 +372,7 @@ class StatementService extends PopbillBase {
     public function AttachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
         $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/AttachStmt';
 
-        $Request = new StmtRequest();
+        $Request = new STMStmtRequest();
         $Request->ItemCode = $SubItemCode;
         $Request->MgtKey= $SubMgtKey;
         $postdata = json_encode($Request);
@@ -384,7 +384,7 @@ class StatementService extends PopbillBase {
     public function DetachStatement ( $CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null ) {
         $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/DetachStmt';
 
-        $Request = new StmtRequest();
+        $Request = new STMStmtRequest();
         $Request->ItemCode = $SubItemCode;
         $Request->MgtKey= $SubMgtKey;
         $postdata = json_encode($Request);
@@ -405,16 +405,16 @@ class StatementService extends PopbillBase {
 
     // 전자명세서 관련 메일전송 항목에 대한 전송여부 목록 반환
     public function ListEmailConfig($CorpNum, $UserID = null) {
-        $EmailSendConfigList = array();
+        $STMEmailSendConfigList = array();
 
         $result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $UserID);
 
         for($i=0; $i<Count($result); $i++){
-            $EmailSendConfig = new EmailSendConfig();
-            $EmailSendConfig->fromJsonInfo($result[$i]);
-            $EmailSendConfigList[$i] = $EmailSendConfig;
+            $STMEmailSendConfig = new STMEmailSendConfig();
+            $STMEmailSendConfig->fromJsonInfo($result[$i]);
+            $STMEmailSendConfigList[$i] = $STMEmailSendConfig;
         }
-        return $EmailSendConfigList;
+        return $STMEmailSendConfigList;
     }
 
     // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
@@ -704,12 +704,12 @@ class StatementLog
     }
 }
 
-class MemoRequest
+class STMMemoRequest
 {
     public $memo;
 }
 
-class IssueRequest
+class STMIssueRequest
 {
     public $memo;
     public $emailSubject;
@@ -746,13 +746,13 @@ class DocSearchResult
     }
 }
 
-class StmtRequest
+class STMStmtRequest
 {
     public $ItemCode;
     public $MgtKey;
 }
 
-class EmailSendConfig
+class STMEmailSendConfig
 {
     public $emailType;
     public $sendYN;

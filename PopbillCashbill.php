@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2022-03-25
+* Updated : 2022-06-21
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -68,7 +68,7 @@ class CashbillService extends PopbillBase {
             throw new PopbillException('현금영수증 정보가 입력되지 않았습니다.');
         }
 
-        $Request = new BulkRequest();
+        $Request = new CBBulkRequest();
 
         $Request->cashbills = $CashbillList;
 
@@ -162,7 +162,7 @@ class CashbillService extends PopbillBase {
         if(is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new IssueRequest();
+        $Request = new CBIssueRequest();
         $Request->memo = $Memo;
         $Request->emailSubject = $EmailSubject;
 
@@ -175,7 +175,7 @@ class CashbillService extends PopbillBase {
         if(is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new CBMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -397,16 +397,16 @@ class CashbillService extends PopbillBase {
     }
 
     public function ListEmailConfig($CorpNum, $UserID = null) {
-        $EmailSendConfigList = array();
+        $CBEmailSendConfigList = array();
 
         $result = $this->executeCURL('/Cashbill/EmailSendConfig', $CorpNum, $UserID);
 
         for($i=0; $i<Count($result); $i++){
-            $EmailSendConfig = new EmailSendConfig();
-            $EmailSendConfig->fromJsonInfo($result[$i]);
-            $EmailSendConfigList[$i] = $EmailSendConfig;
+            $CBEmailSendConfig = new CBEmailSendConfig();
+            $CBEmailSendConfig->fromJsonInfo($result[$i]);
+            $CBEmailSendConfigList[$i] = $CBEmailSendConfig;
         }
-        return $EmailSendConfigList;
+        return $CBEmailSendConfigList;
     }
 
     public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
@@ -570,7 +570,7 @@ class CashbillInfo
     }
 }
 
-class BulkRequest
+class CBBulkRequest
 {
     public $cashbills;
 }
@@ -653,12 +653,12 @@ class CashbillLog
     }
 }
 
-class MemoRequest
+class CBMemoRequest
 {
     public $memo;
 }
 
-class IssueRequest
+class CBIssueRequest
 {
     public $memo;
     public $emailSubject;
@@ -694,7 +694,7 @@ class CBSearchResult
     }
 }
 
-class EmailSendConfig
+class CBEmailSendConfig
 {
     public $emailType;
     public $sendYN;

@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2022-03-25
+ * Updated : 2022-06-21
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -116,7 +116,7 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $Request->emailSubject = $EmailSubject;
         $postdata = json_encode($Request);
@@ -130,7 +130,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -143,7 +143,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -156,7 +156,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -169,7 +169,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new IssueRequest();
+        $Request = new TIIssueRequest();
         $Request->memo = $Memo;
         $Request->emailSubject = $EmailSubject;
         $Request->forceIssue = $ForceIssue;
@@ -184,7 +184,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -209,7 +209,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -222,7 +222,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -235,7 +235,7 @@ class TaxinvoiceService extends PopbillBase
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        $Request = new MemoRequest();
+        $Request = new TIMemoRequest();
         $Request->memo = $Memo;
         $postdata = json_encode($Request);
 
@@ -252,7 +252,7 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException('세금계산서 정보가 입력되지 않았습니다.');
         }
 
-        $Request = new BulkRequest();
+        $Request = new TIBulkRequest();
         if($ForceIssue == true){
             $Request->forceIssue = $ForceIssue;
         }
@@ -619,7 +619,7 @@ class TaxinvoiceService extends PopbillBase
     {
         $uri = '/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '/AttachStmt';
 
-        $Request = new StmtRequest();
+        $Request = new TIStmtRequest();
         $Request->ItemCode = $SubItemCode;
         $Request->MgtKey = $SubMgtKey;
         $postdata = json_encode($Request);
@@ -632,7 +632,7 @@ class TaxinvoiceService extends PopbillBase
     {
         $uri = '/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '/DetachStmt';
 
-        $Request = new StmtRequest();
+        $Request = new TIStmtRequest();
         $Request->ItemCode = $SubItemCode;
         $Request->MgtKey = $SubMgtKey;
         $postdata = json_encode($Request);
@@ -666,16 +666,16 @@ class TaxinvoiceService extends PopbillBase
     //세금계산서 관련 메일전송 항목에 대한 전송여부 목록 반환
     public function ListEmailConfig($CorpNum, $UserID = null)
     {
-        $EmailSendConfigList = array();
+        $TIEmailSendConfigList = array();
 
         $result = $this->executeCURL('/Taxinvoice/EmailSendConfig', $CorpNum, $UserID);
 
         for ($i = 0; $i < Count($result); $i++) {
-            $EmailSendConfig = new EmailSendConfig();
-            $EmailSendConfig->fromJsonInfo($result[$i]);
-            $EmailSendConfigList[$i] = $EmailSendConfig;
+            $TIEmailSendConfig = new TIEmailSendConfig();
+            $TIEmailSendConfig->fromJsonInfo($result[$i]);
+            $TIEmailSendConfigList[$i] = $TIEmailSendConfig;
         }
-        return $EmailSendConfigList;
+        return $TIEmailSendConfigList;
     }
 
     // 전자세금계산서 관련 메일전송 항목에 대한 전송여부를 수정
@@ -978,7 +978,7 @@ class TaxinvoiceDetail
 
 }
 
-class BulkRequest
+class TIBulkRequest
 {
     public $forceIssue;
     public $invoices;
@@ -1242,26 +1242,26 @@ class ENumMgtKeyType
     const TRUSTEE = 'TRUSTEE';
 }
 
-class MemoRequest
+class TIMemoRequest
 {
     public $memo;
     public $emailSubject;
 }
 
-class IssueRequest
+class TIIssueRequest
 {
     public $memo;
     public $emailSubject;
     public $forceIssue;
 }
 
-class StmtRequest
+class TIStmtRequest
 {
     public $ItemCode;
     public $MgtKey;
 }
 
-class EmailSendConfig
+class TIEmailSendConfig
 {
     public $emailType;
     public $sendYN;
