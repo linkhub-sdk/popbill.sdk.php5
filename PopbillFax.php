@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2022-03-25
+ * Updated : 2022-07-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -337,6 +337,7 @@ class FaxState
     public $receiptDT;
     public $receiptNum;
     public $requestNum;
+    public $interOPRefKey;
     public $chargePageCnt;
     public $tiffFileSize;
 
@@ -364,6 +365,7 @@ class FaxState
         isset($jsonInfo->receiptDT) ? $this->receiptDT = $jsonInfo->receiptDT : null;
         isset($jsonInfo->receiptNum) ? $this->receiptNum = $jsonInfo->receiptNum : null;
         isset($jsonInfo->requestNum) ? $this->requestNum = $jsonInfo->requestNum : null;
+        isset($jsonInfo->interOPRefKey) ? $this->interOPRefKey = $jsonInfo->interOPRefKey : null;
         isset($jsonInfo->chargePageCnt) ? $this->chargePageCnt = $jsonInfo->chargePageCnt : null;
         isset($jsonInfo->tiffFileSize) ? $this->tiffFileSize = $jsonInfo->tiffFileSize : null;
 
