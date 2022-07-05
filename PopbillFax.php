@@ -27,11 +27,12 @@ class FaxService extends PopbillBase
     {
         parent::__construct($LinkID, $SecretKey);
         $this->AddScope('160');
+        $this->AddScope('161');
     }
 
-    public function GetUnitCost($CorpNum)
+    public function GetUnitCost($CorpNum, $ReceiveNumType=null)
     {
-        return $this->executeCURL('/FAX/UnitCost', $CorpNum)->unitCost;
+        return $this->executeCURL('/FAX/UnitCost?receiveNumType=' . $ReceiveNumType, $CorpNum)->unitCost;
     }
 
     public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
@@ -286,9 +287,9 @@ class FaxService extends PopbillBase
     }
 
 
-    public function GetChargeInfo($CorpNum, $UserID = null)
+    public function GetChargeInfo($CorpNum, $UserID = null, $ReceiveNumType = null)
     {
-        $uri = '/FAX/ChargeInfo';
+        $uri = '/FAX/ChargeInfo?receiveNumType=' . $ReceiveNumType;
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
         $ChargeInfo = new ChargeInfo();
