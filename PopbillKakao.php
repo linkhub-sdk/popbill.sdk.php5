@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Jeong YoHan (code@linkhubcorp.com)
  * Written : 2018-03-02
- * Updated : 2022-03-25
+ * Updated : 2022-07-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -453,6 +453,9 @@ class ATSTemplate
     public $ads;
     public $appendix;
     public $btns;
+    public $secureYN;
+    public $state;
+    public $stateDT;
 
     public function fromJsonInfo($jsonInfo)
     {
@@ -462,6 +465,9 @@ class ATSTemplate
         isset($jsonInfo->plusFriendID) ? $this->plusFriendID = $jsonInfo->plusFriendID : null;
         isset($jsonInfo->ads) ? $this->ads = $jsonInfo->ads : null;
         isset($jsonInfo->appendix) ? $this->appendix = $jsonInfo->appendix : null;
+        isset($jsonInfo->secureYN) ? $this->secureYN = $jsonInfo->secureYN : null;
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->stateDT) ? $this->stateDT = $jsonInfo->stateDT : null;
 
         if(isset($jsonInfo->btns)){
             $InfoList = array();
