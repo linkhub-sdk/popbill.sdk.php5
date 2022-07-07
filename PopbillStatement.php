@@ -160,6 +160,9 @@ class StatementService extends PopbillBase {
         if(is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+        if(is_null($FileID) || empty($FileID)) {
+            throw new PopbillException('파일아이디가 입력되지 않았습니다.');
+        }
         return $this->executeCURL('/Statement/'.$itemCode.'/'.$MgtKey.'/Files/'.$FileID,$CorpNum,$UserID, true,'DELETE',null);
     }
 
