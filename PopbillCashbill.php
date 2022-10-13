@@ -621,6 +621,7 @@ class BulkCashbillIssueResult
 {
     public $mgtKey;
     public $code;
+    public $message;
     public $confirmNum;
     public $tradeDate;
 
@@ -628,6 +629,7 @@ class BulkCashbillIssueResult
     {
         isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
         isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
         isset($jsonInfo->confirmNum) ? $this->confirmNum = $jsonInfo->confirmNum : null;
         isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
     }

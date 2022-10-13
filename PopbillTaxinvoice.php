@@ -1031,6 +1031,7 @@ class BulkTaxinvoiceIssueResult
     public $invoicerMgtKey;
     public $trusteeMgtKey;
     public $code;
+    public $message;
     public $ntsconfirmNum;
     public $issueDT;
 
@@ -1039,6 +1040,7 @@ class BulkTaxinvoiceIssueResult
         isset($jsonInfo->invoicerMgtKey) ? $this->invoicerMgtKey = $jsonInfo->invoicerMgtKey : null;
         isset($jsonInfo->trusteeMgtKey) ? $this->trusteeMgtKey = $jsonInfo->trusteeMgtKey : null;
         isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
         isset($jsonInfo->ntsconfirmNum) ? $this->ntsconfirmNum = $jsonInfo->ntsconfirmNum : null;
         isset($jsonInfo->issueDT) ? $this->issueDT = $jsonInfo->issueDT : null;
     }
