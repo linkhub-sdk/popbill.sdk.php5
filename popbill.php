@@ -235,6 +235,75 @@ class PopbillBase
         }
     }
 
+    public function GetUseHistory($CorpNum, $SDate, $Edate, $Page = null, $PerPage = null, $Order = null, $UserID = null)
+    {
+        $uri  = '/UseHistory';
+        $uri .= '?SDate='   .$SDate;
+        $uri .= '&EDate='   .$EDate;
+        $uri .= '&Page='    .$Page;
+        $uri .= '&PerPage=' .$PerPage;
+        $uri .= '&Order='   .$Order;
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+
+        $UseHistoryResult = new UseHistoryResult();
+        $UseHistoryResult->fromJsonInfo($response);
+
+        return $UseHistoryResult;
+    }
+
+    public function GetPaymentHistory($CorpNum, $SDate, $Edate, $Page = null, $PerPage = null, $UserID = null)
+    {
+        $uri  = '/PaymentHistory';
+        $uri .= '?SDate='   .$SDate;
+        $uri .= '&EDate='   .$EDate;
+        $uri .= '&Page='    .$Page;
+        $uri .= '&PerPage=' .$PerPage;
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+
+        $PaymentHistoryResult = new PaymentHistoryResult();
+        $PaymentHistoryResult->fromJsonInfo($response);
+
+        return $PaymentHistoryResult;
+    }
+
+    public function GetRefundHistory($CorpNum, $Page = null, $PerPage = null, $UserID = null)
+    {
+        $uri  = '/RefundHistory';
+        $uri .= '?Page='    .$Page;
+        $uri .= '&PerPage=' .$PerPage;
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+
+        $RefundHistoryResult = new RefundHistoryResult();
+        $RefundHistoryResult->fromJsonInfo($response);
+
+        return $RefundHistoryResult;
+    }
+
+    public function Refund($CorpNum, $RefundForm, $UserID = null)
+    {
+        $postdata = json_encode($RefundForm);
+
+        return $this->executeCURL('/Refund', $CorpNum, $UserID, true, null, $postdata);
+    }
+
+    public function PaymentRequest($CorpNum, $PaymentForm, $UserID = null)
+    {
+        $postdata = json_encode($PaymentForm);
+
+        return $this->executeCURL('/Payment', $CorpNum, $UserID, true, null, $postdata);
+    }
+
+    public function GetSettleResult($CorpNum, $SettleCode, $UserID = null)
+    {
+        $uri  = '/Payment/'.$SettleCode;
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
+
+        $PaymentHistory = new PaymentHistory();
+        $PaymentHistory->fromJsonInfo($response);
+
+        return $PaymentHistory;
+    }
+
     // 파트너 포인트 충전 팝업 URL
     // - 2017/08/29 추가
     public function GetPartnerURL($CorpNum, $TOGO)
@@ -540,6 +609,182 @@ class JoinForm
     public $ID;
     public $PWD;
     public $Password;
+}
+
+class UseHistoryResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $list;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+
+        $HistoryList = array();
+
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $HistoryObj = new UseHistory();
+            $HistoryObj->fromJsonInfo($jsonInfo->list[$i]);
+            $HistoryList[$i] = $HistoryObj;
+        }
+        $this->list = $HistoryList;
+    }
+}
+
+class UseHistory
+{
+    public $itemCode;
+    public $txType;
+    public $txPoint;
+    public $balance;
+    public $txDT;
+    public $userID;
+    public $userName;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->itemCode) ? $this->itemCode = $jsonInfo->itemCode : null;
+        isset($jsonInfo->txType) ? $this->txType = $jsonInfo->txType : null;
+        isset($jsonInfo->txPoint) ? $this->txPoint = $jsonInfo->txPoint : null;
+        isset($jsonInfo->balance) ? $this->balance = $jsonInfo->balance : null;
+        isset($jsonInfo->txDT) ? $this->txDT = $jsonInfo->txDT : null;
+        isset($jsonInfo->userID) ? $this->userID = $jsonInfo->userID : null;
+        isset($jsonInfo->userName) ? $this->userName = $jsonInfo->userName : null;
+    }
+}
+
+class PaymentHistoryResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $list;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+
+        $HistoryList = array();
+
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $HistoryObj = new PaymentHistory();
+            $HistoryObj->fromJsonInfo($jsonInfo->list[$i]);
+            $HistoryList[$i] = $HistoryObj;
+        }
+        $this->list = $HistoryList;
+    }
+}
+
+class PaymentHistory
+{
+    public $productType;
+    public $productName;
+    public $settleType;
+    public $settlerName;
+    public $settlerEmail;
+    public $settleCost;
+    public $settlePoint;
+    public $settleState;
+    public $regDT;
+    public $stateDT;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->productType) ? $this->productType = $jsonInfo->productType : null;
+        isset($jsonInfo->productName) ? $this->productName = $jsonInfo->productName : null;
+        isset($jsonInfo->settleType) ? $this->settleType = $jsonInfo->settleType : null;
+        isset($jsonInfo->settlerName) ? $this->settlerName = $jsonInfo->settlerName : null;
+        isset($jsonInfo->settlerEmail) ? $this->settlerEmail = $jsonInfo->settlerEmail : null;
+        isset($jsonInfo->settleCost) ? $this->settleCost = $jsonInfo->settleCost : null;
+        isset($jsonInfo->settlePoint) ? $this->settlePoint = $jsonInfo->settlePoint : null;
+        isset($jsonInfo->settleState) ? $this->settleState = $jsonInfo->settleState : null;
+        isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
+        isset($jsonInfo->stateDT) ? $this->stateDT = $jsonInfo->stateDT : null;
+    }
+}
+
+class RefundHistoryResult
+{
+    public $code;
+    public $total;
+    public $perPage;
+    public $pageNum;
+    public $pageCount;
+    public $list;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
+        isset($jsonInfo->total) ? $this->total = $jsonInfo->total : null;
+        isset($jsonInfo->perPage) ? $this->perPage = $jsonInfo->perPage : null;
+        isset($jsonInfo->pageNum) ? $this->pageNum = $jsonInfo->pageNum : null;
+        isset($jsonInfo->pageCount) ? $this->pageCount = $jsonInfo->pageCount : null;
+
+        $HistoryList = array();
+
+        for ($i = 0; $i < Count($jsonInfo->list); $i++) {
+            $HistoryObj = new RefundHistory();
+            $HistoryObj->fromJsonInfo($jsonInfo->list[$i]);
+            $HistoryList[$i] = $HistoryObj;
+        }
+        $this->list = $HistoryList;
+    }
+}
+
+class RefundHistory
+{
+    public $reqDT;
+    public $requestPoint;
+    public $accountBank;
+    public $accountNum;
+    public $accountName;
+    public $state;
+    public $reason;
+
+    public function fromJsonInfo($jsonInfo)
+    {
+        isset($jsonInfo->reqDT) ? $this->reqDT = $jsonInfo->reqDT : null;
+        isset($jsonInfo->requestPoint) ? $this->requestPoint = $jsonInfo->requestPoint : null;
+        isset($jsonInfo->accountBank) ? $this->accountBank = $jsonInfo->accountBank : null;
+        isset($jsonInfo->accountNum) ? $this->accountNum = $jsonInfo->accountNum : null;
+        isset($jsonInfo->accountName) ? $this->accountName = $jsonInfo->accountName : null;
+        isset($jsonInfo->state) ? $this->state = $jsonInfo->state : null;
+        isset($jsonInfo->reason) ? $this->reason = $jsonInfo->reason : null;
+    }
+}
+
+class PaymentForm
+{
+    public $settlerName;
+    public $settlerEmail;
+    public $settlerHP;
+    public $paymentName;
+    public $settleCost;
+}
+
+class RefundForm
+{
+    public $contactName;
+    public $tel;
+    public $requestPoint;
+    public $accountBank;
+    public $accountNum;
+    public $accountName;
+    public $reason;
 }
 
 class CorpInfo
