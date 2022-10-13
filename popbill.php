@@ -235,7 +235,7 @@ class PopbillBase
         }
     }
 
-    public function GetUseHistory($CorpNum, $SDate, $Edate, $Page = null, $PerPage = null, $Order = null, $UserID = null)
+    public function GetUseHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $Order = null, $UserID = null)
     {
         $uri  = '/UseHistory';
         $uri .= '?SDate='   .$SDate;
@@ -251,7 +251,7 @@ class PopbillBase
         return $UseHistoryResult;
     }
 
-    public function GetPaymentHistory($CorpNum, $SDate, $Edate, $Page = null, $PerPage = null, $UserID = null)
+    public function GetPaymentHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $UserID = null)
     {
         $uri  = '/PaymentHistory';
         $uri .= '?SDate='   .$SDate;
@@ -778,12 +778,12 @@ class PaymentForm
 
 class RefundForm
 {
-    public $contactName;
+    public $contactname;
     public $tel;
-    public $requestPoint;
-    public $accountBank;
-    public $accountNum;
-    public $accountName;
+    public $requestpoint;
+    public $accountbank;
+    public $accountnum;
+    public $accountname;
     public $reason;
 }
 
