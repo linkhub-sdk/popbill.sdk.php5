@@ -265,6 +265,7 @@ class PopbillBase
             $http = curl_init( $targetURL . $uri);
             $header = array();
 
+            $header[] = 'User-Agent: PHP5 POPBILL SDK';
             if (is_null($CorpNum) == false) {
                 $header[] = 'Authorization: Bearer ' . $this->getsession_Token($CorpNum);
             }
@@ -353,6 +354,7 @@ class PopbillBase
 
             $header[] = 'Accept-Encoding: gzip,deflate';
             $header[] = 'Connection: close';
+            $header[] = 'User-Agent: PHP5 POPBILL SDK';
             if (is_null($CorpNum) == false) {
                 $header[] = 'Authorization: Bearer ' . $this->getsession_Token($CorpNum);
             }
