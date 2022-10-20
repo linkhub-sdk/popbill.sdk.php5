@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2022-07-05
+ * Updated : 2022-10-20
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -214,10 +214,10 @@ class MessagingService extends PopbillBase
     }
 
     /* 예약전송 취소
-*    $CorpNum => 발송사업자번호
-*    $RequestNum    => 전송요청번호
-*    $UserID    => 팝빌 회원아이디
-*/
+    *    $CorpNum => 발송사업자번호
+    *    $RequestNum    => 전송요청번호
+    *    $UserID    => 팝빌 회원아이디
+    */
     public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
     {
         if (empty($RequestNum)) {
@@ -225,6 +225,47 @@ class MessagingService extends PopbillBase
         }
         return $this->executeCURL('/Message/Cancel/' . $RequestNum, $CorpNum, $UserID);
     }
+
+    /* 예약전송 취소
+    *    $CorpNum => 발송사업자번호
+    *    $ReceiptNum    => 접수번호
+    *    $ReceiveNum    => 수신번호
+    *    $UserID    => 팝빌 회원아이디
+    */
+    public function CancelReservebyRCV($CorpNum, $ReceiptNum, $ReceiveNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('예약전송 취소할 접수번호가 입력되지 않았습니다.');
+        }
+        if (empty($ReceiveNum)) {
+            throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
+        }
+
+        $postdata = json_encode($ReceiveNum);
+        
+        return $this->executeCURL('/Message/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID, true, null, $postdata);
+    }
+    
+    /* 예약전송 취소
+    *    $CorpNum => 발송사업자번호
+    *    $RequestNum    => 전송요청번호
+    *    $ReceiveNum    => 수신번호
+    *    $UserID    => 팝빌 회원아이디
+    */
+    public function CancelReserveRNbyRCV($CorpNum, $RequestNum, $ReceiveNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('예약전송 취소할 전송요청번호가 입력되지 않았습니다.');
+        }
+        if (empty($ReceiveNum)) {
+            throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
+        }
+        
+        $postdata = json_encode($ReceiveNum);
+
+        return $this->executeCURL('/Message/Cancel/' . $RequestNum, $CorpNum, $UserID, true, null, $postdata);
+    }
+
 
     private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SystemYN = false, $RequestNum = null)
     {
