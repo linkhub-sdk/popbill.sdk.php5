@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2022-10-19
+* Updated : 2022-11-03
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -94,10 +94,10 @@ class CashbillService extends PopbillBase {
         return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,null,$postdata);
     }
 
-    // 취소현금영수증 즉시발행 추가(RevokeRegistIssue). 2017/08/17
+    // 취소현금영수증 즉시발행 TradeDT 추가(RevokeRegistIssue). 2022/11/03
     public function RevokeRegistIssue($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $memo = null,
                                       $UserID = null, $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null,
-                                      $serviceFee = null, $totalAmount = null, $emailSubject = null)
+                                      $serviceFee = null, $totalAmount = null, $emailSubject = null, $tradeDT = null)
     {
 
         $request = array(
@@ -113,17 +113,18 @@ class CashbillService extends PopbillBase {
             'serviceFee' => $serviceFee,
             'totalAmount' => $totalAmount,
             'emailSubject' => $emailSubject,
+            'tradeDT' => $tradeDT,
         );
         $postdata = json_encode($request);
-
+        
         return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'REVOKEISSUE',$postdata);
     }
-
-    // 취소현금영수증 임시저장 추가(RevokeRegister). 2017/08/17
+    
+    // 취소현금영수증 임시저장 TradeDT 추가(RevokeRegister). 2022/11/02
     public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null,
-                                   $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null)
+    $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null, $tradeDT = null)
     {
-
+        
         $request = array(
             'mgtKey' => $mgtKey,
             'orgConfirmNum' => $orgConfirmNum,
@@ -135,6 +136,7 @@ class CashbillService extends PopbillBase {
             'tax' => $tax,
             'serviceFee' => $serviceFee,
             'totalAmount' => $totalAmount,
+            'tradeDT' => $tradeDT,
         );
         $postdata = json_encode($request);
 
@@ -471,6 +473,7 @@ class Cashbill
     public $smssendYN;
     public $memo;
     public $tradeDate;
+    public $tradeDT;
     public $fax;
     public $faxsendYN;
     public $cancelType;
@@ -504,6 +507,7 @@ class Cashbill
         isset($jsonInfo->smssendYN) ? $this->smssendYN = $jsonInfo->smssendYN : null;
         isset($jsonInfo->memo) ? $this->memo = $jsonInfo->memo : null;
         isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
+        isset($jsonInfo->tradeDT) ? $this->tradeDT = $jsonInfo->tradeDT : null;
         isset($jsonInfo->fax) ? $this->fax = $jsonInfo->fax : null;
         isset($jsonInfo->faxsendYN) ? $this->faxsendYN = $jsonInfo->faxsendYN : null;
         isset($jsonInfo->cancelType) ? $this->cancelType = $jsonInfo->cancelType : null;
@@ -517,6 +521,7 @@ class CashbillInfo
     public $itemKey;
     public $mgtKey;
     public $tradeDate;
+    public $tradeDT;
     public $tradeType;
     public $tradeUsage;
     public $tradeOpt;
@@ -545,6 +550,7 @@ class CashbillInfo
         isset($jsonInfo->itemKey) ? $this->itemKey = $jsonInfo->itemKey : null;
         isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
         isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
+        isset($jsonInfo->tradeDT) ? $this->tradeDT = $jsonInfo->tradeDT : null;
         isset($jsonInfo->tradeType) ? $this->tradeType = $jsonInfo->tradeType : null;
         isset($jsonInfo->tradeUsage) ? $this->tradeUsage = $jsonInfo->tradeUsage : null;
         isset($jsonInfo->tradeOpt) ? $this->tradeOpt = $jsonInfo->tradeOpt : null;
@@ -590,7 +596,7 @@ class BulkCashbillResult
     public $txEndDT;
     public $txResultCode;
     public $issueResult;
-
+    
     function fromJsonInfo($jsonInfo)
     {
         isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
@@ -605,9 +611,9 @@ class BulkCashbillResult
         isset($jsonInfo->txStartDT) ? $this->txStartDT = $jsonInfo->txStartDT : null;
         isset($jsonInfo->txEndDT) ? $this->txEndDT = $jsonInfo->txEndDT : null;
         isset($jsonInfo->txResultCode) ? $this->txResultCode = $jsonInfo->txResultCode : null;
-
+        
         $InfoIssueResult = array();
-
+        
         for ($i = 0; $i < Count($jsonInfo->issueResult); $i++) {
             $InfoObj = new BulkCashbillIssueResult();
             $InfoObj->fromJsonInfo($jsonInfo->issueResult[$i]);
@@ -624,7 +630,8 @@ class BulkCashbillIssueResult
     public $message;
     public $confirmNum;
     public $tradeDate;
-
+    public $tradeDT;
+    
     function fromJsonInfo($jsonInfo)
     {
         isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;
@@ -632,6 +639,7 @@ class BulkCashbillIssueResult
         isset($jsonInfo->message) ? $this->message = $jsonInfo->message : null;
         isset($jsonInfo->confirmNum) ? $this->confirmNum = $jsonInfo->confirmNum : null;
         isset($jsonInfo->tradeDate) ? $this->tradeDate = $jsonInfo->tradeDate : null;
+        isset($jsonInfo->tradeDT) ? $this->tradeDT = $jsonInfo->tradeDT : null;
     }
 }
 
