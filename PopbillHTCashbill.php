@@ -55,7 +55,7 @@ class HTCashbillService extends PopbillBase {
     public function GetJobState ( $CorpNum, $JobID, $UserID = null )
     {
         if ( strlen ( $JobID ) != 18 ) {
-        throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+            throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
         }
 
         $response = $this->executeCURL('/HomeTax/Cashbill/'.$JobID.'/State', $CorpNum, $UserID);
@@ -72,11 +72,11 @@ class HTCashbillService extends PopbillBase {
 
         $JobList = array();
 
-            for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-                $JobState = new JobState();
-                $JobState->fromJsonInfo($result[$i]);
-                $JobList[$i] = $JobState;
-            }
+        for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
+            $JobState = new JobState();
+            $JobState->fromJsonInfo($result[$i]);
+            $JobList[$i] = $JobState;
+        }
 
         return $JobList;
     }

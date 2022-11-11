@@ -19,8 +19,7 @@
  */
 require_once 'popbill.php';
 
-class KakaoService extends PopbillBase
-{
+class KakaoService extends PopbillBase {
 
     public function __construct($LinkID, $SecretKey)
     {

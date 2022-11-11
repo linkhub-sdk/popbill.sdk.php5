@@ -20,8 +20,7 @@
  */
 require_once 'popbill.php';
 
-class FaxService extends PopbillBase
-{
+class FaxService extends PopbillBase {
 
     public function __construct($LinkID, $SecretKey)
     {
@@ -286,7 +285,6 @@ class FaxService extends PopbillBase
         return $SearchList;
     }
 
-
     public function GetChargeInfo($CorpNum, $UserID = null, $ReceiveNumType = null)
     {
         $uri = '/FAX/ChargeInfo?receiveNumType=' . $ReceiveNumType;
@@ -411,12 +409,5 @@ class FaxSearchResult
         $this->list = $InfoList;
     }
 }
-
-class FaxUploadFile
-{
-    public $fileName;
-    public $fileData;
-}
-
 
 ?>

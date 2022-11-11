@@ -32,7 +32,7 @@ class ClosedownService extends PopbillBase {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
 
-          if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
+        if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
             throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
         }
 

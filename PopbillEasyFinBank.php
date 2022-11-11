@@ -62,7 +62,7 @@ class EasyFinBankService extends PopbillBase {
     public function CloseBankAccount($CorpNum, $BankCode, $AccountNumber, $CloseType, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-        throw new PopbillException ('기관코드가 올바르지 않습니다.');
+            throw new PopbillException ('기관코드가 올바르지 않습니다.');
         }
 
         if ( empty($AccountNumber) || $AccountNumber === "" ) {
@@ -96,7 +96,7 @@ class EasyFinBankService extends PopbillBase {
         $uri .= '&AccountNumber=' . $AccountNumber;
 
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
-  }
+    }
 
     public function DeleteBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
     {
@@ -118,11 +118,11 @@ class EasyFinBankService extends PopbillBase {
     public function GetBankAccountInfo ( $CorpNum, $BankCode, $AccountNumber, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
-          throw new PopbillException ('기관코드가 올바르지 않습니다.');
+            throw new PopbillException ('기관코드가 올바르지 않습니다.');
         }
 
         if ( empty($AccountNumber) || $AccountNumber === "" ) {
-          throw new PopbillException ('계좌번호가 올바르지 않습니다.');
+            throw new PopbillException ('계좌번호가 올바르지 않습니다.');
         }
 
         $response = $this->executeCURL('/EasyFin/Bank/BankAccount/'.$BankCode.'/'.$AccountNumber, $CorpNum, $UserID);
@@ -192,11 +192,11 @@ class EasyFinBankService extends PopbillBase {
 
         $JobList = array();
 
-            for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-                $JobState = new EasyFinBankJobState();
-                $JobState->fromJsonInfo($result[$i]);
-                $JobList[$i] = $JobState;
-            }
+        for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
+            $JobState = new EasyFinBankJobState();
+            $JobState->fromJsonInfo($result[$i]);
+            $JobList[$i] = $JobState;
+        }
 
         return $JobList;
     }

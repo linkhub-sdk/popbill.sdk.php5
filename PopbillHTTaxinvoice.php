@@ -39,7 +39,7 @@ class HTTaxinvoiceService extends PopbillBase {
 
     public function RequestJob ( $CorpNum, $TIType, $DType, $SDate, $EDate, $UserID = null ) {
         if ( empty($DType) || $DType === "") {
-        throw new PopbillException('수집일자 유형이 입력되지 않았습니다.');
+            throw new PopbillException('수집일자 유형이 입력되지 않았습니다.');
         }
 
         if ( empty($SDate) || $SDate === "")    {
@@ -76,16 +76,16 @@ class HTTaxinvoiceService extends PopbillBase {
 
         $JobList = array();
 
-            for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-                $JobState = new JobState();
-                $JobState->fromJsonInfo($result[$i]);
-                $JobList[$i] = $JobState;
-            }
+        for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
+            $JobState = new JobState();
+            $JobState->fromJsonInfo($result[$i]);
+            $JobList[$i] = $JobState;
+        }
 
         return $JobList;
     }
 
-    public function Search ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null )
+    public function Search ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $Page = null, $PerPage = null, $Order = null, $UserID = null, $SearchString = null )
     {
         if ( strlen ( $JobID ) != 18 ) {
             throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
@@ -95,22 +95,20 @@ class HTTaxinvoiceService extends PopbillBase {
         $uri .= '?Type=' . implode ( ',' , $Type );
         $uri .= '&TaxType=' . implode ( ',' , $TaxType );
         $uri .= '&PurposeType=' . implode ( ',' , $PurposeType );
-
+        
         if ( !empty( $TaxRegIDYN ) ) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-
-        if ( !empty( $QString ) ) {
-            $uri .= '&SearchString=' . urlencode($QString);
-        }
-
+        
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         $uri .= '&TaxRegID=' . $TaxRegID;
-
         $uri .= '&Page=' . $Page;
         $uri .= '&PerPage=' . $PerPage;
         $uri .= '&Order=' . $Order;
-
+        
+        if ( !empty( $SearchString ) ) {
+            $uri .= '&SearchString=' . urlencode($QString);
+        }
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
         $SearchResult = new HTTaxinvoiceSearch();
@@ -119,7 +117,7 @@ class HTTaxinvoiceService extends PopbillBase {
         return $SearchResult;
     }
 
-    public function Summary ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $UserID = null, $QString = null)
+    public function Summary ( $CorpNum, $JobID, $Type, $TaxType, $PurposeType, $TaxRegIDYN = null, $TaxRegIDType = null, $TaxRegID = null, $UserID = null, $SearchString = null)
     {
         if ( strlen ( $JobID ) != 18 ) {
             throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다');
@@ -133,14 +131,13 @@ class HTTaxinvoiceService extends PopbillBase {
         if ( !empty( $TaxRegIDYN ) ) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-
-        if ( !empty( $QString ) ) {
-            $uri .= '&SearchString=' . urlencode($QString);
-        }
-
+        
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         $uri .= '&TaxRegID=' . $TaxRegID;
-
+        
+        if ( !empty( $SearchString ) ) {
+            $uri .= '&SearchString=' . urlencode($QString);
+        }
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
         $Summary = new HTTaxinvoieSummary();
@@ -202,7 +199,8 @@ class HTTaxinvoiceService extends PopbillBase {
         return $this->executeCURL ('/HomeTax/Taxinvoice/CertInfo', $CorpNum )->certificateExpiration;
     }
 
-    public function GetPopUpURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+    public function GetPopUpURL($CorpNum ,$NTSConfirmNum, $UserID = null)
+    {
         if(is_null($NTSConfirmNum) || empty($NTSConfirmNum)) {
             throw new PopbillException('국세청승인번호가 입력되지 않았습니다.');
         }
@@ -214,7 +212,8 @@ class HTTaxinvoiceService extends PopbillBase {
         return $response->url;
     }
 
-    public function GetPrintURL($CorpNum ,$NTSConfirmNum, $UserID = null) {
+    public function GetPrintURL($CorpNum ,$NTSConfirmNum, $UserID = null)
+    {
         if(is_null($NTSConfirmNum) || empty($NTSConfirmNum)) {
             throw new PopbillException('국세청승인번호가 입력되지 않았습니다.');
         }
@@ -227,7 +226,8 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 홈택스 공인인증서 로그인 테스트
-    public function CheckCertValidation($CorpNum, $UserID = null){
+    public function CheckCertValidation($CorpNum, $UserID = null)
+    {
         if(is_null($CorpNum) || empty($CorpNum)) {
             throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -235,7 +235,8 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 부서사용자 계정등록
-    public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null){
+    public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null)
+    {
         if(is_null($CorpNum) || empty($CorpNum)) {
             throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -255,7 +256,8 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 부서사용자 등록정보 확인
-    public function CheckDeptUser($CorpNum, $UserID = null){
+    public function CheckDeptUser($CorpNum, $UserID = null)
+    {
         if(is_null($CorpNum) || empty($CorpNum)) {
             throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -263,7 +265,8 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 부서사용자 로그인 테스트
-    public function CheckLoginDeptUser($CorpNum, $UserID = null){
+    public function CheckLoginDeptUser($CorpNum, $UserID = null)
+    {
         if(is_null($CorpNum) || empty($CorpNum)) {
             throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -271,7 +274,8 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 부서사용자 등록정보 삭제
-    public function DeleteDeptUser($CorpNum, $UserID = null){
+    public function DeleteDeptUser($CorpNum, $UserID = null)
+    {
         if(is_null($CorpNum) || empty($CorpNum)) {
             throw new PopbillException('연동회원 사업자번호가 입력되지 않았습니다.');
         }

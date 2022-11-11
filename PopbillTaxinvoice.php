@@ -20,8 +20,7 @@
  */
 require_once 'popbill.php';
 
-class TaxinvoiceService extends PopbillBase
-{
+class TaxinvoiceService extends PopbillBase {
 
     public function __construct($LinkID, $SecretKey)
     {
@@ -651,7 +650,7 @@ class TaxinvoiceService extends PopbillBase
         return $ChargeInfo;
     }
 
-    // 문서문서번호 할당
+    // 문서번호 할당
     public function AssignMgtKey($CorpNum, $MgtKeyType, $itemKey, $MgtKey, $UserID = null)
     {
         if (is_null($MgtKey) || empty($MgtKey)) {

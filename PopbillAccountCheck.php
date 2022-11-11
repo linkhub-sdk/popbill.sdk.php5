@@ -47,7 +47,7 @@ class AccountCheckService extends PopbillBase {
 
         $result = $this->executeCURL($uri, $MemberCorpNum, $UserID, true, null, null);
 
-        $AccountInfo = new AccountInfo();
+        $AccountInfo = new AccountCheckInfo();
         $AccountInfo->fromJsonInfo($result);
         return $AccountInfo;
     }
@@ -79,7 +79,7 @@ class AccountCheckService extends PopbillBase {
         }
 
         if(preg_match("/^\\d+$/", $IdentityNum) == false){
-            throw new PopbillException('등록번호는 숫자만 입력될 수 있습니다.');
+            throw new PopbillException('등록번호는 숫자만 입력할 수 있습니다.');
         }
 
         $uri = "/EasyFin/DepositorCheck";
@@ -114,7 +114,7 @@ class AccountCheckService extends PopbillBase {
     }
 }
 
-class AccountInfo
+class AccountCheckInfo
 {
     public $resultCode;
     public $result;
