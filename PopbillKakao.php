@@ -115,6 +115,34 @@ class KakaoService extends PopbillBase {
         return $this->executeCURL('/KakaoTalk/Cancel/' . $RequestNum, $CorpNum, $UserID);
     }
 
+    public function CancelReservebyRCV($CorpNum, $ReceiptNum, $ReceiveNum, $UserID = null)
+    {
+        if (empty($ReceiptNum)) {
+            throw new PopbillException('예약전송 취소할 접수번호가 입력되지 않았습니다.');
+        }
+        if (empty($ReceiveNum)) {
+            throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
+        }
+
+        $postdata = json_encode($ReceiveNum);
+
+        return $this->executeCURL('/KakaoTalk/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID, true, null, $postdata);
+    }
+
+    public function CancelReserveRNbyRCV($CorpNum, $RequestNum, $ReceiveNum, $UserID = null)
+    {
+        if (empty($RequestNum)) {
+            throw new PopbillException('예약전송 취소할 전송요청번호가 입력되지 않았습니다.');
+        }
+        if (empty($ReceiveNum)) {
+            throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
+        }
+
+        $postdata = json_encode($ReceiveNum);
+
+        return $this->executeCURL('/KakaoTalk/Cancel/' . $RequestNum, $CorpNum, $UserID, true, null, $postdata);
+    }
+
     public function GetURL($CorpNum, $UserID, $TOGO)
     {
         $URI = '/KakaoTalk/?TG=';
