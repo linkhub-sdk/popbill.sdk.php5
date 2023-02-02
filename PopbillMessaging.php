@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2022-10-20
+ * Updated : 2023-02-02
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -359,6 +359,12 @@ class MessagingService extends PopbillBase {
     public function GetAutoDenyList($CorpNum)
     {
         return $this->executeCURL('/Message/Denied', $CorpNum);
+    }
+
+    // 080 수신거부 조회
+    public function CheckAutoDenyNumber($CorpNum)
+    {
+        return $this->executeCURL('/Message/AutoDenyNumberInfo', $CorpNum);
     }
 
     public function GetChargeInfo($CorpNum, $MessageType, $UserID = null)
