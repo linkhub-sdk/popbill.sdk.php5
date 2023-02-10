@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2022-10-19
+ * Updated : 2023-02-10
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -639,6 +639,7 @@ class TaxinvoiceService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata);
     }
 
+    // 과금정보 확인
     public function GetChargeInfo($CorpNum, $UserID = null)
     {
         $uri = '/Taxinvoice/ChargeInfo';

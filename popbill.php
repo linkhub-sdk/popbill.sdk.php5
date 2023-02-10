@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-02-02
+ * Updated : 2023-02-10
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -190,21 +190,21 @@ class PopbillBase
         return $response->url;
     }
 
-    //팝빌 연동회원 포인트 충전 URL
+    // 연동회원 포인트 충전 팝업 URL
     public function GetChargeURL($CorpNum, $UserID)
     {
         $response = $this->executeCURL('/?TG=CHRG', $CorpNum, $UserID);
         return $response->url;
     }
 
-    //팝빌 연동회원 포인트 결제내역 URL
+    // 연동회원 포인트 결제내역 팝업 URL
     public function GetPaymentURL($CorpNum, $UserID)
     {
         $response = $this->executeCURL('/?TG=PAYMENT', $CorpNum, $UserID);
         return $response->url;
     }
 
-    //팝빌 연동회원 포인트 사용내역 URL
+    // 연동회원 포인트 사용내역 팝업 URL
     public function GetUseHistoryURL($CorpNum, $UserID)
     {
         $response = $this->executeCURL('/?TG=USEHISTORY', $CorpNum, $UserID);
@@ -225,7 +225,7 @@ class PopbillBase
 
     }
 
-    //회원 잔여포인트 확인
+    // 연동회원 잔여포인트 확인
     public function GetBalance($CorpNum)
     {
         try {
@@ -235,6 +235,7 @@ class PopbillBase
         }
     }
 
+    // 연동회원 포인트 사용내역 확인
     public function GetUseHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $Order = null, $UserID = null)
     {
         $uri  = '/UseHistory';
@@ -251,6 +252,7 @@ class PopbillBase
         return $UseHistoryResult;
     }
 
+    // 연동회원 포인트 결제내역 확인
     public function GetPaymentHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $UserID = null)
     {
         $uri  = '/PaymentHistory';
@@ -266,6 +268,7 @@ class PopbillBase
         return $PaymentHistoryResult;
     }
 
+    // 연동회원 포인트 환불내역 확인
     public function GetRefundHistory($CorpNum, $Page = null, $PerPage = null, $UserID = null)
     {
         $uri  = '/RefundHistory';
@@ -279,6 +282,7 @@ class PopbillBase
         return $RefundHistoryResult;
     }
 
+    // 연동회원 포인트 환불신청
     public function Refund($CorpNum, $RefundForm, $UserID = null)
     {
         $postdata = json_encode($RefundForm);
@@ -286,6 +290,7 @@ class PopbillBase
         return $this->executeCURL('/Refund', $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 연동회원 무통장 입금신청
     public function PaymentRequest($CorpNum, $PaymentForm, $UserID = null)
     {
         $postdata = json_encode($PaymentForm);
@@ -293,6 +298,7 @@ class PopbillBase
         return $this->executeCURL('/Payment', $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 연동회원 무통장 입금신청 정보확인
     public function GetSettleResult($CorpNum, $SettleCode, $UserID = null)
     {
         $uri  = '/Payment/'.$SettleCode;
@@ -304,7 +310,7 @@ class PopbillBase
         return $PaymentHistory;
     }
 
-    // 파트너 포인트 충전 팝업 URL
+    // 파트너 포인트충전 팝업 URL
     // - 2017/08/29 추가
     public function GetPartnerURL($CorpNum, $TOGO)
     {
@@ -315,7 +321,7 @@ class PopbillBase
         }
     }
 
-    //파트너 잔여포인트 확인
+    // 파트너 잔여포인트 확인
     public function GetPartnerBalance($CorpNum)
     {
         try {
