@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2019-12-19
-* Updated : 2023-02-02
+* Updated : 2023-02-13
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -27,11 +27,13 @@ class EasyFinBankService extends PopbillBase {
         $this->AddScope ( '180' );
     }
 
+    // 계좌 관리 팝업 URL
     public function GetBankAccountMgtURL ( $CorpNum, $UserID = null )
     {
         return $this->executeCURL ( '/EasyFin/Bank?TG=BankAccount', $CorpNum, $UserID )->url;
     }
 
+    // 계좌 등록
     public function RegistBankAccount($CorpNum, $BankAccountInfo, $UserID = null)
     {
         $uri = '/EasyFin/Bank/BankAccount/Regist';
@@ -42,6 +44,7 @@ class EasyFinBankService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 계좌정보 수정
     public function UpdateBankAccount($CorpNum, $BankCode, $AccountNumber, $BankAccountInfo, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
@@ -59,6 +62,7 @@ class EasyFinBankService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 정액제 해지요청
     public function CloseBankAccount($CorpNum, $BankCode, $AccountNumber, $CloseType, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
@@ -81,6 +85,7 @@ class EasyFinBankService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
     }
 
+    // 정액제 해지요청 취소
     public function RevokeCloseBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
@@ -98,6 +103,7 @@ class EasyFinBankService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, null);
     }
 
+    // 계좌 삭제
     public function DeleteBankAccount($CorpNum, $BankCode, $AccountNumber, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
@@ -115,6 +121,7 @@ class EasyFinBankService extends PopbillBase {
         return $this->executeCURL($uri, $CorpNum, $UserID, true, null, $postdata);
     }
 
+    // 계좌정보 확인
     public function GetBankAccountInfo ( $CorpNum, $BankCode, $AccountNumber, $UserID = null)
     {
         if ( empty($BankCode) || strlen ( $BankCode ) != 4 ) {
@@ -133,6 +140,7 @@ class EasyFinBankService extends PopbillBase {
         return $BankInfo;
     }
 
+    // 계좌정보 목록 조회
     public function ListBankAccount ( $CorpNum, $UserID = null )
     {
         $result = $this->executeCURL('/EasyFin/Bank/ListBankAccount', $CorpNum, $UserID);
@@ -148,6 +156,7 @@ class EasyFinBankService extends PopbillBase {
         return $BankAccountList;
     }
 
+    // 수집 요청
     public function RequestJob ( $CorpNum, $BankCode, $AccountNumber, $SDate, $EDate, $UserID = null ) {
 
         if ( empty($BankCode) || $BankCode === "")    {
@@ -171,7 +180,8 @@ class EasyFinBankService extends PopbillBase {
 
         return $this->executeCURL($uri, $CorpNum, $UserID, true, "", "")->jobID;
     }
-
+    
+    // 수집 상태 확인
     public function GetJobState ( $CorpNum, $JobID, $UserID = null )
     {
         if ( empty($JobID) || strlen ( $JobID ) != 18 ) {
@@ -186,6 +196,7 @@ class EasyFinBankService extends PopbillBase {
         return $JobState;
     }
 
+    // 수집 상태 목록 확인
     public function ListActiveJob ( $CorpNum, $UserID = null )
     {
         $result = $this->executeCURL('/EasyFin/Bank/JobList', $CorpNum, $UserID);
@@ -201,6 +212,7 @@ class EasyFinBankService extends PopbillBase {
         return $JobList;
     }
 
+    // 거래 내역 조회
     public function Search ( $CorpNum, $JobID, $TradeType, $SearchString, $Page, $PerPage, $Order, $UserID = null)
     {
         if ( strlen ( $JobID ) != 18 ) {
@@ -226,6 +238,7 @@ class EasyFinBankService extends PopbillBase {
         return $SearchResult;
     }
 
+    // 거래 내역 요약정보 조회
     public function Summary ( $CorpNum, $JobID, $TradeType, $SearchString, $UserID = null )
     {
         if ( strlen ( $JobID ) != 18 ) {
@@ -247,6 +260,7 @@ class EasyFinBankService extends PopbillBase {
         return $SummaryResult;
     }
 
+    // 거래 내역 메모저장
     public function SaveMemo ( $CorpNum, $TID, $Memo, $UserID = null )
     {
         if(empty($TID) || $TID === "")    {
@@ -261,11 +275,13 @@ class EasyFinBankService extends PopbillBase {
 
     }
 
+    // 정액제 서비스 신청 팝업 URL
     public function GetFlatRatePopUpURL ( $CorpNum, $UserID = null )
     {
         return $this->executeCURL ( '/EasyFin/Bank?TG=CHRG', $CorpNum, $UserID )->url;
     }
 
+    // 정액제 서비스 상태 확인
     public function GetFlatRateState ( $CorpNum, $BankCode, $AccountNumber, $UserID = null )
     {
         $response = $this->executeCURL ( '/EasyFin/Bank/Contract/'.$BankCode.'/'.$AccountNumber, $CorpNum, $UserID ) ;
@@ -276,6 +292,7 @@ class EasyFinBankService extends PopbillBase {
         return $FlatRateState;
     }
 
+    // 과금정보 확인
     public function GetChargeInfo ( $CorpNum, $UserID = null)
     {
         $response = $this->executeCURL('/EasyFin/Bank/ChargeInfo', $CorpNum, $UserID);
@@ -285,7 +302,6 @@ class EasyFinBankService extends PopbillBase {
 
         return $ChargeInfo;
     }
-
 
 }
 
