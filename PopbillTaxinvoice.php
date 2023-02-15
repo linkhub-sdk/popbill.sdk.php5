@@ -1129,6 +1129,7 @@ class TaxinvoiceInfo
     public $ntsresultDT;
     public $ntssendErrCode;
     public $stateMemo;
+    public $regDT;
 
     public $interOPYN;
 
@@ -1136,7 +1137,6 @@ class TaxinvoiceInfo
     {
         isset($jsonInfo->closeDownState) ? ($this->closeDownState = $jsonInfo->closeDownState) : null;
         isset($jsonInfo->closeDownStateDate) ? ($this->closeDownStateDate = $jsonInfo->closeDownStateDate) : null;
-
         isset($jsonInfo->itemKey) ? $this->itemKey = $jsonInfo->itemKey : null;
         isset($jsonInfo->stateCode) ? $this->stateCode = $jsonInfo->stateCode : null;
         isset($jsonInfo->taxType) ? $this->taxType = $jsonInfo->taxType : null;
@@ -1161,6 +1161,7 @@ class TaxinvoiceInfo
         isset($jsonInfo->taxTotal) ? $this->taxTotal = $jsonInfo->taxTotal : null;
         isset($jsonInfo->issueDT) ? $this->issueDT = $jsonInfo->issueDT : null;
         isset($jsonInfo->preIssueDT) ? $this->preIssueDT = $jsonInfo->preIssueDT : null;
+        isset($jsonInfo->regDT) ? $this->regDT = $jsonInfo->regDT : null;
         isset($jsonInfo->stateDT) ? $this->stateDT = $jsonInfo->stateDT : null;
         isset($jsonInfo->openYN) ? $this->openYN = $jsonInfo->openYN : null;
         isset($jsonInfo->openDT) ? $this->openDT = $jsonInfo->openDT : null;
@@ -1173,7 +1174,6 @@ class TaxinvoiceInfo
         isset($jsonInfo->interOPYN) ? $this->interOPYN = $jsonInfo->interOPYN : null;
     }
 }
-
 
 class TaxinvoiceLog
 {
