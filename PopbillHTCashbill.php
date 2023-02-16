@@ -208,7 +208,7 @@ class HTCashbillService extends PopbillBase {
     }
 }
 
-class FlatRate
+class HTCashbillFlatRate
 {
     public $referenceID;
     public $contractDT;
@@ -333,7 +333,7 @@ class HTCashbillSearch
     }
 }
 
-class JobState
+class HTCashbillJobState
 {
     public $jobID;
     public $jobState;
@@ -365,13 +365,13 @@ class JobState
     }
 }
 
-class KeyType
+class HTCashbillKeyType
 {
     const SELL = 'SELL';
     const BUY = 'BUY';
 }
 
-class RegistDeptUserRequest
+class HTCashbillRegistDeptUserRequest
 {
     public $id;
     public $pwd;

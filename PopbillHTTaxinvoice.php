@@ -297,7 +297,7 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 }
 
-class FlatRate
+class HTTaxinvoiceFlatRate
 {
     public $referenceID;
     public $contractDT;
@@ -654,7 +654,7 @@ class HTTaxinvoiceAbbr
     }
 }
 
-class JobState
+class HTTaxinvoiceJobState
 {
     public $jobID;
     public $jobState;
@@ -686,14 +686,14 @@ class JobState
     }
 }
 
-class KeyType
+class HTTaxinvoiceKeyType
 {
     const SELL = 'SELL';
     const BUY = 'BUY';
     const TRUSTEE = 'TRUSTEE';
 }
 
-class RegistDeptUserRequest
+class HTTaxinvoiceRegistDeptUserRequest
 {
     public $id;
     public $pwd;
