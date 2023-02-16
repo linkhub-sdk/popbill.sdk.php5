@@ -67,7 +67,7 @@ class HTTaxinvoiceService extends PopbillBase {
 
         $response = $this->executeCURL('/HomeTax/Taxinvoice/'.$JobID.'/State', $CorpNum, $UserID);
 
-        $JobState = new JobState();
+        $JobState = new HTTaxinvoiceJobState();
         $JobState->fromJsonInfo($response);
 
         return $JobState;
@@ -81,7 +81,7 @@ class HTTaxinvoiceService extends PopbillBase {
         $JobList = array();
 
         for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-            $JobState = new JobState();
+            $JobState = new HTTaxinvoiceJobState();
             $JobState->fromJsonInfo($result[$i]);
             $JobList[$i] = $JobState;
         }
@@ -193,7 +193,7 @@ class HTTaxinvoiceService extends PopbillBase {
     {
         $response = $this->executeCURL ( '/HomeTax/Taxinvoice/Contract', $CorpNum, $UserID ) ;
 
-        $FlatRateState = new FlatRate();
+        $FlatRateState = new HTTaxinvoiceFlatRate();
         $FlatRateState->fromJsonInfo ( $response );
 
         return $FlatRateState;
@@ -261,7 +261,7 @@ class HTTaxinvoiceService extends PopbillBase {
             throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
         }
 
-        $Request = new RegistDeptUserRequest();
+        $Request = new HTTaxinvoiceRegistDeptUserRequest();
         $Request->id = $deptUserID;
         $Request->pwd = $deptUserPWD;
         $postdata = json_encode($Request);
