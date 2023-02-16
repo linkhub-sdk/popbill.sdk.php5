@@ -63,7 +63,7 @@ class HTCashbillService extends PopbillBase {
 
         $response = $this->executeCURL('/HomeTax/Cashbill/'.$JobID.'/State', $CorpNum, $UserID);
 
-        $JobState = new HTCashbillJobState();
+        $JobState = new HTCBJobState();
         $JobState->fromJsonInfo($response);
 
         return $JobState;
@@ -77,7 +77,7 @@ class HTCashbillService extends PopbillBase {
         $JobList = array();
 
         for ( $i = 0; $i < Count ( $result ) ;  $i++ ) {
-            $JobState = new HTCashbillJobState();
+            $JobState = new HTCBJobState();
             $JobState->fromJsonInfo($result[$i]);
             $JobList[$i] = $JobState;
         }
@@ -137,7 +137,7 @@ class HTCashbillService extends PopbillBase {
     {
         $response = $this->executeCURL ( '/HomeTax/Cashbill/Contract', $CorpNum, $UserID ) ;
 
-        $FlatRateState = new HTCashbillFlatRate();
+        $FlatRateState = new HTCBFlatRate();
         $FlatRateState->fromJsonInfo ( $response );
 
         return $FlatRateState;
@@ -175,7 +175,7 @@ class HTCashbillService extends PopbillBase {
             throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
         }
 
-        $Request = new HTCashbillRegistDeptUserRequest();
+        $Request = new HTCBRegistDeptUserRequest();
         $Request->id = $deptUserID;
         $Request->pwd = $deptUserPWD;
         $postdata = json_encode($Request);
@@ -208,7 +208,7 @@ class HTCashbillService extends PopbillBase {
     }
 }
 
-class HTCashbillFlatRate
+class HTCBFlatRate
 {
     public $referenceID;
     public $contractDT;
@@ -333,7 +333,7 @@ class HTCashbillSearch
     }
 }
 
-class HTCashbillJobState
+class HTCBJobState
 {
     public $jobID;
     public $jobState;
@@ -365,13 +365,13 @@ class HTCashbillJobState
     }
 }
 
-class HTCashbillKeyType
+class HTCBKeyType
 {
     const SELL = 'SELL';
     const BUY = 'BUY';
 }
 
-class HTCashbillRegistDeptUserRequest
+class HTCBRegistDeptUserRequest
 {
     public $id;
     public $pwd;
