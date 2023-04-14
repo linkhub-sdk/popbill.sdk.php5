@@ -1,4 +1,5 @@
 <?php
+
 /**
  * =====================================================================================
  * Class for base module for Popbill API SDK. It include base functionality for
@@ -166,7 +167,6 @@ class PopbillBase
         $CorpInfo = new CorpInfo();
         $CorpInfo->fromJsonInfo($response);
         return $CorpInfo;
-
     }
 
     // 회사정보 수정
@@ -222,7 +222,6 @@ class PopbillBase
     {
         $postdata = json_encode($JoinForm);
         return $this->executeCURL('/Join', null, null, true, null, $postdata);
-
     }
 
     // 연동회원 잔여포인트 확인
@@ -239,11 +238,11 @@ class PopbillBase
     public function GetUseHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $Order = null, $UserID = null)
     {
         $uri  = '/UseHistory';
-        $uri .= '?SDate='   .$SDate;
-        $uri .= '&EDate='   .$EDate;
-        $uri .= '&Page='    .$Page;
-        $uri .= '&PerPage=' .$PerPage;
-        $uri .= '&Order='   .$Order;
+        $uri .= '?SDate='   . $SDate;
+        $uri .= '&EDate='   . $EDate;
+        $uri .= '&Page='    . $Page;
+        $uri .= '&PerPage=' . $PerPage;
+        $uri .= '&Order='   . $Order;
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $UseHistoryResult = new UseHistoryResult();
@@ -256,10 +255,10 @@ class PopbillBase
     public function GetPaymentHistory($CorpNum, $SDate, $EDate, $Page = null, $PerPage = null, $UserID = null)
     {
         $uri  = '/PaymentHistory';
-        $uri .= '?SDate='   .$SDate;
-        $uri .= '&EDate='   .$EDate;
-        $uri .= '&Page='    .$Page;
-        $uri .= '&PerPage=' .$PerPage;
+        $uri .= '?SDate='   . $SDate;
+        $uri .= '&EDate='   . $EDate;
+        $uri .= '&Page='    . $Page;
+        $uri .= '&PerPage=' . $PerPage;
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $PaymentHistoryResult = new PaymentHistoryResult();
@@ -272,8 +271,8 @@ class PopbillBase
     public function GetRefundHistory($CorpNum, $Page = null, $PerPage = null, $UserID = null)
     {
         $uri  = '/RefundHistory';
-        $uri .= '?Page='    .$Page;
-        $uri .= '&PerPage=' .$PerPage;
+        $uri .= '?Page='    . $Page;
+        $uri .= '&PerPage=' . $PerPage;
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $RefundHistoryResult = new RefundHistoryResult();
@@ -301,7 +300,7 @@ class PopbillBase
     // 연동회원 무통장 입금신청 정보확인
     public function GetSettleResult($CorpNum, $SettleCode, $UserID = null)
     {
-        $uri  = '/Payment/'.$SettleCode;
+        $uri  = '/Payment/' . $SettleCode;
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $PaymentHistory = new PaymentHistory();
@@ -315,7 +314,7 @@ class PopbillBase
     public function GetPartnerURL($CorpNum, $TOGO)
     {
         try {
-            return $this->Linkhub->getPartnerURL($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $TOGO , $this->UseStaticIP, $this->UseGAIP);
+            return $this->Linkhub->getPartnerURL($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $TOGO, $this->UseStaticIP, $this->UseGAIP);
         } catch (LinkhubException $le) {
             throw new PopbillException($le->message, $le->code);
         }
@@ -331,13 +330,32 @@ class PopbillBase
         }
     }
 
+    // 회원 탈퇴
+    public function QuitRequest($CorpNum, $QuiteReason, $UserID = null)
+    {
+        $postData = json_encode(["quiteReason" => $QuiteReason]);
+        return $this->executeCURL('/Payment', $CorpNum, $UserID, true, null, $postData);
+    }
+
+    // 환불가능 포인트 조회
+    public function GetRefundablePoint($CorpNum, $UserID = null)
+    {
+        return $this->executeCURL('/RefundPoint', $CorpNum, $UserID, false, null);
+    }
+
+    // 환불 신청 상태 조회
+    public function GetRefundResult($CorpNum, $refundCode, $UserID = null)
+    {
+        return $this->executeCURL('/Refund/' . $refundCode, $CorpNum, $UserID, false, null, null);
+    }
+
     protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null, $isBinary = false, $SubmitID = null)
     {
         if ($this->__requestMode != "STREAM") {
 
             $targetURL = $this->getTargetURL();
 
-            $http = curl_init( $targetURL . $uri);
+            $http = curl_init($targetURL . $uri);
             $header = array();
 
             $header[] = 'User-Agent: PHP5 POPBILL SDK';
@@ -349,8 +367,8 @@ class PopbillBase
             }
             if (is_null($action) == false) {
                 $header[] = 'X-HTTP-Method-Override: ' . $action;
-                if($action == 'BULKISSUE') {
-                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1',$postdata,true));
+                if ($action == 'BULKISSUE') {
+                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1', $postdata, true));
                     $header[] = 'x-pb-submit-id: ' . $SubmitID;
                 }
             }
@@ -365,7 +383,7 @@ class PopbillBase
                 if ($isBinary) {
                     $boundary = md5(time());
                     $header[] = "Content-Type: multipart/form-data; boundary=" . $boundary;
-                    $postbody = $this -> binaryPostbody($boundary, $postdata);
+                    $postbody = $this->binaryPostbody($boundary, $postdata);
                 } else {
                     // PHP 5.6 이상 CURL 파일전송 처리
                     if ((version_compare(PHP_VERSION, '5.5') >= 0)) {
@@ -385,7 +403,7 @@ class PopbillBase
 
             if ($isPost) {
                 curl_setopt($http, CURLOPT_POST, 1);
-                if($isBinary){
+                if ($isBinary) {
                     curl_setopt($http, CURLOPT_POSTFIELDS, $postbody);
                 } else {
                     curl_setopt($http, CURLOPT_POSTFIELDS, $postdata);
@@ -418,12 +436,11 @@ class PopbillBase
                 throw new PopbillException($responseJson);
             }
 
-            if( 0 === mb_strpos($contentType, 'application/pdf')) {
+            if (0 === mb_strpos($contentType, 'application/pdf')) {
                 return $responseJson;
             }
 
             return json_decode($responseJson);
-
         } else {
             $header = array();
 
@@ -438,8 +455,8 @@ class PopbillBase
             }
             if (is_null($action) == false) {
                 $header[] = 'X-HTTP-Method-Override: ' . $action;
-                if($action == 'BULKISSUE') {
-                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1',$postdata,true));
+                if ($action == 'BULKISSUE') {
+                    $header[] = 'x-pb-message-digest: ' . base64_encode(hash('sha1', $postdata, true));
                     $header[] = 'x-pb-submit-id: ' . $SubmitID;
                 }
             }
@@ -455,7 +472,7 @@ class PopbillBase
                 $mime_boundary = md5(time());
                 $header[] = "Content-Type: multipart/form-data; boundary=" . $mime_boundary . $eol;
                 if ($isBinary) {
-                    $postbody = $this -> binaryPostbody($mime_boundary, $postdata);
+                    $postbody = $this->binaryPostbody($mime_boundary, $postdata);
                 } else {
                     $postbody = '';
                     if (array_key_exists('form', $postdata)) {
@@ -506,7 +523,8 @@ class PopbillBase
                     'ignore_errors' => TRUE,
                     'protocol_version' => '1.0',
                     'method' => 'GET'
-                ));
+                )
+            );
 
             if ($isPost) {
                 $params['http']['method'] = 'POST';
@@ -538,12 +556,11 @@ class PopbillBase
                 throw new PopbillException($response);
             }
 
-            foreach( $http_response_header as $k=>$v )
-            {
-                $t = explode( ':', $v, 2 );
-                if( preg_match('/^Content-Type:/i', $v, $out )) {
+            foreach ($http_response_header as $k => $v) {
+                $t = explode(':', $v, 2);
+                if (preg_match('/^Content-Type:/i', $v, $out)) {
                     $contentType = trim($t[1]);
-                    if( 0 === mb_strpos($contentType, 'application/pdf')) {
+                    if (0 === mb_strpos($contentType, 'application/pdf')) {
                         return $response;
                     }
                 }
@@ -558,7 +575,7 @@ class PopbillBase
         $postbody = '';
         $eol = "\r\n";
         $postbody .= "--" . $mime_boundary . $eol
-          . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
+            . 'Content-Disposition: form-data; name="form"' . $eol . $eol . $postdata['form'] . $eol;
 
         foreach ($postdata as $key => $value) {
             if (substr($key, 0, 4) == 'name') {
@@ -566,30 +583,32 @@ class PopbillBase
             }
             if (substr($key, 0, 4) == 'file') {
                 $postbody .= "--" . $mime_boundary . $eol
-                . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
-                . 'Content-Type: Application/octetstream' . $eol . $eol;
+                    . 'Content-Disposition: form-data; name="' . 'file' . '"; filename="' . $fileName . '"' . $eol
+                    . 'Content-Type: Application/octetstream' . $eol . $eol;
                 $postbody .= $value . $eol;
             }
         }
-        $postbody .= "--" . $mime_boundary . "--". $eol;
+        $postbody .= "--" . $mime_boundary . "--" . $eol;
 
         return $postbody;
     }
 
     //파일명 추출
-    protected function GetBasename($path){
+    protected function GetBasename($path)
+    {
         $pattern = '/[^\/\\\\]*$/';
-        if (preg_match($pattern, $path, $matches)){
+        if (preg_match($pattern, $path, $matches)) {
             return $matches[0];
         }
         throw new PopbillException("파일명 추출에 실패 하였습니다.", -99999999);
     }
 
     // 서비스 URL
-    private function getTargetURL(){
-        if($this->UseGAIP){
+    private function getTargetURL()
+    {
+        if ($this->UseGAIP) {
             return ($this->IsTest ? PopbillBase::ServiceURL_GA_TEST : PopbillBase::ServiceURL_GA_REAL);
-        } else if($this->UseStaticIP){
+        } else if ($this->UseStaticIP) {
             return ($this->IsTest ? PopbillBase::ServiceURL_Static_TEST : PopbillBase::ServiceURL_Static_REAL);
         } else {
             return ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
@@ -874,6 +893,3 @@ class PopbillException extends Exception
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 }
-
-
-?>
