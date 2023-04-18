@@ -331,10 +331,10 @@ class PopbillBase
     }
 
     // 회원 탈퇴
-    public function QuitRequest($CorpNum, $QuiteReason, $UserID = null)
+    public function QuitRequest($CorpNum, $QuitReason, $UserID = null)
     {
-        $postData = json_encode(["quiteReason" => $QuiteReason]);
-        return $this->executeCURL('/Payment', $CorpNum, $UserID, true, null, $postData);
+        $postData = json_encode(["quitReason" => $QuitReason]);
+        return $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
     }
 
     // 환불가능 포인트 조회
