@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2023-02-13
+* Updated : 2023-04-20
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -121,15 +121,15 @@ class CashbillService extends PopbillBase {
             'tradeDT' => $tradeDT,
         );
         $postdata = json_encode($request);
-        
+
         return $this->executeCURL('/Cashbill',$CorpNum,$UserID,true,'REVOKEISSUE',$postdata);
     }
-    
+
     // 취소현금영수증 임시저장 TradeDT 추가(RevokeRegister). 2022/11/02
     public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null,
     $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null, $tradeDT = null)
     {
-        
+
         $request = array(
             'mgtKey' => $mgtKey,
             'orgConfirmNum' => $orgConfirmNum,
@@ -619,7 +619,7 @@ class BulkCashbillResult
     public $txEndDT;
     public $txResultCode;
     public $issueResult;
-    
+
     function fromJsonInfo($jsonInfo)
     {
         isset($jsonInfo->code) ? $this->code = $jsonInfo->code : null;
@@ -634,9 +634,9 @@ class BulkCashbillResult
         isset($jsonInfo->txStartDT) ? $this->txStartDT = $jsonInfo->txStartDT : null;
         isset($jsonInfo->txEndDT) ? $this->txEndDT = $jsonInfo->txEndDT : null;
         isset($jsonInfo->txResultCode) ? $this->txResultCode = $jsonInfo->txResultCode : null;
-        
+
         $InfoIssueResult = array();
-        
+
         for ($i = 0; $i < Count($jsonInfo->issueResult); $i++) {
             $InfoObj = new BulkCashbillIssueResult();
             $InfoObj->fromJsonInfo($jsonInfo->issueResult[$i]);
@@ -654,7 +654,7 @@ class BulkCashbillIssueResult
     public $confirmNum;
     public $tradeDate;
     public $tradeDT;
-    
+
     function fromJsonInfo($jsonInfo)
     {
         isset($jsonInfo->mgtKey) ? $this->mgtKey = $jsonInfo->mgtKey : null;

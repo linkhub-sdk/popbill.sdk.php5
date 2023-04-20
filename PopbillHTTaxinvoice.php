@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2023-02-16
+* Updated : 2023-04-20
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -100,17 +100,17 @@ class HTTaxinvoiceService extends PopbillBase {
         $uri .= '?Type=' . implode ( ',' , $Type );
         $uri .= '&TaxType=' . implode ( ',' , $TaxType );
         $uri .= '&PurposeType=' . implode ( ',' , $PurposeType );
-        
+
         if ( !empty( $TaxRegIDYN ) ) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-        
+
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         $uri .= '&TaxRegID=' . $TaxRegID;
         $uri .= '&Page=' . $Page;
         $uri .= '&PerPage=' . $PerPage;
         $uri .= '&Order=' . $Order;
-        
+
         if ( !empty( $SearchString ) ) {
             $uri .= '&SearchString=' . urlencode($QString);
         }
@@ -137,10 +137,10 @@ class HTTaxinvoiceService extends PopbillBase {
         if ( !empty( $TaxRegIDYN ) ) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-        
+
         $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         $uri .= '&TaxRegID=' . $TaxRegID;
-        
+
         if ( !empty( $SearchString ) ) {
             $uri .= '&SearchString=' . urlencode($QString);
         }

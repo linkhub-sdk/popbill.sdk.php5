@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-02-13
+ * Updated : 2023-04-20
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -56,7 +56,7 @@ class MessagingService extends PopbillBase {
     *        'rcvnm'=> 수신자 성명
     *        'msg'  => 메시지 내용, 미기재시 동보메시지로 전송함.
     *        'sjt'  => 메시지 제목(SMS 사용 불가, 미입력시 팝빌에서 설정한 기본값 사용)
-    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값) 
+    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값)
     *    $ReserveDT => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
@@ -81,7 +81,7 @@ class MessagingService extends PopbillBase {
     *        'rcvnm'=> 수신자 성명
     *        'msg'  => 메시지 내용, 미기재시 동보메시지로 전송함.
     *        'sjt'  => 메시지 제목(SMS 사용 불가, 미입력시 팝빌에서 설정한 기본값 사용)
-    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값) 
+    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값)
     *    $ReserveDT => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
@@ -106,7 +106,7 @@ class MessagingService extends PopbillBase {
     *        'rcvnm'=> 수신자 성명
     *        'msg'  => 메시지 내용, 미기재시 동보메시지로 전송함.
     *        'sjt'  => 메시지 제목(SMS 사용 불가, 미입력시 팝빌에서 설정한 기본값 사용)
-    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값) 
+    *        'interOPRefKey'=> 파트너 지정 키(SMS/LMS/MMS 대량/동보전송시 파트너가 개별건마다 입력할 수 있는 값)
     *    $ReserveDT => 예약전송시 예약시간 yyyyMMddHHmmss 형식으로 기재
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
@@ -262,10 +262,10 @@ class MessagingService extends PopbillBase {
         }
 
         $postdata = json_encode($ReceiveNum);
-        
+
         return $this->executeCURL('/Message/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID, true, null, $postdata);
     }
-    
+
     /* 예약전송 취소
     *    $CorpNum       => 발송사업자번호
     *    $RequestNum    => 전송요청번호
@@ -280,7 +280,7 @@ class MessagingService extends PopbillBase {
         if (empty($ReceiveNum)) {
             throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
         }
-        
+
         $postdata = json_encode($ReceiveNum);
 
         return $this->executeCURL('/Message/Cancel/' . $RequestNum, $CorpNum, $UserID, true, null, $postdata);

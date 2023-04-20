@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2019-12-19
-* Updated : 2023-02-13
+* Updated : 2023-04-20
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -180,7 +180,7 @@ class EasyFinBankService extends PopbillBase {
 
         return $this->executeCURL($uri, $CorpNum, $UserID, true, "", "")->jobID;
     }
-    
+
     // 수집 상태 확인
     public function GetJobState ( $CorpNum, $JobID, $UserID = null )
     {

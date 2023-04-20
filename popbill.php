@@ -13,7 +13,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-02-13
+ * Updated : 2023-04-20
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
