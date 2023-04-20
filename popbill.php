@@ -340,7 +340,7 @@ class PopbillBase
     // 환불가능 포인트 조회
     public function GetRefundableBalance($CorpNum, $UserID = null)
     {
-        return $this->executeCURL('/RefundPoint', $CorpNum, $UserID, false, null);
+        return $this->executeCURL('/RefundPoint', $CorpNum, $UserID, false, null)->refundableBalance;
     }
 
     // 환불 신청 상태 조회
