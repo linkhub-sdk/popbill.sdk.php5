@@ -331,7 +331,7 @@ class PopbillBase
     }
 
     // 회원 탈퇴
-    public function QuitMember($CorpNum, $QuiteReason, $UserID = null)
+    public function QuitMember($CorpNum, $QuitReason, $UserID = null)
     {
         $postData = json_encode(["quitReason" => $QuitReason]);
         return $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
@@ -344,9 +344,12 @@ class PopbillBase
     }
 
     // 환불 신청 상태 조회
-    public function GetRefundInfo($CorpNum, $refundCode, $UserID = null)
+    public function GetRefundInfo($CorpNum, $RefundCode, $UserID = null)
     {
-        return $this->executeCURL('/Refund/' . $refundCode, $CorpNum, $UserID, false, null, null);
+        if (is_null($RefundCode) || empty($RefundCode)) {
+            throw new PopbillException('조회할 환불코드가 입력되지 않았습니다.');
+        }
+        return $this->executeCURL('/Refund/' . $RefundCode, $CorpNum, $UserID, false, null, null);
     }
 
     protected function executeCURL($uri, $CorpNum = null, $userID = null, $isPost = false, $action = null, $postdata = null, $isMultiPart = false, $contentsType = null, $isBinary = false, $SubmitID = null)
