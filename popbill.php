@@ -333,7 +333,7 @@ class PopbillBase
     // 회원 탈퇴
     public function QuitMember($CorpNum, $QuitReason, $UserID = null)
     {
-        $postData = json_encode(["quitReason" => $QuitReason]);
+        $postData = json_encode(array("quitReason" => $QuitReason));
         return $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
     }
 
