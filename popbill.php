@@ -230,7 +230,7 @@ class PopbillBase
         try {
             return $this->Linkhub->getBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $this->UseStaticIP, $this->UseGAIP);
         } catch (LinkhubException $le) {
-            throw new PopbillException($le->message, $le->code);
+            throw new PopbillException($le->getMessage(), $le->getCode());
         }
     }
 
@@ -316,7 +316,7 @@ class PopbillBase
         try {
             return $this->Linkhub->getPartnerURL($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $TOGO, $this->UseStaticIP, $this->UseGAIP);
         } catch (LinkhubException $le) {
-            throw new PopbillException($le->message, $le->code);
+            throw new PopbillException($le->getMessage(), $le->getCode());
         }
     }
 
@@ -326,7 +326,7 @@ class PopbillBase
         try {
             return $this->Linkhub->getPartnerBalance($this->getsession_Token($CorpNum), $this->IsTest ? PopbillBase::ServiceID_TEST : PopbillBase::ServiceID_REAL, $this->UseStaticIP, $this->UseGAIP);
         } catch (LinkhubException $le) {
-            throw new PopbillException($le->message, $le->code);
+            throw new PopbillException($le->getMessage(), $le->getCode());
         }
     }
 
