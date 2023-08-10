@@ -20,7 +20,8 @@
  */
 require_once 'popbill.php';
 
-class TaxinvoiceService extends PopbillBase {
+class TaxinvoiceService extends PopbillBase
+{
 
     public function __construct($LinkID, $SecretKey)
     {
@@ -252,7 +253,7 @@ class TaxinvoiceService extends PopbillBase {
         }
 
         $Request = new TIBulkRequest();
-        if($ForceIssue == true){
+        if ($ForceIssue == true) {
             $Request->forceIssue = $ForceIssue;
         }
         $Request->invoices = $taxinvoiceList;
@@ -394,7 +395,7 @@ class TaxinvoiceService extends PopbillBase {
     }
 
     // 파일첨부
-    public function AttachFile($CorpNum, $MgtKeyType, $MgtKey, $FilePath, $UserID = null)
+    public function AttachFile($CorpNum, $MgtKeyType, $MgtKey, $FilePath, $UserID = null, $DisplayName= null)
     {
         if (is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
@@ -403,12 +404,16 @@ class TaxinvoiceService extends PopbillBase {
         if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
-        $FileName = $this->GetBasename($FilePath);
+
+        if(is_null($DisplayName) || empty($DisplayName)) {
+            $FileName = $this->GetBasename($FilePath);
+        }else{
+            $FileName = $DisplayName;
+        }
         $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
         return $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '/Files', $CorpNum, $UserID, true, null, $postdata, true);
     }
-
 
     // 첨부파일 목록 확인
     public function GetFiles($CorpNum, $MgtKeyType, $MgtKey)
@@ -737,7 +742,7 @@ class TaxinvoiceService extends PopbillBase {
         $response = $this->executeCURL('/Taxinvoice/' . $MgtKeyType . '/' . $MgtKey . '?XML', $CorpNum, $UserID);
 
         $TaxinvoiceXML = new TaxinvoiceXML();
-        $TaxinvoiceXML->fromJsonInfo ( $response ) ;
+        $TaxinvoiceXML->fromJsonInfo($response);
 
         return $TaxinvoiceXML;
     }
