@@ -397,7 +397,8 @@ class PopbillBase
                                 if ($key == 'Filedata') {
                                     $filename = substr($filename, 0, strpos($filename, ';filename'));
                                 }
-                                $postdata[$key] = new CURLFile($filename);
+                				$displayName = substr($value, strpos($value, 'filename=') + strlen('filename='));
+                                $postdata[$key] = new CURLFile($filename, null, $displayName);
                             }
                         } // end of foreach
                     }
@@ -491,10 +492,10 @@ class PopbillBase
                                 if (file_exists($value) == FALSE) {
                                     throw new PopbillException("전송할 파일이 존재하지 않습니다.", -99999999);
                                 }
+                				$displayName = substr($value, strpos($value, 'filename=') + strlen('filename='));
                                 $fileContents = file_get_contents($value);
                                 $postbody .= '--' . $mime_boundary . $eol;
-                                $postbody .= "Content-Disposition: form-data; name=\"file\"; filename=\"" . $this->GetBasename($value) . "\"" . $eol;
-
+                                $postbody .= "Content-Disposition: form-data; name=\"file\"; filename=\"" .$displayName . "\"" . $eol;
                                 $postbody .= "Content-Type: Application/octet-stream" . $eol . $eol;
                                 $postbody .= $fileContents . $eol;
                             }
