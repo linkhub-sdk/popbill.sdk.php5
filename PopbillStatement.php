@@ -140,17 +140,26 @@ class StatementService extends PopbillBase {
     }
 
     // 전자명세서 첨부파일 추가
-    public function AttachFile($CorpNum, $itemCode, $MgtKey, $FilePath, $UserID = null)
+    public function AttachFile($CorpNum, $itemCode, $MgtKey, $FilePath, $UserID = null, $DisplayName)
     {
         if(is_null($MgtKey) || empty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+
+        if(is_null($DisplayName) || empty($DisplayName)) {
+            throw new PopbillException('첨부파일명이 입력되지 않았습니다.');
         }
 
         if (mb_detect_encoding($this->GetBasename($FilePath)) == 'CP949') {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
 
-        $FileName = $this->GetBasename($FilePath);
+        if(is_null($DisplayName) || empty($DisplayName)) {
+            $FileName = $this->GetBasename($FilePath);
+        }else{
+            $FileName = $DisplayName;
+        }
+
         $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Files', $CorpNum, $UserID, true, null, $postdata, true);
