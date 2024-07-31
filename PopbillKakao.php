@@ -529,6 +529,7 @@ class KakaoButton
     public $t;
     public $u1;
     public $u2;
+    public $tg;
 
     function fromJsonInfo($jsonInfo)
     {
@@ -536,6 +537,7 @@ class KakaoButton
         isset($jsonInfo->t) ? $this->t = $jsonInfo->t : null;
         isset($jsonInfo->u1) ? $this->u1 = $jsonInfo->u1 : null;
         isset($jsonInfo->u2) ? $this->u2 = $jsonInfo->u2 : null;
+        isset($jsonInfo->tg) ? $this->tg = $jsonInfo->tg : null;
     }
 }
 

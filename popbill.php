@@ -179,35 +179,35 @@ class PopbillBase
     //팝빌 연결 URL함수
     public function GetPopbillURL($CorpNum, $UserID, $TOGO)
     {
-        $response = $this->executeCURL('/?TG=' . $TOGO, $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=' . $TOGO, $CorpNum, $UserID);
         return $response->url;
     }
 
     //팝빌 로그인 URL
     public function GetAccessURL($CorpNum, $UserID)
     {
-        $response = $this->executeCURL('/?TG=LOGIN', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=LOGIN', $CorpNum, $UserID);
         return $response->url;
     }
 
     // 연동회원 포인트 충전 팝업 URL
     public function GetChargeURL($CorpNum, $UserID)
     {
-        $response = $this->executeCURL('/?TG=CHRG', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=CHRG', $CorpNum, $UserID);
         return $response->url;
     }
 
     // 연동회원 포인트 결제내역 팝업 URL
     public function GetPaymentURL($CorpNum, $UserID)
     {
-        $response = $this->executeCURL('/?TG=PAYMENT', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=PAYMENT', $CorpNum, $UserID);
         return $response->url;
     }
 
     // 연동회원 포인트 사용내역 팝업 URL
     public function GetUseHistoryURL($CorpNum, $UserID)
     {
-        $response = $this->executeCURL('/?TG=USEHISTORY', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=USEHISTORY', $CorpNum, $UserID);
         return $response->url;
     }
 
