@@ -397,7 +397,7 @@ class StatementService extends PopbillBase {
     // 팝빌 인감 및 첨부문서 등록 URL
     public function GetSealURL($CorpNum, $UserID = null)
     {
-        $response = $this->executeCURL('/?TG=SEAL', $CorpNum, $UserID);
+        $response = $this->executeCURL('/Member?TG=SEAL', $CorpNum, $UserID);
         return $response->url;
     }
 
