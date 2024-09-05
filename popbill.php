@@ -334,7 +334,11 @@ class PopbillBase
     public function QuitMember($CorpNum, $QuitReason, $UserID = null)
     {
         $postData = json_encode(array("quitReason" => $QuitReason));
-        return $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
+        $response = $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
+        if($response->code == 1) {
+            unset($this-> Token_Table[$CorpNum]);
+        }
+        return $response;
     }
 
     // 환불가능 포인트 조회
