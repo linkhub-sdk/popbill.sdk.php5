@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -154,11 +154,7 @@ class StatementService extends PopbillBase {
             $FilePath = iconv('CP949', 'UTF-8', $FilePath);
         }
 
-        if(is_null($DisplayName) || empty($DisplayName)) {
-            $FileName = $this->GetBasename($FilePath);
-        }else{
-            $FileName = $DisplayName;
-        }
+        $FileName = $DisplayName;
 
         $postdata = array('Filedata' => '@' . $FilePath . ';filename=' . $FileName);
 
@@ -296,7 +292,7 @@ class StatementService extends PopbillBase {
     }
 
     // 팝빌 전자명세서 연결 URL
-    public function GetURL($CorpNum, $UserID, $TOGO) {
+    public function GetURL($CorpNum, $UserID = null, $TOGO) {
         return $this->executeCURL('/Statement?TG='.$TOGO, $CorpNum, $UserID)->url;
     }
 
@@ -367,25 +363,40 @@ class StatementService extends PopbillBase {
             throw new PopbillException('종료일자가 입력되지 않았습니다.');
         }
 
-        $uri = '/Statement/Search?DType=' . $DType;
+        $uri = '/Statement/Search';
+        $uri .= '?DType=' . $DType;
         $uri .= '&SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
+        $uri .= '&State=';
         if( !is_null( $State ) || !empty( $State ) ){
-            $uri .= '&State=' . implode(',', $State);
+            $uri .= implode(',', $State);
         }
 
+        $uri .= '&ItemCode=';
         if( !is_null( $ItemCode ) || !empty( $ItemCode ) ){
             $uri .= '&ItemCode=' . implode(',', $ItemCode);
         }
 
+        $uri .= '&Page=';
+        if(!is_null($Page) || !empty($Page)){
+            $uri .= $Page;
+        }
+
+        $uri .= '&PerPage=';
+        if(!is_null($PerPage) || !empty($PerPage)){
+            $uri .= $PerPage;
+        }
+
+        $uri .= '&Order=';
+        if(!is_null($Order) || !empty($Order)){
+            $uri .= $Order;
+        }
+
+        $uri .= '&QString=';
         if(!is_null($QString) || !empty($QString)){
             $uri .= '&QString=' . urlencode($QString);
         }
-
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
 
         $response = $this->executeCURL($uri, $CorpNum, "");
 

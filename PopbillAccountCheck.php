@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2020-06-29
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -96,14 +96,22 @@ class AccountCheckService extends PopbillBase {
     }
 
     // 조회단가 확인
-    public function GetUnitCost($CorpNum, $ServiceType = null, $UserID = null) {
+    public function GetUnitCost($CorpNum, $ServiceType, $UserID = null) {
+        if(is_null($ServiceType) || empty($ServiceType)) {
+            throw new PopbillException('서비스 유형이 입력되지 않았습니다.');
+        }
+
         $uri = "/EasyFin/AccountCheck/UnitCost?serviceType=". $ServiceType;
 
         return $this->executeCURL($uri, $CorpNum, $UserID)->unitCost;
     }
 
     // 과금정보 확인
-    public function GetChargeInfo ( $CorpNum, $UserID = null, $ServiceType = null) {
+    public function GetChargeInfo ( $CorpNum, $UserID = null, $ServiceType) {
+        if(is_null($ServiceType) || empty($ServiceType)) {
+            throw new PopbillException('서비스 유형이 입력되지 않았습니다.');
+        }
+        
         $uri = '/EasyFin/AccountCheck/ChargeInfo?serviceType='. $ServiceType;
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

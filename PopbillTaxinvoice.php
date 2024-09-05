@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-05-09
+ * Updated : 2024-09-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -558,60 +558,90 @@ class TaxinvoiceService extends PopbillBase
             throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
         }
 
-        $uri = '/Taxinvoice/' . $MgtKeyType . '?';
-        $uri .= 'DType=' . $DType;
+        $uri = '/Taxinvoice/' . $MgtKeyType;
+        $uri .= '?DType=' . $DType;
         $uri .= '&SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
+        $uri .= '&State=';
         if (!is_null($State) || !empty($State)) {
-            $uri .= '&State=' . implode(',', $State);
+            $uri .= implode(',', $State);
         }
 
+        $uri .= '&Type=';
         if (!is_null($Type) || !empty($Type)) {
-            $uri .= '&Type=' . implode(',', $Type);
+            $uri .= implode(',', $Type);
         }
 
+        $uri .= '&TaxType=';
         if (!is_null($TaxType) || !empty($TaxType)) {
-            $uri .= '&TaxType=' . implode(',', $TaxType);
+            $uri .= implode(',', $TaxType);
         }
 
-        if (!is_null($IssueType) || !empty($IssueType)) {
-            $uri .= '&IssueType=' . implode(',', $IssueType);
+        if ($LateOnly) {
+            $uri .= '&LateOnly=1';
+        } else {
+            $uri .= '&LateOnly=0';
         }
 
-        if (!is_null($RegType) || !empty($RegType)) {
-            $uri .= '&RegType=' . implode(',', $RegType);
+        $uri .= '&Page=';
+        if (!is_null($Page) ||!empty($Page)) {
+            $uri .= $Page;
         }
 
-        if (!is_null($LateOnly) || !empty($LateOnly)) {
-            $uri .= '&LateOnly=' . $LateOnly;
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) ||!empty($PerPage)) {
+            $uri .= $PerPage;
         }
 
-        if (!is_null($CloseDownState) || !empty($CloseDownState)) {
-            $uri .= '&CloseDownState=' . implode(',', $CloseDownState);
+        $uri .= '&Order=';
+        if (!is_null($Order) ||!empty($Order)) {
+            $uri .= $Order;
         }
 
-        if (!empty($TaxRegIDType)) {
-            $uri .= '&TaxRegIDType=' . $TaxRegIDType;
+        $uri .= '&TaxRegID=';
+        if (!is_null($TaxRegID) ||!empty($TaxRegID)) {
+            $uri .= $TaxRegID;
         }
 
-        if (!empty($TaxRegIDType)) {
-            $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+        $uri .= '&TaxRegIDType=';
+        if (!is_null($TaxRegIDType) ||!empty($TaxRegIDType)) {
+            $uri .= $TaxRegIDType;
         }
 
-        $uri .= '&TaxRegID=' . $TaxRegID;
+        $uri .= '&TaxRegIDYN=';
+        if (!is_null($TaxRegIDYN) ||!empty($TaxRegIDYN)) {
+            $uri .= $TaxRegIDYN;
+        }
 
+        $uri .= '&QString=';
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . urlencode($QString);
+            $uri .= urlencode($QString);
         }
 
-        $uri .= '&Order=' . $Order;
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&InterOPYN=' . $InterOPYN;
+        $uri .= '&InterOPYN=';
+        if (!is_null($InterOPYN) ||!empty($InterOPYN)) {
+            $uri .= $InterOPYN;
+        }
 
-        if (!empty($MgtKey)) {
-            $uri .= '&MgtKey=' . $MgtKey;
+        $uri .= '&IssueType=';
+        if (!is_null($IssueType) || !empty($IssueType)) {
+            $uri .= implode(',', $IssueType);
+        }
+
+        $uri .= '&CloseDownState=';
+        if (!is_null($CloseDownState) || !empty($CloseDownState)) {
+            $uri .= implode(',', $CloseDownState);
+        }
+
+        $uri .= '&MgtKey=';
+        if (!is_null($MgtKey) || !empty($MgtKey)) {
+            $uri .= $MgtKey;
+        }
+
+        $uri .= '&RegType=';
+        if (!is_null($RegType) || !empty($RegType)) {
+            $uri .= implode(',', $RegType);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -97,22 +97,55 @@ class HTTaxinvoiceService extends PopbillBase {
         }
 
         $uri = '/HomeTax/Taxinvoice/'.$JobID;
-        $uri .= '?Type=' . implode ( ',' , $Type );
-        $uri .= '&TaxType=' . implode ( ',' , $TaxType );
-        $uri .= '&PurposeType=' . implode ( ',' , $PurposeType );
 
-        if ( !empty( $TaxRegIDYN ) ) {
-            $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+        $uri .= '?Type=';
+        if (!is_null($Type) || !empty($Type)) {
+            $uri .= implode(',', $Type);
         }
 
-        $uri .= '&TaxRegIDType=' . $TaxRegIDType;
-        $uri .= '&TaxRegID=' . $TaxRegID;
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
+        $uri .= '&TaxType=';
+        if (!is_null($TaxType) || !empty($TaxType)) {
+            $uri .= implode(',', $TaxType);
+        }
 
-        if ( !empty( $SearchString ) ) {
-            $uri .= '&SearchString=' . urlencode($QString);
+        $uri .= '&PurposeType=';
+        if (!is_null($PurposeType) || !empty($PurposeType)) {
+            $uri .= implode(',', $PurposeType);
+        }
+
+        $uri .= '&TaxRegIDYN=';
+        if (!is_null($TaxRegIDYN) || !empty($TaxRegIDYN)) {
+            $uri .= $TaxRegIDYN;
+        }
+
+        $uri .= '&TaxRegIDType=';
+        if (!is_null($TaxRegIDType) || !empty($TaxRegIDType)) {
+            $uri .= $TaxRegIDType;
+        }
+
+        $uri .= '&TaxRegID=';
+        if (!is_null($TaxRegID) || !empty($TaxRegID)) {
+            $uri .= $TaxRegID;
+        }
+
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page)) {
+            $uri .= $Page;
+        }
+
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage)) {
+            $uri .= $PerPage;
+        }
+
+        $uri .= '&Order=';
+        if (!is_null($Order) || !empty($Order)) {
+            $uri .= $Order;
+        }
+
+        $uri .= '&SearchString=';
+        if (!is_null($SearchString) || !empty( $SearchString)) {
+            $uri .= urlencode($SearchString);
         }
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
@@ -130,19 +163,40 @@ class HTTaxinvoiceService extends PopbillBase {
         }
 
         $uri = '/HomeTax/Taxinvoice/' . $JobID .  '/Summary';
-        $uri .= '?Type=' . implode ( ',' , $Type );
-        $uri .= '&TaxType=' . implode ( ',' , $TaxType );
-        $uri .= '&PurposeType=' . implode ( ',' , $PurposeType );
-
-        if ( !empty( $TaxRegIDYN ) ) {
-            $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
+        
+        $uri .= '?Type=';
+        if (!is_null($Type) || !empty($Type)) {
+            $uri .= implode(',', $Type);
         }
 
-        $uri .= '&TaxRegIDType=' . $TaxRegIDType;
-        $uri .= '&TaxRegID=' . $TaxRegID;
+        $uri .= '&TaxType=';
+        if (!is_null($TaxType) || !empty($TaxType)) {
+            $uri .= implode(',', $TaxType);
+        }
 
+        $uri .= '&PurposeType=';
+        if (!is_null($PurposeType) || !empty($PurposeType)) {
+            $uri .= implode(',', $PurposeType);
+        }
+
+        $uri .= '&TaxRegIDYN=';
+        if (!is_null($TaxRegIDYN) || !empty($TaxRegIDYN)) {
+            $uri .= $TaxRegIDYN;
+        }
+
+        $uri .= '&TaxRegIDType=';
+        if (!is_null($TaxRegIDType) || !empty($TaxRegIDType)) {
+            $uri .= $TaxRegIDType;
+        }
+
+        $uri .= '&TaxRegID=';
+        if (!is_null($TaxRegID) || !empty($TaxRegID)) {
+            $uri .= $TaxRegID;
+        }
+
+        $uri .= '&SearchString=';
         if ( !empty( $SearchString ) ) {
-            $uri .= '&SearchString=' . urlencode($QString);
+            $uri .= urlencode($SearchString);
         }
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 

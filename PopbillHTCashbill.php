@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -39,7 +39,8 @@ class HTCashbillService extends PopbillBase {
     }
 
     // 수집 요청
-    public function RequestJob($CorpNum, $CBType, $SDate, $EDate, $UserID = null) {
+    public function RequestJob($CorpNum, $CBType, $SDate, $EDate, $UserID = null) 
+    {
         if ( empty($SDate) || ( $SDate === "" ) )    {
             throw new PopbillException('시작일자가 입력되지 않았습니다.');
         }
@@ -93,11 +94,31 @@ class HTCashbillService extends PopbillBase {
         }
 
         $uri = '/HomeTax/Cashbill/'.$JobID;
-        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
-        $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Oder=' . $Order;
+        
+        $uri .= '?TradeType=';
+        if (!is_null($TradeType) || !empty($TradeType))  {
+            $uri .= implode ( ',' , $TradeType );
+        }
+
+        $uri .= '&TradeUsage=';
+        if (!is_null($TradeUsage) || !empty($TradeUsage))  {
+            $uri .= implode ( ',' , $TradeUsage );
+        }
+
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page))  {
+            $uri .= $Page;
+        }
+
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage))  {
+            $uri .= $PerPage;
+        }
+
+        $uri .= '&Order=';
+        if (!is_null($Order) || !empty($Order))  {
+            $uri .= $Order;
+        }
 
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
@@ -115,8 +136,16 @@ class HTCashbillService extends PopbillBase {
         }
 
         $uri = '/HomeTax/Cashbill/' . $JobID . '/Summary';
-        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
-        $uri .= '&TradeUsage=' . implode ( ',' , $TradeUsage );
+        
+        $uri .= '?TradeType=';
+        if (!is_null($TradeType) || !empty($TradeType))  {
+            $uri .= implode ( ',' , $TradeType );
+        }
+
+        $uri .= '&TradeUsage=';
+        if (!is_null($TradeUsage) || !empty($TradeUsage))  {
+            $uri .= implode ( ',' , $TradeUsage );
+        }
 
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 

@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2019-12-19
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -220,15 +220,31 @@ class EasyFinBankService extends PopbillBase {
         }
 
         $uri = '/EasyFin/Bank/'.$JobID;
-        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
-
-        if ( !empty( $SearchString ) ) {
-            $uri .= '&SearchString=' . urlencode($SearchString);
+        
+        $uri .= '?TradeType=';
+        if (!is_null($TradeType) || !empty($TradeType)) {
+            $uri .= implode ( ',' , $TradeType );
         }
 
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
+        $uri .= '&SearchString=';
+        if ( !is_null($SearchString) || !empty($SearchString)) {
+            $uri .= urlencode($SearchString);
+        }
+
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page)) {
+            $uri .= $Page; 
+        }
+
+        $uri .= 'PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage)) {
+            $uri .= $PerPage; 
+        }
+
+        $uri .= 'Order=';
+        if (!is_null($Order) || !empty($Order)) {
+            $uri .= $Order; 
+        }
 
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
 
@@ -246,10 +262,15 @@ class EasyFinBankService extends PopbillBase {
         }
 
         $uri = '/EasyFin/Bank/'.$JobID.'/Summary';
-        $uri .= '?TradeType=' . implode ( ',' , $TradeType );
 
-        if ( !empty( $SearchString ) ) {
-            $uri .= '&SearchString=' . urlencode($SearchString);
+        $uri .= '?TradeType=';
+        if (!is_null($TradeType) || !empty($TradeType)) {
+            $uri .= implode ( ',' , $TradeType );
+        }
+        
+        $uri .= '&SearchString=';
+        if (!is_null($SearchString) || !empty( $SearchString)) {
+            $uri .= urlencode($SearchString);
         }
 
         $response = $this->executeCURL ( $uri, $CorpNum, $UserID );

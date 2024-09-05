@@ -417,6 +417,10 @@ class PopbillBase
             curl_setopt($http, CURLOPT_HTTPHEADER, $header);
             curl_setopt($http, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($http, CURLOPT_ENCODING, 'gzip,deflate');
+            // Read timeout 설정 
+            curl_setopt($http, CURLOPT_TIMEOUT_MS, 180 * 1000);
+            // Connection timeout 설정
+            curl_setopt($http, CURLOPT_CONNECTTIMEOUT_MS, 10 * 1000);
 
             $responseJson = curl_exec($http);
 
@@ -526,7 +530,8 @@ class PopbillBase
                 'http' => array(
                     'ignore_errors' => TRUE,
                     'protocol_version' => '1.0',
-                    'method' => 'GET'
+                    'method' => 'GET',
+                    'timeout' => 10
                 )
             );
 

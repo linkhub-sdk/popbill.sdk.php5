@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Jeong YoHan (code@linkhubcorp.com)
  * Written : 2018-03-02
- * Updated : 2023-05-09
+ * Updated : 2024-09-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -220,28 +220,49 @@ class KakaoService extends PopbillBase {
             throw new PopbillException('종료일자가 입력되지 않았습니다.');
         }
 
-        $uri = '/KakaoTalk/Search?SDate=' . $SDate;
+        $uri = '/KakaoTalk/Search';
+        $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
+        $uri .= '&State=';
         if (!is_null($State) || !empty($State)) {
-            $uri .= '&State=' . implode(',', $State);
-        }
-        if (!is_null($Item) || !empty($Item)) {
-            $uri .= '&Item=' . implode(',', $Item);
+            $uri .= implode(',', $State);
         }
 
-        $uri .= '&ReserveYN=' . $ReserveYN;
+        $uri .= '&Item=';
+        if (!is_null($Item) || !empty($Item)) {
+            $uri .= implode(',', $Item);
+        }
+
+        $uri .= '&ReserveYN=';
+        if (!is_null($ReserveYN) || !empty($ReserveYN)) {
+            $uri .= $ReserveYN;
+        }
 
         if ($SenderYN) {
             $uri .= '&SenderYN=1';
+        } else {
+            $uri .= '&SenderYN=0';
         }
 
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page)) {
+            $uri .= $Page;
+        }
+        
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage)) {
+            $uri .= $PerPage;
+        }
 
+        $uri .= '&Order=';
+        if (!is_null($Order) || !empty($Order)) {
+            $uri .= $Order;
+        }
+
+        $uri .= '&QString=';
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . urlencode($QString);
+            $uri .= urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

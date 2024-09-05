@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : choi sh (code@linkhubcorp.com)
 * Written : 2022-09-30
-* Updated : 2023-05-09
+* Updated : 2024-09-05
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -49,7 +49,7 @@ class BizInfoCheckService extends PopbillBase {
         return $this->executeCURL('/BizInfo/UnitCost', $CorpNum)->unitCost;
     }
 
-    public function GetChargeInfo ( $CorpNum, $UserID = null) {
+    public function GetChargeInfo ($CorpNum, $UserID = null) {
         $uri = '/BizInfo/ChargeInfo';
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

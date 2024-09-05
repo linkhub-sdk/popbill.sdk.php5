@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-05-09
+ * Updated : 2024-09-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -312,21 +312,21 @@ class MessagingService extends PopbillBase {
     }
 
     // 문자 관련 URL함수
-    public function GetURL($CorpNum, $UserID, $TOGO)
+    public function GetURL($CorpNum, $UserID = null, $TOGO)
     {
         $response = $this->executeCURL('/Message/?TG=' . $TOGO, $CorpNum, $UserID);
         return $response->url;
     }
 
     // 문자 전송내역 팝업 URL
-    public function GetSentListURL($CorpNum, $UserID)
+    public function GetSentListURL($CorpNum, $UserID = null)
     {
         $response = $this->executeCURL('/Message/?TG=BOX', $CorpNum, $UserID);
         return $response->url;
     }
 
     // 발신번호 관리 팝업 URL
-    public function GetSenderNumberMgtURL($CorpNum, $UserID)
+    public function GetSenderNumberMgtURL($CorpNum, $UserID = null)
     {
         $response = $this->executeCURL('/Message/?TG=SENDER', $CorpNum, $UserID);
         return $response->url;
@@ -343,29 +343,49 @@ class MessagingService extends PopbillBase {
             throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
         }
 
-        $uri = '/Message/Search?SDate=' . $SDate;
+        $uri = '/Message/Search';
+        $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
+        $uri .= '&State=';
         if (!is_null($State) || !empty($State)) {
-            $uri .= '&State=' . implode(',', $State);
+            $uri .= implode(',', $State);
         }
+
+        $uri .= '&Item=';
         if (!is_null($Item) || !empty($Item)) {
-            $uri .= '&Item=' . implode(',', $Item);
+            $uri .= implode(',', $Item);
         }
 
         if ($ReserveYN) {
             $uri .= '&ReserveYN=1';
+        } else {
+            $uri .= '&ReserveYN=0';
         }
         if ($SenderYN) {
             $uri .= '&SenderYN=1';
+        } else {
+            $uri .= '&SenderYN=0';
         }
 
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page)) {
+            $uri .= $Page;
+        }
 
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage)) {
+            $uri .= $PerPage;
+        }
+
+        $uri .= '&Order=';
+        if (!is_null($Order) || !empty($Order)) {
+            $uri .= $Order;
+        }
+
+        $uri .= '&QString=';
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . urlencode($QString);
+            $uri .= urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

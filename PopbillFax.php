@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-05-09
+ * Updated : 2024-09-05
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -232,14 +232,14 @@ class FaxService extends PopbillBase {
     }
 
     // 팩스 전송내역 팝업 URL
-    public function GetSentListURL($CorpNum, $UserID)
+    public function GetSentListURL($CorpNum, $UserID = null)
     {
         $response = $this->executeCURL('/FAX/?TG=BOX', $CorpNum, $UserID);
         return $response->url;
     }
 
     // 발신번호 관리 팝업 URL
-    public function GetSenderNumberMgtURL($CorpNum, $UserID)
+    public function GetSenderNumberMgtURL($CorpNum, $UserID = null)
     {
         $response = $this->executeCURL('/FAX/?TG=SENDER', $CorpNum, $UserID);
         return $response->url;
@@ -261,8 +261,9 @@ class FaxService extends PopbillBase {
         $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
+        $uri .= '&State=';
         if (!is_null($State) || !empty($State)) {
-            $uri .= '&State=' . implode(',', $State);
+            $uri .= implode(',', $State);
         }
 
         if ($ReserveYN) {
@@ -277,12 +278,24 @@ class FaxService extends PopbillBase {
             $uri .= '&SenderOnly=0';
         }
 
-        $uri .= '&Page=' . $Page;
-        $uri .= '&PerPage=' . $PerPage;
-        $uri .= '&Order=' . $Order;
+        $uri .= '&Page=';
+        if (!is_null($Page) || !empty($Page)) {
+            $uri .= $Page;
+        }
+        
+        $uri .= '&PerPage=';
+        if (!is_null($PerPage) || !empty($PerPage)) {
+            $uri .= $PerPage;
+        }
 
+        $uri .= '&Order=';
+        if (!is_null($Order) || !empty($Order)) {
+            $uri .= $Order;
+        }
+
+        $uri .= '&QString=';
         if (!is_null($QString) || !empty($QString)) {
-            $uri .= '&QString=' . urlencode($QString);
+            $uri .= urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, "");
@@ -312,7 +325,7 @@ class FaxService extends PopbillBase {
     }
 
     // 팩스 미리보기 URL
-    public function getPreviewURL($CorpNum, $ReceiptNum, $UserID)
+    public function getPreviewURL($CorpNum, $ReceiptNum, $UserID = null)
     {
         $response = $this->executeCURL('/FAX/Preview/'.$ReceiptNum, $CorpNum, $UserID);
         return $response->url;
