@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2020-06-29
-* Updated : 2024-09-19
+* Updated : 2024-09-22
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -129,6 +129,7 @@ class AccountCheckInfo
     public $accountNumber;
     public $accountName;
     public $checkDate;
+    public $checkDT;
 
     function fromJsonInfo($jsonInfo)
     {
@@ -139,6 +140,7 @@ class AccountCheckInfo
         isset($jsonInfo->accountNumber) ? $this->accountNumber = $jsonInfo->accountNumber : null;
         isset($jsonInfo->accountName) ? $this->accountName = $jsonInfo->accountName : null;
         isset($jsonInfo->checkDate) ? $this->checkDate = $jsonInfo->checkDate : null;
+        isset($jsonInfo->checkDT) ? $this->checkDT = $jsonInfo->checkDT : null;
     }
 }
 
@@ -152,6 +154,7 @@ class DepositorCheckInfo
     public $identityNumType;
     public $identityNum;
     public $checkDate;
+    public $checkDT;
 
     function fromJsonInfo($jsonInfo)
     {
@@ -163,6 +166,7 @@ class DepositorCheckInfo
         isset($jsonInfo->identityNumType) ? $this->identityNumType = $jsonInfo->identityNumType : null;
         isset($jsonInfo->identityNum) ? $this->identityNum = $jsonInfo->identityNum : null;
         isset($jsonInfo->checkDate) ? $this->checkDate = $jsonInfo->checkDate : null;
+        isset($jsonInfo->checkDT) ? $this->checkDT = $jsonInfo->checkDT : null;
     }
 }
 
