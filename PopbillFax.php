@@ -369,7 +369,7 @@ class FaxService extends PopbillBase {
         return $this->executeCURL('/FAX/SenderNumber', $CorpNum, $UserID);
     }
 
-    // 팩스 미리보기 URL
+    // 팩스 변환결과 확인 팝업 URL
     public function getPreviewURL($CorpNum, $ReceiptNum, $UserID = null) {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
