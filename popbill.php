@@ -337,6 +337,8 @@ class PopbillBase
         $response = $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
         if($response->code == 1) {
             unset($this-> Token_Table[$CorpNum]);
+        } else {
+            throw new PopbillException('회원탈퇴에 실패 하였습니다.');
         }
         return $response;
     }
