@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : choi sh (code@linkhubcorp.com)
 * Written : 2022-09-30
-* Updated : 2024-09-05
+* Updated : 2024-09-19
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -28,11 +28,10 @@ class BizInfoCheckService extends PopbillBase {
 
     // 기업정보조회 - 단건
     public function CheckBizInfo($MemberCorpNum, $CheckCorpNum, $UserId = null) {
-        if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+        if($this->isNullOrEmpty($MemberCorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-
-        if(is_null($CheckCorpNum) || empty($CheckCorpNum)) {
+        if($this->isNullOrEmpty($CheckCorpNum)) {
             throw new PopbillException('조회할 사업자번호가 입력되지 않았습니다.');
         }
 
@@ -41,15 +40,22 @@ class BizInfoCheckService extends PopbillBase {
         $BizCheckInfo = new BizCheckInfo();
         $BizCheckInfo->fromJsonInfo($result);
         return $BizCheckInfo;
-
     }
 
     // 조회 단가 확인
     public function GetUnitCost($CorpNum) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         return $this->executeCURL('/BizInfo/UnitCost', $CorpNum)->unitCost;
     }
 
     public function GetChargeInfo ($CorpNum, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $uri = '/BizInfo/ChargeInfo';
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-09-05
+ * Updated : 2024-09-19
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -31,17 +31,26 @@ class MessagingService extends PopbillBase {
     }
 
     // 전송단가 확인
-    public function GetUnitCost($CorpNum, $MessageType)
-    {
+    public function GetUnitCost($CorpNum, $MessageType) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MessageType)) {
+            throw new PopbillException('문자 전송유형이 입력되지 않았습니다.');
+        }
+
         return $this->executeCURL('/Message/UnitCost?Type=' . $MessageType, $CorpNum)->unitCost;
     }
 
     // 발신번호 등록여부 확인
-    public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID=null)
-    {
-        if (empty($SenderNumber)) {
+    public function CheckSenderNumber($CorpNum, $SenderNumber, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SenderNumber)) {
             throw new PopbillException('발신번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Message/CheckSenderNumber/' . $SenderNumber, $CorpNum, $UserID);
     }
 
@@ -64,7 +73,7 @@ class MessagingService extends PopbillBase {
     *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendSMS($CorpNum, $Sender, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendSMS($CorpNum, $Sender = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
         return $this->SendMessage(ENumMessageType::SMS, $CorpNum, $Sender, $SenderName, null, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
     }
@@ -89,7 +98,7 @@ class MessagingService extends PopbillBase {
     *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendLMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendLMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
         return $this->SendMessage(ENumMessageType::LMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
     }
@@ -114,7 +123,7 @@ class MessagingService extends PopbillBase {
     *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendXMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendXMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
         return $this->SendMessage(ENumMessageType::XMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
     }
@@ -140,24 +149,26 @@ class MessagingService extends PopbillBase {
     *    $SystemYN   => false
     *    $requestNum => 전송 요청번호
     */
-    public function SendMMS($CorpNum, $Sender, $Subject, $Content, $Messages = array(), $FilePaths = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendMMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $FilePaths = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
     {
-        if (empty($Messages)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Messages)) {
             throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
         }
-
-        if (empty($FilePaths)) {
-            throw new PopbillException('발신파일 목록이 입력되지 않았습니다.');
+        if($this->isNullOrEmpty($FilePaths)) {
+            throw new PopbillException('전송할 이미지 파일 경로가 입력되지 않았습니다.');
         }
 
         $Request = array();
 
-        if (empty($Sender) == false) $Request['snd'] = $Sender;
-        if (empty($SenderName) == false) $Request['sndnm'] = $SenderName;
-        if (empty($Content) == false) $Request['content'] = $Content;
-        if (empty($Subject) == false) $Request['subject'] = $Subject;
-        if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
-        if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
+        if(!$this->isNullOrEmpty($Sender)) $Request['snd'] = $Sender;
+        if(!$this->isNullOrEmpty($Subject)) $Request['subject'] = $Subject;
+        if(!$this->isNullOrEmpty($Content)) $Request['content'] = $Content;
+        if(!$this->isNullOrEmpty($ReserveDT)) $Request['sndDT'] = $ReserveDT;
+        if(!$this->isNullOrEmpty($SenderName)) $Request['sndnm'] = $SenderName;
+        if(!$this->isNullOrEmpty($RequestNum)) $Request['requestNum'] = $RequestNum;
 
         if ($adsYN) $Request['adsYN'] = $adsYN;
         if ($SystemYN) $Request['systemYN'] = $SystemYN;
@@ -183,9 +194,13 @@ class MessagingService extends PopbillBase {
     */
     public function GetMessages($CorpNum, $ReceiptNum, $UserID = null)
     {
-        if (empty($ReceiptNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ReceiptNum)) {
             throw new PopbillException('접수번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Message/' . $ReceiptNum, $CorpNum, $UserID);
 
         $MessageInfoList = array();
@@ -205,9 +220,13 @@ class MessagingService extends PopbillBase {
     */
     public function GetMessagesRN($CorpNum, $RequestNum, $UserID = null)
     {
-        if (empty($RequestNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($RequestNum)) {
             throw new PopbillException('전송요청번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Message/Get/' . $RequestNum, $CorpNum, $UserID);
 
         $MessageInfoList = array();
@@ -227,9 +246,13 @@ class MessagingService extends PopbillBase {
     */
     public function CancelReserve($CorpNum, $ReceiptNum, $UserID = null)
     {
-        if (empty($ReceiptNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ReceiptNum)) {
             throw new PopbillException('예약전송 취소할 접수번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Message/' . $ReceiptNum . '/Cancel', $CorpNum, $UserID);
     }
 
@@ -240,9 +263,13 @@ class MessagingService extends PopbillBase {
     */
     public function CancelReserveRN($CorpNum, $RequestNum, $UserID = null)
     {
-        if (empty($RequestNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($RequestNum)) {
             throw new PopbillException('예약전송 취소할 전송요청번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Message/Cancel/' . $RequestNum, $CorpNum, $UserID);
     }
 
@@ -254,10 +281,13 @@ class MessagingService extends PopbillBase {
     */
     public function CancelReservebyRCV($CorpNum, $ReceiptNum, $ReceiveNum, $UserID = null)
     {
-        if (empty($ReceiptNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ReceiptNum)) {
             throw new PopbillException('예약전송 취소할 접수번호가 입력되지 않았습니다.');
         }
-        if (empty($ReceiveNum)) {
+        if($this->isNullOrEmpty($ReceiveNum)) {
             throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
         }
 
@@ -274,10 +304,13 @@ class MessagingService extends PopbillBase {
     */
     public function CancelReserveRNbyRCV($CorpNum, $RequestNum, $ReceiveNum, $UserID = null)
     {
-        if (empty($RequestNum)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($RequestNum)) {
             throw new PopbillException('예약전송 취소할 전송요청번호가 입력되지 않았습니다.');
         }
-        if (empty($ReceiveNum)) {
+        if($this->isNullOrEmpty($ReceiveNum)) {
             throw new PopbillException('예약전송 취소할 수신번호가 입력되지 않았습니다.');
         }
 
@@ -289,18 +322,21 @@ class MessagingService extends PopbillBase {
 
     private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SystemYN = false, $RequestNum = null)
     {
-        if (empty($Messages)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Messages)) {
             throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
         }
 
         $Request = array();
 
-        if (empty($Sender) == false) $Request['snd'] = $Sender;
-        if (empty($SenderName) == false) $Request['sndnm'] = $SenderName;
-        if (empty($Content) == false) $Request['content'] = $Content;
-        if (empty($Subject) == false) $Request['subject'] = $Subject;
-        if (empty($ReserveDT) == false) $Request['sndDT'] = $ReserveDT;
-        if (empty($RequestNum) == false) $Request['requestNum'] = $RequestNum;
+        if(!$this->isNullOrEmpty($Sender)) $Request['snd'] = $Sender;
+        if(!$this->isNullOrEmpty($SenderName)) $Request['sndnm'] = $SenderName;
+        if(!$this->isNullOrEmpty($Content)) $Request['content'] = $Content;
+        if(!$this->isNullOrEmpty($Subject)) $Request['subject'] = $Subject;
+        if(!$this->isNullOrEmpty($ReserveDT)) $Request['sndDT'] = $ReserveDT;
+        if(!$this->isNullOrEmpty($RequestNum)) $Request['requestNum'] = $RequestNum;
 
         if ($adsYN) $Request['adsYN'] = $adsYN;
         if ($SystemYN) $Request['systemYN'] = $SystemYN;
@@ -321,6 +357,10 @@ class MessagingService extends PopbillBase {
     // 문자 전송내역 팝업 URL
     public function GetSentListURL($CorpNum, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        
         $response = $this->executeCURL('/Message/?TG=BOX', $CorpNum, $UserID);
         return $response->url;
     }
@@ -328,6 +368,10 @@ class MessagingService extends PopbillBase {
     // 발신번호 관리 팝업 URL
     public function GetSenderNumberMgtURL($CorpNum, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $response = $this->executeCURL('/Message/?TG=SENDER', $CorpNum, $UserID);
         return $response->url;
     }
@@ -335,12 +379,20 @@ class MessagingService extends PopbillBase {
     // 문자 전송내역 조회
     public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null)
     {
-        if (is_null($SDate) || $SDate === "") {
-            throw new PopbillException(-99999999, '시작일자가 입력되지 않았습니다.');
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-
-        if (is_null($EDate) || $EDate === "") {
-            throw new PopbillException(-99999999, '종료일자가 입력되지 않았습니다.');
+        if($this->isNullOrEmpty($SDate)) {
+            throw new PopbillException('시작일자가 입력되지 않았습니다.');
+        }
+        if(!$this->isValidDate($SDate)) {
+            throw new PopbillException('시작일자가 유효하지 않습니다.');
+        }
+        if($this->isNullOrEmpty($EDate)) {
+            throw new PopbillException('종료일자가 입력되지 않았습니다.');
+        }
+        if(!$this->isValidDate($EDate)) {
+            throw new PopbillException('종료일자가 유효하지 않습니다.');
         }
 
         $uri = '/Message/Search';
@@ -348,12 +400,12 @@ class MessagingService extends PopbillBase {
         $uri .= '&EDate=' . $EDate;
 
         $uri .= '&State=';
-        if (!is_null($State) || !empty($State)) {
+        if(!$this->isNullOrEmpty($State)) {
             $uri .= implode(',', $State);
         }
 
         $uri .= '&Item=';
-        if (!is_null($Item) || !empty($Item)) {
+        if(!$this->isNullOrEmpty($Item)) {
             $uri .= implode(',', $Item);
         }
 
@@ -369,22 +421,22 @@ class MessagingService extends PopbillBase {
         }
 
         $uri .= '&Page=';
-        if (!is_null($Page) || !empty($Page)) {
+        if(!$this->isNullOrEmpty($Page)) {
             $uri .= $Page;
         }
 
         $uri .= '&PerPage=';
-        if (!is_null($PerPage) || !empty($PerPage)) {
+        if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= $PerPage;
         }
 
         $uri .= '&Order=';
-        if (!is_null($Order) || !empty($Order)) {
+        if(!$this->isNullOrEmpty($Order)) {
             $uri .= $Order;
         }
 
         $uri .= '&QString=';
-        if (!is_null($QString) || !empty($QString)) {
+        if(!$this->isNullOrEmpty($QString)) {
             $uri .= urlencode($QString);
         }
 
@@ -397,19 +449,34 @@ class MessagingService extends PopbillBase {
     }
 
     // 080 수신거부목록 조회
-    public function GetAutoDenyList($CorpNum)
+    public function GetAutoDenyList($CorpNum, $UserID = null)
     {
-        return $this->executeCURL('/Message/Denied', $CorpNum);
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
+        return $this->executeCURL('/Message/Denied', $CorpNum, $UserID);
     }
 
     // 080 수신거부 조회
-    public function CheckAutoDenyNumber($CorpNum)
+    public function CheckAutoDenyNumber($CorpNum, $UserID = null)
     {
-        return $this->executeCURL('/Message/AutoDenyNumberInfo', $CorpNum);
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
+        return $this->executeCURL('/Message/AutoDenyNumberInfo', $CorpNum, $UserID);
     }
 
     public function GetChargeInfo($CorpNum, $MessageType, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MessageType)) {
+            throw new PopbillException('문자 전송유형이 입력되지 않았습니다.');
+        }
+
         $uri = '/Message/ChargeInfo?Type=' . $MessageType;
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
@@ -422,6 +489,10 @@ class MessagingService extends PopbillBase {
     // 발신번호 목록 조회
     public function GetSenderNumberList($CorpNum, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        
         return $this->executeCURL('/Message/SenderNumber', $CorpNum, $UserID);
     }
 

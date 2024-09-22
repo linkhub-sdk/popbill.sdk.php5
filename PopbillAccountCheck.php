@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2020-06-29
-* Updated : 2024-09-05
+* Updated : 2024-09-19
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -29,15 +29,13 @@ class AccountCheckService extends PopbillBase {
 
     // 예금주성명 조회
     public function CheckAccountInfo($MemberCorpNum, $BankCode, $AccountNumber, $UserID = null) {
-        if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+        if($this->isNullOrEmpty($MemberCorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-
-        if(is_null($BankCode) || empty($BankCode)) {
+        if($this->isNullOrEmpty($BankCode)) {
             throw new PopbillException('기관코드가 입력되지 않았습니다.');
         }
-
-        if(is_null($AccountNumber) || empty($AccountNumber)) {
+        if($this->isNullOrEmpty($AccountNumber)) {
             throw new PopbillException('계좌번호가 입력되지 않았습니다.');
         }
 
@@ -54,30 +52,24 @@ class AccountCheckService extends PopbillBase {
 
     // 예금주실명 조회
     public function CheckDepositorInfo($MemberCorpNum, $BankCode, $AccountNumber, $IdentityNumType, $IdentityNum, $UserID = null) {
-        if(is_null($MemberCorpNum) || empty($MemberCorpNum)) {
+        if($this->isNullOrEmpty($MemberCorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-
-        if(is_null($BankCode) || empty($BankCode)) {
+        if($this->isNullOrEmpty($BankCode)) {
             throw new PopbillException('기관코드가 입력되지 않았습니다.');
         }
-
-        if(is_null($AccountNumber) || empty($AccountNumber)) {
+        if($this->isNullOrEmpty($AccountNumber)) {
             throw new PopbillException('계좌번호가 입력되지 않았습니다.');
         }
-
-        if(is_null($IdentityNumType) || empty($IdentityNumType)) {
+        if($this->isNullOrEmpty($IdentityNumType)) {
             throw new PopbillException('등록번호 유형이 입력되지 않았습니다.');
         }
-
         if(preg_match("/^[PB]$/", $IdentityNumType) == false){
             throw new PopbillException('등록번호 유형이 유효하지 않습니다.');
         }
-
-        if(is_null($IdentityNum) || empty($IdentityNum)) {
+        if($this->isNullOrEmpty($IdentityNum)) {
             throw new PopbillException('등록번호가 입력되지 않았습니다.');
         }
-
         if(preg_match("/^\\d+$/", $IdentityNum) == false){
             throw new PopbillException('등록번호는 숫자만 입력할 수 있습니다.');
         }
@@ -97,7 +89,10 @@ class AccountCheckService extends PopbillBase {
 
     // 조회단가 확인
     public function GetUnitCost($CorpNum, $ServiceType, $UserID = null) {
-        if(is_null($ServiceType) || empty($ServiceType)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ServiceType)) {
             throw new PopbillException('서비스 유형이 입력되지 않았습니다.');
         }
 
@@ -107,8 +102,11 @@ class AccountCheckService extends PopbillBase {
     }
 
     // 과금정보 확인
-    public function GetChargeInfo ( $CorpNum, $UserID = null, $ServiceType) {
-        if(is_null($ServiceType) || empty($ServiceType)) {
+    public function GetChargeInfo($CorpNum, $UserID = null, $ServiceType) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ServiceType)) {
             throw new PopbillException('서비스 유형이 입력되지 않았습니다.');
         }
         

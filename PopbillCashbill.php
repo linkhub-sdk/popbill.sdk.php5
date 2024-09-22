@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2024-09-05
+* Updated : 2024-09-19
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -28,19 +28,29 @@ class CashbillService extends PopbillBase {
     }
 
     // 팝빌 현금영수증 문서함 관련 URL
-    public function GetURL($CorpNum, $UserID, $TOGO) {
+    public function GetURL($CorpNum, $UserID = null, $TOGO) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($TOGO)) {        
+            throw new PopbillException('접근 메뉴가 입력되지 않았습니다.');
+        }
+
         $response = $this->executeCURL('/Cashbill/?TG='.$TOGO,$CorpNum,$UserID);
         return $response->url;
     }
 
     // 문서번호 사용 여부 확인
-    public function CheckMgtKeyInUse($CorpNum, $MgtKey) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function CheckMgtKeyInUse($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        try
-        {
-            $response = $this->executeCURL('/Cashbill/'.$MgtKey,$CorpNum);
+
+        try{
+            $response = $this->executeCURL('/Cashbill/'.$MgtKey,$CorpNum,$UserID);
             return is_null($response->itemKey) == false;
         }catch(PopbillException $pe) {
             if($pe->getCode() == -14000003) {return false;}
@@ -49,12 +59,18 @@ class CashbillService extends PopbillBase {
     }
 
     // 즉시 발행
-    public function RegistIssue($CorpNum, $Cashbill, $Memo, $UserID = null, $EmailSubject = null) {
-        if(!is_null($Memo) || !empty($Memo)){
+    public function RegistIssue($CorpNum, $Cashbill, $Memo = null, $UserID = null, $EmailSubject = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Cashbill)) {
+            throw new PopbillException('현금영수증 정보가 입력되지 않았습니다.');
+        }
+        
+        if(!$this->isNullOrEmpty($Memo)) {
             $Cashbill->memo = $Memo;
         }
-
-        if(!is_null($EmailSubject) || !empty($EmailSubject)){
+        if(!$this->isNullOrEmpty($EmailSubject)) {
             $Cashbill->emailSubject = $EmailSubject;
         }
 
@@ -64,11 +80,14 @@ class CashbillService extends PopbillBase {
     }
 
     // 초대량 발행 접수
-    public function BulkSubmit($CorpNum, $SubmitID, $CashbillList, $UserID=null) {
-        if (is_null($SubmitID) || empty($SubmitID)) {
+    public function BulkSubmit($CorpNum, $SubmitID, $CashbillList, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubmitID)) {
             throw new PopbillException('제출아이디가 입력되지 않았습니다.');
         }
-        if (is_null($CashbillList) || empty($CashbillList)) {
+        if($this->isNullOrEmpty($CashbillList)) {
             throw new PopbillException('현금영수증 정보가 입력되지 않았습니다.');
         }
 
@@ -82,8 +101,11 @@ class CashbillService extends PopbillBase {
     }
 
     // 초대량 접수결과 확인
-    public function getBulkResult($CorpNum, $SubmitID, $UserID=null) {
-        if (is_null($SubmitID) || empty($SubmitID)) {
+    public function getBulkResult($CorpNum, $SubmitID, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubmitID)) {
             throw new PopbillException('제출아이디가 입력되지 않았습니다.');
         }
 
@@ -104,6 +126,21 @@ class CashbillService extends PopbillBase {
                                       $UserID = null, $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null,
                                       $serviceFee = null, $totalAmount = null, $emailSubject = null, $tradeDT = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($mgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($orgConfirmNum)) {
+            throw new PopbillException('당초 승인 현금영수증의 국세청승인번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($orgTradeDate)) {
+            throw new PopbillException('당초 승인 현금영수증의 거래일자가 입력되지 않았습니다.');
+        }
+        if(!$this->isValidDaTe($orgTradeDate)) {
+            throw new PopbillException('당초 승인 현금영수증의 거래일자가 유효하지 않습니다.');
+        }
 
         $request = array(
             'mgtKey' => $mgtKey,
@@ -129,7 +166,6 @@ class CashbillService extends PopbillBase {
     public function RevokeRegister($CorpNum, $mgtKey, $orgConfirmNum, $orgTradeDate, $smssendYN = false, $UserID = null,
     $isPartCancel = false, $cancelType = null, $supplyCost = null, $tax = null, $serviceFee = null, $totalAmount = null, $tradeDT = null)
     {
-
         $request = array(
             'mgtKey' => $mgtKey,
             'orgConfirmNum' => $orgConfirmNum,
@@ -149,11 +185,15 @@ class CashbillService extends PopbillBase {
     }
 
     // 삭제
-    public function Delete($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function Delete($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-    return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'DELETE','');
+
+        return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'DELETE','');
     }
 
     public function Update($CorpNum,$MgtKey,$Cashbill, $UserID = null) {
@@ -190,21 +230,39 @@ class CashbillService extends PopbillBase {
     }
 
     // 메일 재전송
-    public function SendEmail($CorpNum,$MgtKey,$Receiver,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function SendEmail($CorpNum, $MgtKey, $Receiver, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Receiver)) {
+            throw new PopbillException('수신자 이메일주소가 입력되지 않았습니다.');
         }
 
         $Request = array('receiver' => $Receiver);
         $postdata = json_encode($Request);
 
-        return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true,'EMAIL',$postdata);
+        return $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum, $UserID, true, 'EMAIL', $postdata);
     }
 
     // 문자 재전송
-    public function SendSMS($CorpNum,$MgtKey,$Sender,$Receiver,$Contents,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function SendSMS($CorpNum, $MgtKey, $Sender, $Receiver, $Contents, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Sender)) {
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Receiver)) {
+            throw new PopbillException('수신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Contents)) {
+            throw new PopbillException('메시지 내용이 입력되지 않았습니다.');
         }
 
         $Request = array('receiver' => $Receiver,'sender'=>$Sender,'contents' => $Contents);
@@ -214,9 +272,18 @@ class CashbillService extends PopbillBase {
     }
 
     // 팩스 전송
-    public function SendFAX($CorpNum,$MgtKey,$Sender,$Receiver,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function SendFAX($CorpNum, $MgtKey, $Sender, $Receiver, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호 배열이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Sender)) {
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Receiver)) {
+            throw new PopbillException('수신번호가 입력되지 않았습니다.');
         }
 
         $Request = array('receiver' => $Receiver,'sender'=>$Sender);
@@ -226,10 +293,14 @@ class CashbillService extends PopbillBase {
     }
 
     // 상태 확인
-    public function GetInfo($CorpNum,$MgtKey) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetInfo($CorpNum, $MgtKey) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Cashbill/'.$MgtKey, $CorpNum);
 
         $CashbillInfo = new CashbillInfo();
@@ -238,10 +309,14 @@ class CashbillService extends PopbillBase {
     }
 
     // 상세정보 확인
-    public function GetDetailInfo($CorpNum,$MgtKey) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetDetailInfo($CorpNum, $MgtKey) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Cashbill/'.$MgtKey.'?Detail', $CorpNum);
 
         $CashbillDetail = new Cashbill();
@@ -251,8 +326,11 @@ class CashbillService extends PopbillBase {
     }
 
     // 다수건 상태 확인
-    public function GetInfos($CorpNum,$MgtKeyList = array()) {
-        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
+    public function GetInfos($CorpNum, $MgtKeyList = array()) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKeyList)) {
             throw new PopbillException('문서번호 배열이 입력되지 않았습니다.');
         }
 
@@ -288,30 +366,39 @@ class CashbillService extends PopbillBase {
     }
 
     // 현금영수증 상세 정보 팝업 URL
-    public function GetPopUpURL($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetPopUpURL($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=POPUP', $CorpNum,$UserID)->url;
+        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=POPUP', $CorpNum, $UserID)->url;
     }
 
     // 현금영수증 인쇄 팝업 URL
-    public function GetPrintURL($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetPrintURL($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=PRINT', $CorpNum,$UserID)->url;
+        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=PRINT', $CorpNum, $UserID)->url;
     }
 
     // 현금영수증 상세 정보 팝업 URL (메뉴/버튼 제외)
-    public function GetViewURL($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetViewURL($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=VIEW', $CorpNum,$UserID)->url;
+        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=VIEW', $CorpNum, $UserID)->url;
     }
 
     public function GetEPrintURL($CorpNum,$MgtKey,$UserID = null) {
@@ -323,44 +410,60 @@ class CashbillService extends PopbillBase {
     }
 
     // 현금영수증 안내메일 버튼 팝업 URL
-    public function GetMailURL($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetMailURL($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=MAIL', $CorpNum,$UserID)->url;
+        return $this->executeCURL('/Cashbill/'.$MgtKey.'?TG=MAIL', $CorpNum, $UserID)->url;
     }
 
     // 현금영수증 대량 인쇄 팝업 URL
-    public function GetMassPrintURL($CorpNum,$MgtKeyList = array(),$UserID = null) {
-        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
+    public function GetMassPrintURL($CorpNum, $MgtKeyList = array(), $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKeyList)) {
             throw new PopbillException('문서번호 배열이 입력되지 않았습니다.');
         }
 
         $postdata = json_encode($MgtKeyList);
 
-        return $this->executeCURL('/Cashbill/Prints', $CorpNum, $UserID, true,null,$postdata)->url;
+        return $this->executeCURL('/Cashbill/Prints', $CorpNum, $UserID, true, null, $postdata)->url;
     }
 
     // 발행 단가 확인
     public function GetUnitCost($CorpNum) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         return $this->executeCURL('/Cashbill?cfg=UNITCOST', $CorpNum)->unitCost;
     }
 
     // 목록 조회
     public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $TradeType = array(), $TradeUsage = array(), $TaxationType = array(),
         $Page = null, $PerPage = null, $Order = null, $QString = null, $TradeOpt = array(null), $FranchiseTaxRegID = null){
-
-        if(is_null($DType) || empty($DType)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($DType)) {
             throw new PopbillException('일자유형(DType)이 입력되지 않았습니다.');
         }
-
-        if(is_null($SDate) || empty($SDate)) {
+        if($this->isNullOrEmpty($SDate)) {
             throw new PopbillException('시작일자(SDate)가 입력되지 않았습니다.');
         }
-
-        if(is_null($EDate) || empty($EDate)) {
+        if(!$this->isValidDate($SDate)) {
+            throw new PopbillException('시작일자(SDate)가 유효하지 않습니다.');
+        }
+        if($this->isNullOrEmpty($EDate)) {
             throw new PopbillException('종료일자(EDate)가 입력되지 않았습니다.');
+        }
+        if(!$this->isValidDate($EDate)) {
+            throw new PopbillException('종료일자(EDate)가 유효하지 않습니다.');
         }
 
         $uri = '/Cashbill/Search';
@@ -369,52 +472,52 @@ class CashbillService extends PopbillBase {
         $uri .= '&EDate='.$EDate;
 
         $uri .= '&State=';
-        if(!is_null($State) || !empty($State)){
-            $uri .= implode(',',$State);
+        if(!$this->isNullOrEmpty($State)) {
+            $uri .= implode(',', $State);
         }
 
         $uri .= '&TradeType=';
-        if(!is_null($TradeType) || !empty($TradeType)){
-            $uri .= implode(',',$TradeType);
+        if(!$this->isNullOrEmpty($TradeType)) {
+            $uri .= implode(',', $TradeType);
         }
 
         $uri .= '&TradeUsage=';
-        if(!is_null($TradeUsage) || !empty($TradeUsage)){
-            $uri .= implode(',',$TradeUsage);
+        if(!$this->isNullOrEmpty($TradeUsage)) {
+            $uri .= implode(',', $TradeUsage);
         }
 
         $uri .= '&TaxationType=';
-        if(!is_null($TaxationType) || !empty($TaxationType)){
-            $uri .= implode(',',$TaxationType);
+        if(!$this->isNullOrEmpty($TaxationType)) {
+            $uri .= implode(',', $TaxationType);
         }
 
         $uri .= '&Page=';
-        if(!is_null($Page) || !empty($Page)){
+        if(!$this->isNullOrEmpty($Page)) {
             $uri .= $Page;
         }
 
         $uri .= '&PerPage=';
-        if(!is_null($PerPage) || !empty($PerPage)){
+        if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= $PerPage;
         }
 
         $uri .= '&Order=';
-        if(!is_null($Order) || !empty($Order)){
+        if(!$this->isNullOrEmpty($Order)) {
             $uri .= $Order;
         }
 
         $uri .= '&QString=';
-        if(!is_null($QString) || !empty($QString)){
+        if(!$this->isNullOrEmpty($QString)) {
             $uri .= $QString;
         }
 
         $uri .= '&TradeOpt=';
-        if(!is_null($TradeOpt) || !empty($TradeOpt)){
-            $uri .= implode(',',$TradeOpt);
+        if(!$this->isNullOrEmpty($TradeOpt)) {
+            $uri .= implode(',', $TradeOpt);
         }
 
         $uri .= '&FranchiseTaxRegID=';
-        if(!is_null($FranchiseTaxRegID) || !empty($FranchiseTaxRegID)){
+        if(!$this->isNullOrEmpty($FranchiseTaxRegID)) {
             $uri .= $FranchiseTaxRegID;
         }
 
@@ -427,7 +530,11 @@ class CashbillService extends PopbillBase {
     }
 
     // 과금정보 확인
-    public function GetChargeInfo ( $CorpNum, $UserID = null) {
+    public function GetChargeInfo ($CorpNum, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $uri = '/Cashbill/ChargeInfo';
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
@@ -439,6 +546,10 @@ class CashbillService extends PopbillBase {
 
     // 현금영수증 알림메일 발송설정 조회
     public function ListEmailConfig($CorpNum, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $CBEmailSendConfigList = array();
 
         $result = $this->executeCURL('/Cashbill/EmailSendConfig', $CorpNum, $UserID);
@@ -453,6 +564,16 @@ class CashbillService extends PopbillBase {
 
     // 현금영수증 알림메일 발송설정 수정
     public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null) {
+        if($this->isNullOrEmpty($corpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($emailType)) {
+            throw new PopbillException('발송 메일 유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($sendYN)) {
+            throw new PopbillException('전송 여부가 입력되지 않았습니다.');
+        }
+
         $sendYNString = $sendYN ? 'True' : 'False';
         $uri = '/Cashbill/EmailSendConfig?EmailType='.$emailType.'&SendYN='.$sendYNString;
 
@@ -460,8 +581,11 @@ class CashbillService extends PopbillBase {
     }
 
     // 현금영수증 PDF 다운로드 URL
-    public function GetPDFURL($CorpNum,$MgtKey,$UserID = null) {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetPDFURL($CorpNum, $MgtKey, $UserID = null) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
@@ -471,18 +595,29 @@ class CashbillService extends PopbillBase {
     // get PDF
     public function GetPDF($CorpNum, $MgtKey, $UserID = null)
     {
-        if (is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Cashbill/' . $MgtKey . '?PDF', $CorpNum, $UserID);
     }
 
     // 문서번호 할당
     public function AssignMgtKey($CorpNum, $itemKey, $MgtKey, $UserID = null)
     {
-        if (is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemKey)) {
+            throw new PopbillException('팝빌에서 할당한 식별번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('할당할 문서번호가 입력되지 않았습니다.');
         }
+
         $uri = '/Cashbill/' . $itemKey;
         $postdata = 'MgtKey=' . $MgtKey;
         return $this->executeCURL($uri, $CorpNum, $UserID, true, "", $postdata, false, 'application/x-www-form-urlencoded; charset=utf-8');

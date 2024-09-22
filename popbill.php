@@ -627,6 +627,21 @@ class PopbillBase
             return ($this->IsTest ? PopbillBase::ServiceURL_TEST : PopbillBase::ServiceURL_REAL);
         }
     }
+
+    public function isNullOrEmpty($value)
+    {
+        return is_null($value) || empty($value);
+    }
+
+    public function isValidDate($date)
+    {
+        return preg_match('/(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])/', $date);
+    }
+
+    public function isValidDT($datetime) 
+    {
+        return preg_match('/^(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(0[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])$/', $datetime);
+    }
 }
 
 class JoinForm

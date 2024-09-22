@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2024-09-05
+* Updated : 2024-09-19
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -35,15 +35,29 @@ class StatementService extends PopbillBase {
     // 전자명세서 발행단가 확인
     public function GetUnitCost($CorpNum, $itemCode)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+
         return $this->executeCURL('/Statement/' . $itemCode . '?cfg=UNITCOST', $CorpNum)->unitCost;
     }
 
     // 문서문서번호 사용유무 확인
     public function CheckMgtKeyInuse($CorpNum, $itemCode, $MgtKey)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         try{
             $response = $this->executeCURL('/Statement/' . $itemCode . "/" . $MgtKey, $CorpNum);
             return is_null($response->itemKey) == false;
@@ -55,25 +69,40 @@ class StatementService extends PopbillBase {
     // 전자명세서 선팩스 전송
     public function FAXSend($CorpNum, $Statement, $SendNum, $ReceiveNum, $UserID = null)
     {
-        if(!is_null($SendNum) || !empty($SendNum)){
-            $Statement->sendNum = $SendNum;
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-        if(!is_null($ReceiveNum) || !empty($ReceiveNum)){
-            $Statement->receiveNum = $ReceiveNum;
+        if($this->isNullOrEmpty($Statement)) {
+            throw new PopbillException('전자명세서 정보가 입력되지 않았습니다.');
         }
+        if($this->isNullOrEmpty($SendNum)) {
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ReceiveNum)) {
+            throw new PopbillException('수신번호가 입력되지 않았습니다.');
+        }
+        
+        $Statement->sendNum = $SendNum;
+        $Statement->receiveNum = $ReceiveNum;
 
         $postdata = json_encode($Statement);
         return $this->executeCURL('/Statement', $CorpNum, $UserID, true, 'FAX', $postdata)->receiptNum;
     }
 
     // 전자명세서 즉시발행
-    public function RegistIssue($CorpNum, $Statement, $memo, $UserID = null, $EmailSubject = null)
+    public function RegistIssue($CorpNum, $Statement, $memo = null, $UserID = null, $EmailSubject = null)
     {
-        if(!is_null($memo) || !empty($memo)){
-            $Statement->memo = $memo;
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Statement)) {
+            throw new PopbillException('전자명세서 정보가 입력되지 않았습니다.');
         }
 
-        if(!is_null($EmailSubject) || !empty($EmailSubject)){
+        if(!$this->isNullOrEmpty($memo)) {
+            $Statement->memo = $memo;
+        }
+        if(!$this->isNullOrEmpty($EmailSubject)) {
             $Statement->emailSubject = $EmailSubject;
         }
 
@@ -84,6 +113,13 @@ class StatementService extends PopbillBase {
     // 전자명세서 임시저장
     public function Register($CorpNum, $Statement, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($Statement)) {
+            throw new PopbillException('전자명세서 정보가 입력되지 않았습니다.');
+        }
+
         $postdata = json_encode($Statement);
         return $this->executeCURL('/Statement', $CorpNum, $UserID, true, null, $postdata);
     }
@@ -91,9 +127,19 @@ class StatementService extends PopbillBase {
     // 전자명세서 수정
     public function Update($CorpNum, $itemCode, $MgtKey, $Statement, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+        if($this->isNullOrEmpty($Statement)) {
+            throw new PopbillException('수정할 전자명세서 정보가 입력되지 않았습니다.');
+        }
+
         $postdata = json_encode($Statement);
         return $this->executeCURL('/Statement/' . $itemCode . "/" . $MgtKey, $CorpNum, $UserID, true,"PATCH", $postdata);
     }
@@ -101,23 +147,37 @@ class StatementService extends PopbillBase {
     // 전자명세서 삭제
     public function Delete($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
         return $this->executeCURL('/Statement/' . $itemCode . "/" . $MgtKey, $CorpNum, $UserID, true,'DELETE','');
     }
 
     // 전자명세서 발행
-    public function Issue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null, $EmailSubject = null){
-        if(is_null($MgtKey) || empty($MgtKey))
-        {
+    public function Issue($CorpNum, $itemCode, $MgtKey, $Memo = null, $UserID = null, $EmailSubject = null)
+    {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
         $Request = new STMIssueRequest();
-        $Request->memo = $Memo;
-
-        if(!is_null($EmailSubject) || !empty($EmailSubject)){
+        
+        if(!$this->isNullOrEmpty($Memo)) {
+            $Request->memo = $Memo;
+        }
+        if(!$this->isNullOrEmpty($EmailSubject)) {
             $Request->emailSubject = $EmailSubject;
         }
 
@@ -127,13 +187,24 @@ class StatementService extends PopbillBase {
     }
 
     // 전자명세서 발행취소
-    public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo, $UserID = null)
+    public function CancelIssue($CorpNum, $itemCode, $MgtKey, $Memo = null, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $Request = new STMMemoRequest();
-        $Request->memo = $Memo;
+        
+        if(!$this->isNullOrEmpty($Memo)) {
+            $Request->memo = $Memo;
+        }
+
         $postdata = json_encode($Request);
 
         return $this->executeCURL('/Statement/' . $itemCode . "/" . $MgtKey, $CorpNum, $UserID, true, 'CANCEL', $postdata);
@@ -142,11 +213,19 @@ class StatementService extends PopbillBase {
     // 전자명세서 첨부파일 추가
     public function AttachFile($CorpNum, $itemCode, $MgtKey, $FilePath, $UserID = null, $DisplayName)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-
-        if(is_null($DisplayName) || empty($DisplayName)) {
+        if($this->isNullOrEmpty($FilePath)) {
+            throw new PopbillException('첨부파일 경로가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($DisplayName)) {
             throw new PopbillException('첨부파일명이 입력되지 않았습니다.');
         }
 
@@ -164,30 +243,51 @@ class StatementService extends PopbillBase {
     // 첨부파일 목록확인
     public function GetFiles($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Files', $CorpNum, $UserID);
     }
 
     // 첨부파일 삭제
     public function DeleteFile($CorpNum, $itemCode, $MgtKey, $FileID, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
-        if(is_null($FileID) || empty($FileID)) {
+        if($this->isNullOrEmpty($FileID)) {
             throw new PopbillException('파일아이디가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Files/' . $FileID, $CorpNum, $UserID, true, 'DELETE', null);
     }
 
     // 다량 전자명세서 상태,요약 정보확인
     public function GetInfo($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey, $CorpNum, $UserID);
 
         $StatementInfo = new StatementInfo();
@@ -198,11 +298,18 @@ class StatementService extends PopbillBase {
     // 다량 전자명세서 상태,요약 정보확인
     public function GetInfos($CorpNum, $itemCode, $MgtKeyList, $UserID = null)
     {
-        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKeyList)) {
             throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
         }
+
         $postdata = json_encode($MgtKeyList);
-        $result = $this->executeCURL('/Statement/' . $itemCode, $CorpNum, null, true, null, $postdata);
+        $result = $this->executeCURL('/Statement/' . $itemCode, $CorpNum, $UserID, true, null, $postdata);
 
         $StatementInfoList = array();
 
@@ -218,9 +325,16 @@ class StatementService extends PopbillBase {
     // 이력 확인
     public function GetLogs($CorpNum, $itemCode, $MgtKey)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Logs', $CorpNum);
 
         $StatementLogList = array();
@@ -236,9 +350,16 @@ class StatementService extends PopbillBase {
     // 상세정보 확인
     public function GetDetailInfo($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         $result = $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '?Detail', $CorpNum, $UserID);
 
         $StatementDetail = new Statement();
@@ -250,19 +371,44 @@ class StatementService extends PopbillBase {
     // 알림메일 재전송
     public function SendEmail($CorpNum, $itemCode, $MgtKey, $receiver, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+        if($this->isNullOrEmpty($receiver)) {
+            throw new PopbillException('수신자 이메일주소가 입력되지 않았습니다.');
+        }
+
         $Request = array('receiver' => $receiver);
         $postdata = json_encode($Request);
-        return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey, $CorpNum, $UserID, true,'EMAIL', $postdata);
+        return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey, $CorpNum, $UserID, true, 'EMAIL', $postdata);
     }
 
     // 알림문자 재전송
     public function SendSMS($CorpNum, $itemCode, $MgtKey, $sender, $receiver, $contents, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($sender)) {
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($receiver)) {
+            throw new PopbillException('수신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($contents)) {
+            throw new PopbillException('메시지 내용이 입력되지 않았습니다.');
         }
 
         $Request = array(
@@ -278,8 +424,20 @@ class StatementService extends PopbillBase {
     // 전자명세서 팩스전송
     public function SendFAX($CorpNum, $itemCode, $MgtKey, $sender, $receiver, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($sender)) {
+            throw new PopbillException('발신번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($receiver)) {
+            throw new PopbillException('수신번호가 입력되지 않았습니다.');
         }
 
         $Request = array (
@@ -292,30 +450,60 @@ class StatementService extends PopbillBase {
     }
 
     // 팝빌 전자명세서 연결 URL
-    public function GetURL($CorpNum, $UserID = null, $TOGO) {
+    public function GetURL($CorpNum, $UserID = null, $TOGO) 
+    {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($TOGO)) {
+            throw new PopbillException('접근 메뉴가 입력되지 않았습니다.');
+        }
+
         return $this->executeCURL('/Statement?TG='.$TOGO, $CorpNum, $UserID)->url;
     }
 
     // 전자명세서 보기 URL
-    public function GetPopUpURL($CorpNum, $itemCode, $MgtKey, $UserID = null){
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetPopUpURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
+    {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '?TG=POPUP', $CorpNum, $UserID)->url;
     }
 
     // 인쇄 URL 호출
-    public function GetPrintURL($CorpNum, $itemCode, $MgtKey, $UserID = null){
-        if(is_null($MgtKey) || empty($MgtKey)) {
+    public function GetPrintURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
+    {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '?TG=PRINT', $CorpNum, $UserID)->url;
     }
 
     // 뷰 URL
     public function GetViewURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if (is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
@@ -325,18 +513,32 @@ class StatementService extends PopbillBase {
     // 인쇄 URL 호출(공급받는자용)
     public function GetEPrintURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '?TG=EPRINT', $CorpNum, $UserID)->url;
     }
 
     // 다량 인쇄 URL호출
     public function GetMassPrintURL($CorpNum, $itemCode, $MgtKeyList, $UserID = null)
     {
-        if(is_null($MgtKeyList) || empty($MgtKeyList)) {
-            throw new PopbillException('문서번호배열이 입력되지 않았습니다.');
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKeyList)) {
+            throw new PopbillException('문서번호 배열이 입력되지 않았습니다.');
+        }
+
         $postdata = json_encode($MgtKeyList);
         return $this->executeCURL('/Statement/' . $itemCode . '?Print', $CorpNum, $UserID, true, '', $postdata)->url;
     }
@@ -344,23 +546,39 @@ class StatementService extends PopbillBase {
     // 메일 링크 URL 호출
     public function GetMailURL($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
-        if(is_null($MgtKey) || empty($MgtKey)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($itemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
+
         return $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '?TG=MAIL', $CorpNum, $UserID)->url;
     }
 
     // 전자명세서 목록조회
     public function Search($CorpNum, $DType, $SDate, $EDate, $State = array(), $ItemCode = array(), $Page = null, $PerPage = null, $Order = null, $QString = null)
     {
-        if(is_null($DType) || empty($DType)) {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($DType)) {
             throw new PopbillException('조회일자 유형이 입력되지 않았습니다.');
         }
-        if(is_null($SDate) || empty($SDate)) {
+        if($this->isNullOrEmpty($SDate)) {
             throw new PopbillException('시작일자가 입력되지 않았습니다.');
         }
-        if(is_null($EDate) || empty($EDate)) {
+        if(!$this->isValidDate($SDate)) {
+            throw new PopbillException('시작일자가 유효하지 않습니다.');
+        }
+        if($this->isNullOrEmpty($EDate)) {
             throw new PopbillException('종료일자가 입력되지 않았습니다.');
+        }
+        if(!$this->isValidDate($EDate)) {
+            throw new PopbillException('종료일자가 유효하지 않습니다.');
         }
 
         $uri = '/Statement/Search';
@@ -369,32 +587,32 @@ class StatementService extends PopbillBase {
         $uri .= '&EDate=' . $EDate;
 
         $uri .= '&State=';
-        if( !is_null( $State ) || !empty( $State ) ){
+        if(!$this->isNullOrEmpty($State)) {
             $uri .= implode(',', $State);
         }
 
         $uri .= '&ItemCode=';
-        if( !is_null( $ItemCode ) || !empty( $ItemCode ) ){
+        if(!$this->isNullOrEmpty($ItemCode)) {
             $uri .= '&ItemCode=' . implode(',', $ItemCode);
         }
 
         $uri .= '&Page=';
-        if(!is_null($Page) || !empty($Page)){
+        if(!$this->isNullOrEmpty($Page)) {
             $uri .= $Page;
         }
 
         $uri .= '&PerPage=';
-        if(!is_null($PerPage) || !empty($PerPage)){
+        if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= $PerPage;
         }
 
         $uri .= '&Order=';
-        if(!is_null($Order) || !empty($Order)){
+        if(!$this->isNullOrEmpty($Order)) {
             $uri .= $Order;
         }
 
         $uri .= '&QString=';
-        if(!is_null($QString) || !empty($QString)){
+        if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }
 
@@ -408,6 +626,10 @@ class StatementService extends PopbillBase {
     // 팝빌 인감 및 첨부문서 등록 URL
     public function GetSealURL($CorpNum, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $response = $this->executeCURL('/Member?TG=SEAL', $CorpNum, $UserID);
         return $response->url;
     }
@@ -415,6 +637,22 @@ class StatementService extends PopbillBase {
     // 전자명세서 첨부
     public function AttachStatement($CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ItemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubItemCode)) {
+            throw new PopbillException('첨부할 전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubMgtKey)) {
+            throw new PopbillException('첨부할 전자명세서 문서번호가 입력되지 않았습니다.');
+        }
+
         $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/AttachStmt';
 
         $Request = new SubSTM();
@@ -428,6 +666,22 @@ class StatementService extends PopbillBase {
     // 전자명세서 첨부해제
     public function DetachStatement($CorpNum, $ItemCode, $MgtKey, $SubItemCode, $SubMgtKey, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ItemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($MgtKey)) {
+            throw new PopbillException('문서번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubItemCode)) {
+            throw new PopbillException('첨부해제할 전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($SubMgtKey)) {
+            throw new PopbillException('첨부해제할 전자명세서 문서번호가 입력되지 않았습니다.');
+        }
+
         $uri = '/Statement/' . $ItemCode . '/' . $MgtKey . '/DetachStmt';
 
         $Request = new SubSTM();
@@ -441,6 +695,13 @@ class StatementService extends PopbillBase {
     // 과금정보 확인
     public function GetChargeInfo($CorpNum, $ItemCode, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($ItemCode)) {
+            throw new PopbillException('전자명세서 문서유형이 입력되지 않았습니다.');
+        }
+
         $uri = '/Statement/ChargeInfo/'.$ItemCode;
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
@@ -453,6 +714,10 @@ class StatementService extends PopbillBase {
     // 전자명세서 관련 메일전송 항목에 대한 전송여부 목록 반환
     public function ListEmailConfig($CorpNum, $UserID = null)
     {
+        if($this->isNullOrEmpty($CorpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+
         $STMEmailSendConfigList = array();
 
         $result = $this->executeCURL('/Statement/EmailSendConfig', $CorpNum, $UserID);
@@ -468,6 +733,16 @@ class StatementService extends PopbillBase {
     // 전자명세서 관련 메일전송 항목에 대한 전송여부를 수정
     public function UpdateEmailConfig($corpNum, $emailType, $sendYN, $userID = null)
     {
+        if($this->isNullOrEmpty($corpNum)) {
+            throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($emailType)) {
+            throw new PopbillException('전송 메일 유형이 입력되지 않았습니다.');
+        }
+        if($this->isNullOrEmpty($sendYN)) {
+            throw new PopbillException('전송여부가 입력되지 않았습니다.');
+        }
+
         $sendYNString = $sendYN ? 'True' : 'False';
         $uri = '/Statement/EmailSendConfig?EmailType=' . $emailType . '&SendYN=' . $sendYNString;
 
