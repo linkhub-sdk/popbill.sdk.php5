@@ -274,7 +274,7 @@ class EasyFinBankService extends PopbillBase {
             throw new PopbillException ('작업아이디가 입력되지 않았습니다.');
         }
         if(strlen ( $JobID ) != 18) {
-            throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+            throw new PopbillException ('작업아이디 유효하지 않습니다.');
         }
 
         $uri = '/EasyFin/Bank/'.$JobID;
@@ -321,7 +321,7 @@ class EasyFinBankService extends PopbillBase {
             throw new PopbillException ('작업아이디가 입력되지 않았습니다.');
         }
         if(strlen ( $JobID ) != 18) {
-            throw new PopbillException ('작업아이디(JobID)가 올바르지 않습니다.');
+            throw new PopbillException ('작업아이디 유효하지 않습니다.');
         }
 
         $uri = '/EasyFin/Bank/'.$JobID.'/Summary';
