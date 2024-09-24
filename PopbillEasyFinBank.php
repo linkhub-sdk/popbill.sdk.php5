@@ -93,10 +93,10 @@ class EasyFinBankService extends PopbillBase {
             throw new PopbillException ('계좌번호가 입력되지 않았습니다.');
         }
         if($this->isNullOrEmpty($CloseType)) {
-            throw new PopbillException ('정액제 해지유형이 입력되지 않았습니다.');
+            throw new PopbillException ('정액제 해지 구분이 입력되지 않았습니다.');
         }
         if($CloseType != "일반" && $CloseType != "중도") {
-            throw new PopbillException ('정액제 해지유형이 유효하지 않습니다.');
+            throw new PopbillException ('정액제 해지 구분이 유효하지 않습니다.');
         }
 
         $uri = '/EasyFin/Bank/BankAccount/Close';
