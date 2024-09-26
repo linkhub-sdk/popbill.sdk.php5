@@ -229,7 +229,7 @@ class TaxinvoiceService extends PopbillBase
         if(!$this->isNullOrEmpty($EmailSubject)) {
             $Request->emailSubject = $EmailSubject;
         }
-        if(!$this->isNullOrEmpty($ForceIssue)) {
+        if($ForceIssue){
             $Request->forceIssue = $ForceIssue;
         }
 
@@ -365,7 +365,7 @@ class TaxinvoiceService extends PopbillBase
 
         $Request = new TIBulkRequest();
         
-        if ($ForceIssue == true) {
+        if ($ForceIssue) {
             $Request->forceIssue = $ForceIssue;
         }
         $Request->invoices = $taxinvoiceList;

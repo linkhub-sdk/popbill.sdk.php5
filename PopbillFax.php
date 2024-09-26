@@ -66,12 +66,12 @@ class FaxService extends PopbillBase {
         }
 
         $RequestForm = array();
-        $RequestForm['snd'] = $Sender;
-        $RequestForm['sndnm'] = $SenderName;
-        $RequestForm['title'] = $title;
         $RequestForm['fCnt'] = count($FilePaths);
         $RequestForm['rcvs'] = $Receivers;
 
+        if(!$this->isNullOrEmpty($Sender))  $RequestForm['snd'] = $Sender;
+        if(!$this->isNullOrEmpty($SenderName))  $RequestForm['sndnm'] = $SenderName;
+        if(!$this->isNullOrEmpty($title))  $RequestForm['title'] = $title;
         if(!$this->isNullOrEmpty($ReserveDT))  $RequestForm['sndDT'] = $ReserveDT;
         if(!$this->isNullOrEmpty($RequestNum))  $RequestForm['requestNum'] = $RequestNum;
         if ($adsYN) $RequestForm['adsYN'] = $adsYN;
@@ -104,12 +104,12 @@ class FaxService extends PopbillBase {
         }
 
         $RequestForm = array();
-        $RequestForm['snd'] = $Sender;
-        $RequestForm['sndnm'] = $SenderName;
-        $RequestForm['title'] = $title;
         $RequestForm['fCnt'] = count($FileDatas);
         $RequestForm['rcvs'] = $Receivers;
 
+        if(!$this->isNullOrEmpty($Sender))  $RequestForm['snd'] = $Sender;
+        if(!$this->isNullOrEmpty($SenderName))  $RequestForm['sndnm'] = $SenderName;
+        if(!$this->isNullOrEmpty($title))  $RequestForm['title'] = $title;
         if(!$this->isNullOrEmpty($ReserveDT))  $RequestForm['sndDT'] = $ReserveDT;
         if(!$this->isNullOrEmpty($RequestNum))  $RequestForm['requestNum'] = $RequestNum;
         if ($adsYN) $RequestForm['adsYN'] = $adsYN;
