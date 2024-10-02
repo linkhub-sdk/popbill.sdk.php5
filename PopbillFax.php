@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-09-19
+ * Updated : 2024-10-02
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -279,7 +279,7 @@ class FaxService extends PopbillBase {
     }
 
     // 전송내역 목록 조회
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN = null, $SenderOnly = null, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null) {
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $ReserveYN = null, $SenderOnly = false, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null) {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -300,15 +300,16 @@ class FaxService extends PopbillBase {
         $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
-        $uri .= '&State=';
-        if (!is_null($State) || !empty($State)) {
-            $uri .= implode(',', $State);
+        if(!$this->isNullOrEmpty($State)) {
+            $uri .= '&State=' . implode(',', $State);
         }
 
-        if ($ReserveYN) {
-            $uri .= '&ReserveYN=1';
-        } else {
-            $uri .= '&ReserveYN=0';
+        if(!is_null($ReserveYN)) {
+            if($ReserveYN) {
+                $uri .= '&ReserveYN=1';
+            }else{
+                $uri .= '&ReserveYN=0';
+            }
         }
 
         if ($SenderOnly) {
@@ -317,27 +318,23 @@ class FaxService extends PopbillBase {
             $uri .= '&SenderOnly=0';
         }
 
-        $uri .= '&Page=';
-        if (!is_null($Page) || !empty($Page)) {
-            $uri .= $Page;
+        if(!$this->isNullOrEmpty($Page)) {
+            $uri .= '&Page=' . $Page;
         }
         
-        $uri .= '&PerPage=';
-        if (!is_null($PerPage) || !empty($PerPage)) {
-            $uri .= $PerPage;
+        if(!$this->isNullOrEmpty($PerPage)) {
+            $uri .= '&PerPage=' . $PerPage;
         }
 
-        $uri .= '&Order=';
-        if (!is_null($Order) || !empty($Order)) {
-            $uri .= $Order;
+        if(!$this->isNullOrEmpty($Order)) {
+            $uri .= '&Order=' . $Order;
         }
 
-        $uri .= '&QString=';
-        if (!is_null($QString) || !empty($QString)) {
-            $uri .= urlencode($QString);
+        if(!$this->isNullOrEmpty($QString)) {
+            $uri .= '&QString=' . urlencode($QString);
         }
 
-        $response = $this->executeCURL($uri, $CorpNum, "");
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $SearchList = new FaxSearchResult();
         $SearchList->fromJsonInfo($response);

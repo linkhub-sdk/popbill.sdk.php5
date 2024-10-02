@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2024-09-19
+* Updated : 2024-10-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -586,32 +586,26 @@ class StatementService extends PopbillBase {
         $uri .= '&SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
-        $uri .= '&State=';
         if(!$this->isNullOrEmpty($State)) {
-            $uri .= implode(',', $State);
+            $uri .= '&State=' . implode(',', $State);
         }
 
-        $uri .= '&ItemCode=';
         if(!$this->isNullOrEmpty($ItemCode)) {
             $uri .= '&ItemCode=' . implode(',', $ItemCode);
         }
 
-        $uri .= '&Page=';
         if(!$this->isNullOrEmpty($Page)) {
-            $uri .= $Page;
+            $uri .= '&Page=' . $Page;
         }
 
-        $uri .= '&PerPage=';
         if(!$this->isNullOrEmpty($PerPage)) {
-            $uri .= $PerPage;
+            $uri .= '&PerPage=' . $PerPage;
         }
 
-        $uri .= '&Order=';
         if(!$this->isNullOrEmpty($Order)) {
-            $uri .= $Order;
+            $uri .= '&Order=' . $Order;
         }
 
-        $uri .= '&QString=';
         if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }

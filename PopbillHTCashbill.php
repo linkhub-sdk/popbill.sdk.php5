@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2024-09-19
+* Updated : 2024-10-02
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -108,7 +108,7 @@ class HTCashbillService extends PopbillBase {
     }
 
     // 수집 결과 조회
-    public function Search($CorpNum, $JobID, $TradeType, $TradeUsage, $Page = null, $PerPage = null, $Order = null, $UserID = null) {
+    public function Search($CorpNum, $JobID, $TradeType = array(), $TradeUsage = array(), $Page = null, $PerPage = null, $Order = null, $UserID = null) {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
@@ -118,44 +118,34 @@ class HTCashbillService extends PopbillBase {
         if(strlen ( $JobID ) != 18) {
             throw new PopbillException ('작업아이디(JobID)가 유효하지 않습니다.');
         }
-        if($this->isNullOrEmpty($TradeType)) {
-            throw new PopbillException('현금영수증 문서형태가 입력되지 않았습니다.');
-        }
-        if($this->isNullOrEmpty($TradeUsage)) {
-            throw new PopbillException('현금영수증 거래구분이 입력되지 않았습니다.');
-        }
 
         $uri = '/HomeTax/Cashbill/'.$JobID;
         
         $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
-            $uri .= implode ( ',' , $TradeType );
+            $uri .= implode (',', $TradeType);
         }
 
-        $uri .= '&TradeUsage=';
         if(!$this->isNullOrEmpty($TradeUsage)) {
-            $uri .= implode ( ',' , $TradeUsage );
+            $uri .= '&TradeUsage=' . implode (',', $TradeUsage);
         }
 
-        $uri .= '&Page=';
         if(!$this->isNullOrEmpty($Page)) {
-            $uri .= $Page;
+            $uri .= '&Page=' . $Page;
         }
 
-        $uri .= '&PerPage=';
         if(!$this->isNullOrEmpty($PerPage)) {
-            $uri .= $PerPage;
+            $uri .= '&PerPage=' . $PerPage;
         }
 
-        $uri .= '&Order=';
         if(!$this->isNullOrEmpty($Order)) {
-            $uri .= $Order;
+            $uri .= '&Order=' . $Order;
         }
 
-        $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
+        $response = $this->executeCURL($uri, $CorpNum, $UserID);
 
         $SearchResult = new HTCashbillSearch();
-        $SearchResult->fromJsonInfo ( $response ) ;
+        $SearchResult->fromJsonInfo ($response) ;
 
         return $SearchResult;
     }
@@ -176,18 +166,17 @@ class HTCashbillService extends PopbillBase {
         
         $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
-            $uri .= implode ( ',' , $TradeType );
+            $uri .= implode (',', $TradeType);
         }
 
-        $uri .= '&TradeUsage=';
         if(!$this->isNullOrEmpty($TradeUsage)) {
-            $uri .= implode ( ',' , $TradeUsage );
+            $uri .= '&TradeUsage=' . implode (',', $TradeUsage);
         }
 
-        $response = $this->executeCURL ( $uri, $CorpNum, $UserID );
+        $response = $this->executeCURL ($uri, $CorpNum, $UserID);
 
         $Summary = new HTCashbillSummary();
-        $Summary->fromJsonInfo ( $response ) ;
+        $Summary->fromJsonInfo ($response) ;
 
         return $Summary;
     }

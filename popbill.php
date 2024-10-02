@@ -13,7 +13,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2023-05-09
+ * Updated : 2024-10-02
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -334,11 +334,13 @@ class PopbillBase
     public function QuitMember($CorpNum, $QuitReason, $UserID = null)
     {
         $postData = json_encode(array("quitReason" => $QuitReason));
-        $response = $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
-        if($response->code == 1) {
-            unset($this-> Token_Table[$CorpNum]);
-        } else {
-            throw new PopbillException('회원탈퇴에 실패 하였습니다.');
+        try {
+            $response = $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
+            if($response->code == 1) {
+                unset($this-> Token_Table[$CorpNum]);
+            } 
+        } catch (LinkhubException $le) {
+            throw new PopbillException($le->getMessage(), $le->getCode());
         }
         return $response;
     }

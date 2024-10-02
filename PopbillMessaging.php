@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-09-19
+ * Updated : 2024-10-02
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -159,6 +159,9 @@ class MessagingService extends PopbillBase {
         }
         if($this->isNullOrEmpty($FilePaths)) {
             throw new PopbillException('전송할 이미지 파일 경로가 입력되지 않았습니다.');
+        }
+        if(!$this->isNullOrEmpty($ReserveDT) && !$this->isValidDT($ReserveDT)) {
+            throw new PopbillException('전송 예약일시가 유효하지 않습니다.');
         }
 
         $Request = array();
@@ -328,6 +331,9 @@ class MessagingService extends PopbillBase {
         if($this->isNullOrEmpty($Messages)) {
             throw new PopbillException('전송할 메시지가 입력되지 않았습니다.');
         }
+        if(!$this->isNullOrEmpty($ReserveDT) && !$this->isValidDT($ReserveDT)) {
+            throw new PopbillException('전송 예약일시가 유효하지 않습니다.');
+        }
 
         $Request = array();
 
@@ -399,14 +405,12 @@ class MessagingService extends PopbillBase {
         $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
-        $uri .= '&State=';
         if(!$this->isNullOrEmpty($State)) {
-            $uri .= implode(',', $State);
+            $uri .= '&State=' . implode(',', $State);
         }
 
-        $uri .= '&Item=';
         if(!$this->isNullOrEmpty($Item)) {
-            $uri .= implode(',', $Item);
+            $uri .= '&Item=' . implode(',', $Item);
         }
 
         if ($ReserveYN) {
@@ -420,24 +424,20 @@ class MessagingService extends PopbillBase {
             $uri .= '&SenderYN=0';
         }
 
-        $uri .= '&Page=';
         if(!$this->isNullOrEmpty($Page)) {
-            $uri .= $Page;
+            $uri .= '&Page=' . $Page;
         }
 
-        $uri .= '&PerPage=';
         if(!$this->isNullOrEmpty($PerPage)) {
-            $uri .= $PerPage;
+            $uri .= '&PerPage=' . $PerPage;
         }
 
-        $uri .= '&Order=';
         if(!$this->isNullOrEmpty($Order)) {
-            $uri .= $Order;
+            $uri .= '&Order=' . $Order;
         }
 
-        $uri .= '&QString=';
         if(!$this->isNullOrEmpty($QString)) {
-            $uri .= urlencode($QString);
+            $uri .= '&QString=' . urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);

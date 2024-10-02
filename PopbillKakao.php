@@ -11,7 +11,7 @@
  * http://www.linkhub.co.kr
  * Author : Jeong YoHan (code@linkhubcorp.com)
  * Written : 2018-03-02
- * Updated : 2024-09-19
+ * Updated : 2024-10-02
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -279,19 +279,20 @@ class KakaoService extends PopbillBase {
         $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
 
-        $uri .= '&State=';
         if(!$this->isNullOrEmpty($State)) {
-            $uri .= implode(',', $State);
+            $uri .= '&State=' . implode(',', $State);
         }
 
-        $uri .= '&Item=';
         if(!$this->isNullOrEmpty($Item)) {
-            $uri .= implode(',', $Item);
+            $uri .= '&Item=' . implode(',', $Item);
         }
 
-        $uri .= '&ReserveYN=';
-        if(!$this->isNullOrEmpty($ReserveYN)) {
-            $uri .= $ReserveYN;
+        if(!is_null($ReserveYN)) {
+            if($ReserveYN) {
+                $uri .= '&ReserveYN=1';
+            }else{
+                $uri .= '&ReserveYN=0';
+            }
         }
 
         if ($SenderYN) {
@@ -300,24 +301,20 @@ class KakaoService extends PopbillBase {
             $uri .= '&SenderYN=0';
         }
 
-        $uri .= '&Page=';
         if(!$this->isNullOrEmpty($Page)) {
-            $uri .= $Page;
+            $uri .= '&Page=' . $Page;
         }
         
-        $uri .= '&PerPage=';
         if(!$this->isNullOrEmpty($PerPage)) {
-            $uri .= $PerPage;
+            $uri .= '&PerPage=' . $PerPage;
         }
 
-        $uri .= '&Order=';
         if(!$this->isNullOrEmpty($Order)) {
-            $uri .= $Order;
+            $uri .= '&Order=' . $Order;
         }
 
-        $uri .= '&QString=';
         if(!$this->isNullOrEmpty($QString)) {
-            $uri .= urlencode($QString);
+            $uri .= '&QString=' . urlencode($QString);
         }
 
         $response = $this->executeCURL($uri, $CorpNum, $UserID);
@@ -363,6 +360,9 @@ class KakaoService extends PopbillBase {
         if($this->isNullOrEmpty($FilePaths)) {
             throw new PopbillException('전송할 이미지 파일 경로가 입력되지 않았습니다.');
         }
+        if(!$this->isNullOrEmpty($ReserveDT) && !$this->isValidDT($ReserveDT)) {
+            throw new PopbillException('전송 예약일시가 유효하지 않습니다.');
+        }
 
         $Request = array();
 
@@ -403,6 +403,9 @@ class KakaoService extends PopbillBase {
         if($this->isNullOrEmpty($Messages)) {
             throw new PopbillException('카카오톡 전송정보가 입력되지 않았습니다.');
         }
+        if(!$this->isNullOrEmpty($ReserveDT) && !$this->isValidDT($ReserveDT)) {
+            throw new PopbillException('전송 예약일시가 유효하지 않습니다.');
+        }
 
         $Request = array();
 
@@ -434,6 +437,9 @@ class KakaoService extends PopbillBase {
         }
         if($this->isNullOrEmpty($Messages)) {
             throw new PopbillException('카카오톡 전송정보가 입력되지 않았습니다.');
+        }
+        if(!$this->isNullOrEmpty($ReserveDT) && !$this->isValidDT($ReserveDT)) {
+            throw new PopbillException('전송 예약일시가 유효하지 않습니다.');
         }
 
         $Request = array();
