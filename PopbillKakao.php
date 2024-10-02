@@ -287,7 +287,7 @@ class KakaoService extends PopbillBase {
             $uri .= '&Item=' . implode(',', $Item);
         }
 
-        if(!is_null($ReserveYN)) {
+        if(!is_null($ReserveYN) && $ReserveYN != "") {
             if($ReserveYN) {
                 $uri .= '&ReserveYN=1';
             }else{

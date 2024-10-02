@@ -868,16 +868,24 @@ class TaxinvoiceService extends PopbillBase
             $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         }
 
-        if(!$this->isNullOrEmpty($TaxRegIDYN)) {
-            $uri .= '&TaxRegIDYN='. $TaxRegIDYN;
+        if (!is_null($TaxRegIDYN) && $TaxRegIDYN != "") {
+            if ($TaxRegIDYN) {
+                $uri .= '&TaxRegIDYN=1';
+            } else {
+                $uri .= '&TaxRegIDYN=0';
+            }
         }
 
         if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }
 
-        if(!$this->isNullOrEmpty($InterOPYN)) {
-            $uri .= '&InterOPYN=' . $InterOPYN;
+        if (!is_null($InterOPYN) && $InterOPYN != "") {
+            if ($InterOPYN) {
+                $uri .= '&InterOPYN=1';
+            } else {
+                $uri .= '&InterOPYN=0';
+            }
         }
 
         if(!$this->isNullOrEmpty($IssueType)) {

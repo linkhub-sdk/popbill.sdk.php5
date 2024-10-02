@@ -383,7 +383,7 @@ class MessagingService extends PopbillBase {
     }
 
     // 문자 전송내역 조회
-    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = false, $SenderYN = false, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null)
+    public function Search($CorpNum, $SDate, $EDate, $State = array(), $Item = array(), $ReserveYN = null, $SenderYN = false, $Page = null, $PerPage = null, $Order = null, $UserID = null, $QString = null)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
@@ -413,11 +413,14 @@ class MessagingService extends PopbillBase {
             $uri .= '&Item=' . implode(',', $Item);
         }
 
-        if ($ReserveYN) {
-            $uri .= '&ReserveYN=1';
-        } else {
-            $uri .= '&ReserveYN=0';
+        if(!is_null($ReserveYN)) {
+            if ($ReserveYN) {
+                $uri .= '&ReserveYN=1';
+            } else {
+                $uri .= '&ReserveYN=0';
+            }
         }
+
         if ($SenderYN) {
             $uri .= '&SenderYN=1';
         } else {
