@@ -141,7 +141,7 @@ class CashbillService extends PopbillBase {
         if(!$this->isValidDaTe($orgTradeDate)) {
             throw new PopbillException('당초 승인 현금영수증의 거래일자가 유효하지 않습니다.');
         }
-        if(!$this->isNullOrEmpty($tradeDT) && !($this->isValidDT($tradeDT) || $this->isValidDate($tradeDT))) {
+        if(!$this->isNullOrEmpty($tradeDT) && !$this->isValidDT($tradeDT)) {
             throw new PopbillException('거래일시가 유효하지 않습니다.');
         }
 
