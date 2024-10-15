@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2024-10-02
+* Updated : 2024-10-15
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -323,7 +323,7 @@ class StatementService extends PopbillBase {
     }
 
     // 이력 확인
-    public function GetLogs($CorpNum, $itemCode, $MgtKey)
+    public function GetLogs($CorpNum, $itemCode, $MgtKey, $UserID = null)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
@@ -335,7 +335,7 @@ class StatementService extends PopbillBase {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
 
-        $result = $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Logs', $CorpNum);
+        $result = $this->executeCURL('/Statement/' . $itemCode . '/' . $MgtKey . '/Logs', $CorpNum, $UserID);
 
         $StatementLogList = array();
 
@@ -735,6 +735,9 @@ class StatementService extends PopbillBase {
         }
         if($this->isNullOrEmpty($sendYN)) {
             throw new PopbillException('전송여부가 입력되지 않았습니다.');
+        }
+        if(!is_bool($sendYN)) {
+            throw new PopbillException('메일 전송 여부가 유효하지 않습니다.');
         }
 
         $sendYNString = $sendYN ? 'True' : 'False';

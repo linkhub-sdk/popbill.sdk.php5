@@ -13,7 +13,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-10-02
+ * Updated : 2024-10-15
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -425,10 +425,10 @@ class PopbillBase
             curl_setopt($http, CURLOPT_HTTPHEADER, $header);
             curl_setopt($http, CURLOPT_RETURNTRANSFER, TRUE);
             curl_setopt($http, CURLOPT_ENCODING, 'gzip,deflate');
-            // Read timeout 설정 
-            curl_setopt($http, CURLOPT_TIMEOUT_MS, 180 * 1000);
             // Connection timeout 설정
             curl_setopt($http, CURLOPT_CONNECTTIMEOUT_MS, 10 * 1000);
+            // 통합 timeout 설정 
+            curl_setopt($http, CURLOPT_TIMEOUT_MS, 180 * 1000);
 
             $responseJson = curl_exec($http);
 
@@ -539,7 +539,7 @@ class PopbillBase
                     'ignore_errors' => TRUE,
                     'protocol_version' => '1.0',
                     'method' => 'GET',
-                    'timeout' => 10
+                    'timeout' => 180
                 )
             );
 
@@ -634,6 +634,9 @@ class PopbillBase
 
     public function isNullOrEmpty($value)
     {
+        if(is_bool($value)) {
+            return is_null($value) || $value === '';
+        }
         return is_null($value) || empty($value);
     }
 
@@ -644,7 +647,7 @@ class PopbillBase
 
     public function isValidDT($datetime) 
     {
-        return preg_match('/^(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(0[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])$/', $datetime);
+        return preg_match('/(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(0[0-9]|1[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])/', $datetime);
     }
 }
 

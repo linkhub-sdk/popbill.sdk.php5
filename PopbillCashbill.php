@@ -12,7 +12,7 @@
 * Author : Kim Seongjun
 * Written : 2014-09-04
 * Contributor : Jeong YoHan (code@linkhubcorp.com)
-* Updated : 2024-10-02
+* Updated : 2024-10-15
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -565,6 +565,9 @@ class CashbillService extends PopbillBase {
         }
         if($this->isNullOrEmpty($sendYN)) {
             throw new PopbillException('전송 여부가 입력되지 않았습니다.');
+        }
+        if(!is_bool($sendYN)) {
+            throw new PopbillException('메일 전송 여부가 유효하지 않습니다.');
         }
 
         $sendYNString = $sendYN ? 'True' : 'False';

@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-10-02
+ * Updated : 2024-10-15
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -30,7 +30,7 @@ class TaxinvoiceService extends PopbillBase
     }
 
     // 팝빌 세금계산서 연결 url
-    public function GetURL($CorpNum, $UserID, $TOGO)
+    public function GetURL($CorpNum, $UserID = null, $TOGO)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
@@ -1036,8 +1036,11 @@ class TaxinvoiceService extends PopbillBase
         if($this->isNullOrEmpty($emailType)) {
             throw new PopbillException('발송 메일 유형이 입력되지 않았습니다.');
         }
-        if($this->isNullOrEmpty($sendYN)) {
+        if(is_null($sendYN) or $sendYN === '') {
             throw new PopbillException('메일 전송 여부가 입력되지 않았습니다.');
+        }
+        if(!is_bool($sendYN)) {
+            throw new PopbillException('메일 전송 여부가 유효하지 않습니다.');
         }
 
         $sendYNString = $sendYN ? 'True' : 'False';
