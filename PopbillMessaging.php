@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-10-15
+ * Updated : 2024-10-22
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -70,12 +70,11 @@ class MessagingService extends PopbillBase {
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
     *    $SenderName=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
-    *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendSMS($CorpNum, $Sender = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendSMS($CorpNum, $Sender = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $RequestNum = null)
     {
-        return $this->SendMessage(ENumMessageType::SMS, $CorpNum, $Sender, $SenderName, null, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
+        return $this->SendMessage(ENumMessageType::SMS, $CorpNum, $Sender, $SenderName, null, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $RequestNum);
     }
 
     /* 장문메시지 전송
@@ -95,12 +94,11 @@ class MessagingService extends PopbillBase {
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
     *    $SenderName=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
-    *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendLMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendLMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $RequestNum = null)
     {
-        return $this->SendMessage(ENumMessageType::LMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
+        return $this->SendMessage(ENumMessageType::LMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $RequestNum);
     }
 
     /* 장/단문메시지 전송 - 메지시 길이에 따라 단문과 장문을 선택하여 전송합니다.
@@ -120,12 +118,11 @@ class MessagingService extends PopbillBase {
     *    $adsYN     => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID    => 발신자 팝빌 회원아이디
     *    $SenderName=> 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
-    *    $SystemYN  => false
     *    $requestNum=> 전송 요청번호
     */
-    public function SendXMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendXMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $RequestNum = null)
     {
-        return $this->SendMessage(ENumMessageType::XMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $SystemYN, $RequestNum);
+        return $this->SendMessage(ENumMessageType::XMS, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages, $ReserveDT, $adsYN, $UserID, $RequestNum);
     }
 
     /* MMS 메시지 전송
@@ -146,10 +143,9 @@ class MessagingService extends PopbillBase {
     *    $adsYN      => 광고메시지 전송여부, true:광고/false:일반 중 택 1
     *    $UserID     => 발신자 팝빌 회원아이디
     *    $SenderName => 동보전송용 발신자명 미기재시 개별메시지 발신자명으로 전송
-    *    $SystemYN   => false
     *    $requestNum => 전송 요청번호
     */
-    public function SendMMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $FilePaths = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $SystemYN = false, $RequestNum = null)
+    public function SendMMS($CorpNum, $Sender = null, $Subject = null, $Content = null, $Messages = array(), $FilePaths = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SenderName = null, $RequestNum = null)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
@@ -174,7 +170,6 @@ class MessagingService extends PopbillBase {
         if(!$this->isNullOrEmpty($RequestNum)) $Request['requestNum'] = $RequestNum;
 
         if ($adsYN) $Request['adsYN'] = $adsYN;
-        if ($SystemYN) $Request['systemYN'] = $SystemYN;
 
         $Request['msgs'] = $Messages;
 
@@ -323,7 +318,7 @@ class MessagingService extends PopbillBase {
     }
 
 
-    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $SystemYN = false, $RequestNum = null)
+    private function SendMessage($MessageType, $CorpNum, $Sender, $SenderName, $Subject, $Content, $Messages = array(), $ReserveDT = null, $adsYN = false, $UserID = null, $RequestNum = null)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
@@ -345,7 +340,6 @@ class MessagingService extends PopbillBase {
         if(!$this->isNullOrEmpty($RequestNum)) $Request['requestNum'] = $RequestNum;
 
         if ($adsYN) $Request['adsYN'] = $adsYN;
-        if ($SystemYN) $Request['systemYN'] = $SystemYN;
 
         $Request['msgs'] = $Messages;
 
