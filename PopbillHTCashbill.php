@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2024-10-22
+* Updated : 2024-11-11
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -204,7 +204,7 @@ class HTCashbillService extends PopbillBase {
         return $FlatRateState;
     }
 
-    // 홈택스연동 인증 관리 팝업 URL
+    // 홈택스수집 인증 관리 팝업 URL
     public function GetCertificatePopUpURL($CorpNum, $UserID = null) {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
