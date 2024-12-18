@@ -102,7 +102,7 @@ class AccountCheckService extends PopbillBase {
     }
 
     // 과금정보 확인
-    public function GetChargeInfo($CorpNum, $UserID = null, $ServiceType) {
+    public function GetChargeInfo($CorpNum, $UserID = null, $ServiceType = null) {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
