@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-11-11
+ * Updated : 2025-01-13
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -303,7 +303,6 @@ class FaxService extends PopbillBase {
         if(!$this->isNullOrEmpty($State)) {
             $uri .= '&State=' . implode(',', $State);
         }
-
         if(!is_null($ReserveYN)) {
             if($ReserveYN) {
                 $uri .= '&ReserveYN=1';
@@ -311,25 +310,20 @@ class FaxService extends PopbillBase {
                 $uri .= '&ReserveYN=0';
             }
         }
-
         if ($SenderOnly) {
             $uri .= '&SenderOnly=1';
         } else {
             $uri .= '&SenderOnly=0';
         }
-
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page;
         }
-        
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage;
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order;
         }
-
         if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }

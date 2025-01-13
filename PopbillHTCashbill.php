@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2024-11-11
+* Updated : 2025-01-13
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -119,25 +119,20 @@ class HTCashbillService extends PopbillBase {
             throw new PopbillException ('작업아이디(JobID)가 유효하지 않습니다.');
         }
 
-        $uri = '/HomeTax/Cashbill/'.$JobID;
+        $uri = '/HomeTax/Cashbill/' . $JobID . '?TradeType=';
         
-        $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
             $uri .= implode (',', $TradeType);
         }
-
         if(!$this->isNullOrEmpty($TradeUsage)) {
             $uri .= '&TradeUsage=' . implode (',', $TradeUsage);
         }
-
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page;
         }
-
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage;
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order;
         }
@@ -162,13 +157,11 @@ class HTCashbillService extends PopbillBase {
             throw new PopbillException ('작업아이디(JobID)가 유효하지 않습니다.');
         }
 
-        $uri = '/HomeTax/Cashbill/' . $JobID . '/Summary';
+        $uri = '/HomeTax/Cashbill/' . $JobID . '/Summary' . '?TradeType=';
         
-        $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
             $uri .= implode (',', $TradeType);
         }
-
         if(!$this->isNullOrEmpty($TradeUsage)) {
             $uri .= '&TradeUsage=' . implode (',', $TradeUsage);
         }

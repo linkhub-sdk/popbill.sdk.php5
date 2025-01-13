@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-11-11
+ * Updated : 2025-01-13
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -394,19 +394,18 @@ class MessagingService extends PopbillBase {
         if(!$this->isValidDate($EDate)) {
             throw new PopbillException('종료일자가 유효하지 않습니다.');
         }
+        if($this->isNullOrEmpty($State)) {
+            throw new PopbillException('전송상태가 입력되지 않았습니다.');
+        }
 
         $uri = '/Message/Search';
         $uri .= '?SDate=' . $SDate;
         $uri .= '&EDate=' . $EDate;
-
-        if(!$this->isNullOrEmpty($State)) {
-            $uri .= '&State=' . implode(',', $State);
-        }
+        $uri .= '&State=' . implode(',', $State);
 
         if(!$this->isNullOrEmpty($Item)) {
             $uri .= '&Item=' . implode(',', $Item);
         }
-
         if(!is_null($ReserveYN)) {
             if ($ReserveYN) {
                 $uri .= '&ReserveYN=1';
@@ -414,7 +413,6 @@ class MessagingService extends PopbillBase {
                 $uri .= '&ReserveYN=0';
             }
         }
-
         if ($SenderYN) {
             $uri .= '&SenderOnly=1';
         } else {
@@ -424,15 +422,12 @@ class MessagingService extends PopbillBase {
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page;
         }
-
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage;
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order;
         }
-
         if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }

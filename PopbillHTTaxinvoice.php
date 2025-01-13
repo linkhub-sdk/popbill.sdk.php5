@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2024-11-11
+* Updated : 2025-01-13
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -123,45 +123,35 @@ class HTTaxinvoiceService extends PopbillBase {
             throw new PopbillException ('작업아이디(JobID)가 유효하지 않습니다.');
         }
 
-        $uri = '/HomeTax/Taxinvoice/'.$JobID;
+        $uri = '/HomeTax/Taxinvoice/' . $JobID . '?Type=';
 
-        $uri .= '?Type=';
         if(!$this->isNullOrEmpty($Type)) {
             $uri .= implode(',', $Type);
         }
-
         if(!$this->isNullOrEmpty($TaxType)) {
             $uri .= '&TaxType=' . implode(',', $TaxType);
         }
-
         if(!$this->isNullOrEmpty($PurposeType)) {
             $uri .= '&PurposeType=' . implode(',', $PurposeType);
         }
-
         if(!$this->isNullOrEmpty($TaxRegIDYN)) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-
         if(!$this->isNullOrEmpty($TaxRegIDType)) {
             $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         }
-
         if(!$this->isNullOrEmpty($TaxRegID)) {
             $uri .= '&TaxRegID=' . $TaxRegID;
         }
-
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page;
         }
-
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage;
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order;
         }
-
         if(!$this->isNullOrEmpty($SearchString)) {
             $uri .= '&SearchString=' . urlencode($SearchString);
         }
@@ -186,33 +176,26 @@ class HTTaxinvoiceService extends PopbillBase {
             throw new PopbillException ('작업아이디(JobID)가 유효하지 않습니다.');
         }
 
-        $uri = '/HomeTax/Taxinvoice/' . $JobID .  '/Summary';
-        
-        $uri .= '?Type=';
+        $uri = '/HomeTax/Taxinvoice/' . $JobID .  '/Summary' . '?Type=';
+
         if(!$this->isNullOrEmpty($Type)) {
             $uri .= implode(',', $Type);
         }
-
         if(!$this->isNullOrEmpty($TaxType)) {
             $uri .= '&TaxType=' . implode(',', $TaxType);
         }
-
         if(!$this->isNullOrEmpty($PurposeType)) {
             $uri .= '&PurposeType=' . implode(',', $PurposeType);
         }
-
         if(!$this->isNullOrEmpty($TaxRegIDYN)) {
             $uri .= '&TaxRegIDYN=' . $TaxRegIDYN;
         }
-
         if(!$this->isNullOrEmpty($TaxRegIDType)) {
             $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         }
-
         if(!$this->isNullOrEmpty($TaxRegID)) {
             $uri .= '&TaxRegID=' . $TaxRegID;
         }
-
         if(!$this->isNullOrEmpty($SearchString)) {
             $uri .= '&SearchString=' . urlencode($SearchString);
         }

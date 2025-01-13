@@ -12,7 +12,7 @@
  * Author : Kim Seongjun
  * Written : 2015-06-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2024-11-11
+ * Updated : 2025-01-13
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anything.
@@ -831,15 +831,12 @@ class TaxinvoiceService extends PopbillBase
         if(!$this->isNullOrEmpty($State)) {
             $uri .= '&State=' . implode(',', $State);
         }
-
         if(!$this->isNullOrEmpty($Type)) {
             $uri .= '&Type=' . implode(',', $Type);
         }
-
         if(!$this->isNullOrEmpty($TaxType)) {
             $uri .= '&TaxType=' . implode(',', $TaxType);
         }
-
         if(!is_null($LateOnly)) {
             if($LateOnly) {
                 $uri .= '&LateOnly=1';
@@ -847,27 +844,18 @@ class TaxinvoiceService extends PopbillBase
                 $uri .= '&LateOnly=0';
             }
         }
-
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page;
         }
-
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage;
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order;
         }
-
-        if(!$this->isNullOrEmpty($TaxRegID)) {
-            $uri .= '&TaxRegID=' . $TaxRegID;
-        }
-
         if(!$this->isNullOrEmpty($TaxRegIDType)) {
             $uri .= '&TaxRegIDType=' . $TaxRegIDType;
         }
-
         if (!is_null($TaxRegIDYN) && $TaxRegIDYN != "") {
             if ($TaxRegIDYN) {
                 $uri .= '&TaxRegIDYN=1';
@@ -875,11 +863,12 @@ class TaxinvoiceService extends PopbillBase
                 $uri .= '&TaxRegIDYN=0';
             }
         }
-
+        if(!$this->isNullOrEmpty($TaxRegID)) {
+            $uri .= '&TaxRegID=' . $TaxRegID;
+        }
         if(!$this->isNullOrEmpty($QString)) {
             $uri .= '&QString=' . urlencode($QString);
         }
-
         if (!is_null($InterOPYN) && $InterOPYN != "") {
             if ($InterOPYN) {
                 $uri .= '&InterOPYN=1';
@@ -887,19 +876,15 @@ class TaxinvoiceService extends PopbillBase
                 $uri .= '&InterOPYN=0';
             }
         }
-
         if(!$this->isNullOrEmpty($IssueType)) {
             $uri .= '&IssueType=' . implode(',', $IssueType);
         }
-
         if(!$this->isNullOrEmpty($CloseDownState)) {
             $uri .= '&CloseDownState=' . implode(',', $CloseDownState);
         }
-
         if(!$this->isNullOrEmpty($MgtKey)) {
             $uri .= '&MgtKey=' . $MgtKey;
         }
-
         if(!$this->isNullOrEmpty($RegType)) {
             $uri .= '&RegType=' . implode(',', $RegType);
         }

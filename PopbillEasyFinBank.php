@@ -11,7 +11,7 @@
 * https://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2019-12-19
-* Updated : 2024-11-11
+* Updated : 2025-01-13
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -277,25 +277,20 @@ class EasyFinBankService extends PopbillBase {
             throw new PopbillException ('작업아이디 유효하지 않습니다.');
         }
 
-        $uri = '/EasyFin/Bank/'.$JobID;
+        $uri = '/EasyFin/Bank/' . $JobID . '?TradeType=';
         
-        $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
             $uri .= implode ( ',' , $TradeType );
         }
-
         if(!$this->isNullOrEmpty($SearchString)) {
             $uri .= '&SearchString=' . urlencode($SearchString);
         }
-
         if(!$this->isNullOrEmpty($Page)) {
             $uri .= '&Page=' . $Page; 
         }
-
         if(!$this->isNullOrEmpty($PerPage)) {
             $uri .= '&PerPage=' . $PerPage; 
         }
-
         if(!$this->isNullOrEmpty($Order)) {
             $uri .= '&Order=' . $Order; 
         }
@@ -320,13 +315,11 @@ class EasyFinBankService extends PopbillBase {
             throw new PopbillException ('작업아이디 유효하지 않습니다.');
         }
 
-        $uri = '/EasyFin/Bank/'.$JobID.'/Summary';
+        $uri = '/EasyFin/Bank/'.$JobID . '/Summary' . '?TradeType=';
 
-        $uri .= '?TradeType=';
         if(!$this->isNullOrEmpty($TradeType)) {
             $uri .= implode ( ',' , $TradeType );
         }
-        
         if(!$this->isNullOrEmpty($SearchString)) {
             $uri .= '&SearchString=' . urlencode($SearchString);
         }
