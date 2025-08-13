@@ -32,7 +32,7 @@ class CashbillService extends PopbillBase {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
-        if($this->isNullOrEmpty($TOGO)) {        
+        if($this->isNullOrEmpty($TOGO)) {
             throw new PopbillException('접근 메뉴가 입력되지 않았습니다.');
         }
 
@@ -66,7 +66,7 @@ class CashbillService extends PopbillBase {
         if($this->isNullOrEmpty($Cashbill)) {
             throw new PopbillException('현금영수증 정보가 입력되지 않았습니다.');
         }
-        
+
         if(!$this->isNullOrEmpty($Memo)) {
             $Cashbill->memo = $Memo;
         }
@@ -133,13 +133,13 @@ class CashbillService extends PopbillBase {
             throw new PopbillException('문서번호가 입력되지 않았습니다.');
         }
         if($this->isNullOrEmpty($orgConfirmNum)) {
-            throw new PopbillException('당초 승인 현금영수증의 국세청승인번호가 입력되지 않았습니다.');
+            throw new PopbillException('당초 국세청승인번호가 입력되지 않았습니다.');
         }
         if($this->isNullOrEmpty($orgTradeDate)) {
-            throw new PopbillException('당초 승인 현금영수증의 거래일자가 입력되지 않았습니다.');
+            throw new PopbillException('당초 거래일자가 입력되지 않았습니다.');
         }
         if(!$this->isValidDaTe($orgTradeDate)) {
-            throw new PopbillException('당초 승인 현금영수증의 거래일자가 유효하지 않습니다.');
+            throw new PopbillException('당초 거래일자가 유효하지 않습니다.');
         }
         if(!$this->isNullOrEmpty($tradeDT) && !$this->isValidDT($tradeDT)) {
             throw new PopbillException('거래일시가 유효하지 않습니다.');
@@ -714,7 +714,7 @@ class CashbillInfo
     public $serviceFee;
     public $orderNumber;
     public $email;
-    public $hp; 
+    public $hp;
     public $interOPYN;
 
     function fromJsonInfo($jsonInfo)
@@ -752,7 +752,7 @@ class CashbillInfo
         isset($jsonInfo->email) ? $this->email = $jsonInfo->email : null;
         isset($jsonInfo->hp) ? $this->hp = $jsonInfo->hp : null;
         isset($jsonInfo->interOPYN) ? $this->interOPYN = $jsonInfo->interOPYN : null;
-        
+
     }
 }
 
