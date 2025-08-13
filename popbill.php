@@ -13,7 +13,7 @@
  * Author : Kim Seongjun
  * Written : 2014-04-15
  * Contributor : Jeong YoHan (code@linkhubcorp.com)
- * Updated : 2025-01-13
+ * Updated : 2025-08-13
  *
  * Thanks for your interest.
  * We welcome any suggestions, feedbacks, blames or anythings.
@@ -134,6 +134,12 @@ class PopbillBase
     {
         $postdata = json_encode($ContactInfo);
         return $this->executeCURL('/IDs', $CorpNum, $UserID, true, null, $postdata);
+    }
+
+    // 담당자 삭제
+    public function DeleteContact($CorpNum, $TargetUserID, $UserID)
+    {
+        return $this->executeCURL('/Contact/Delete?ContactID='. $TargetUserID, $CorpNum, $UserID, true, null, "");
     }
 
     // 담당자 정보 확인
@@ -338,7 +344,7 @@ class PopbillBase
             $response = $this->executeCURL('/QuitRequest', $CorpNum, $UserID, true, null, $postData);
             if($response->code == 1) {
                 unset($this-> Token_Table[$CorpNum]);
-            } 
+            }
         } catch (LinkhubException $le) {
             throw new PopbillException($le->getMessage(), $le->getCode());
         }
@@ -427,7 +433,7 @@ class PopbillBase
             curl_setopt($http, CURLOPT_ENCODING, 'gzip,deflate');
             // Connection timeout 설정
             curl_setopt($http, CURLOPT_CONNECTTIMEOUT_MS, 10 * 1000);
-            // 통합 timeout 설정 
+            // 통합 timeout 설정
             curl_setopt($http, CURLOPT_TIMEOUT_MS, 180 * 1000);
 
             $responseJson = curl_exec($http);
@@ -645,7 +651,7 @@ class PopbillBase
         return preg_match('/(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])/', $date);
     }
 
-    public function isValidDT($datetime) 
+    public function isValidDT($datetime)
     {
         return preg_match('/(\d{4})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])(0[0-9]|1[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])/', $datetime);
     }
