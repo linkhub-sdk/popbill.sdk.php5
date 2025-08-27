@@ -11,7 +11,7 @@
 * http://www.linkhub.co.kr
 * Author : Jeong Yohan (code@linkhubcorp.com)
 * Written : 2016-07-07
-* Updated : 2025-01-13
+* Updated : 2025-08-27
 *
 * Thanks for your interest.
 * We welcome any suggestions, feedbacks, blames or anything.
@@ -331,21 +331,22 @@ class HTTaxinvoiceService extends PopbillBase {
     }
 
     // 부서사용자 계정등록
-    public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $UserID = null)
+    public function RegistDeptUser($CorpNum, $deptUserID, $deptUserPWD, $identityNum, $UserID = null)
     {
         if($this->isNullOrEmpty($CorpNum)) {
             throw new PopbillException('팝빌회원 사업자번호가 입력되지 않았습니다.');
         }
         if($this->isNullOrEmpty($deptUserID)) {
-            throw new PopbillException('홈택스 부서사용자 계정 아이디가 입력되지 않았습니다.');
+            throw new PopbillException('부서사용자 아이디가 입력되지 않았습니다.');
         }
         if($this->isNullOrEmpty($deptUserPWD)) {
-            throw new PopbillException('홈택스 부서사용자 계정 비밀번호가 입력되지 않았습니다.');
+            throw new PopbillException('부서사용자 비밀번호가 입력되지 않았습니다.');
         }
 
         $Request = new HTTIRegistDeptUserRequest();
         $Request->id = $deptUserID;
         $Request->pwd = $deptUserPWD;
+        $Request->secAuth = $identityNum;
         $postdata = json_encode($Request);
 
         return $this->executeCURL('/HomeTax/Taxinvoice/DeptUser', $CorpNum, $UserID, true, null, $postdata);
@@ -782,11 +783,13 @@ class HTTIRegistDeptUserRequest
 {
     public $id;
     public $pwd;
+    public $identityNum;
 
     public function fromJsonInfo($jsonInfo)
     {
         isset ($jsonInfo->id) ? $this->id = $jsonInfo->id : null;
         isset ($jsonInfo->pwd) ? $this->pwd = $jsonInfo->pwd : null;
+        isset ($jsonInfo->identityNum) ? $this->identityNum = $jsonInfo->identityNum : null;
     }
 }
 
